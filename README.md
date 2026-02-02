@@ -14,6 +14,18 @@ Automates the setup of a complete Notion workspace for new GTM clients, includin
 
 **Requirements:** [Notion MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/notion)
 
+### Clay Client Workspace
+Guides setup of a Clay.com workspace for new GTM clients with structured tables for prospect research, data enrichment, and outreach automation:
+- 5 pre-configured Clay tables (Target Accounts, Contacts, Outreach, Competitive Intel, ICP Analysis)
+- Automated enrichment workflows and trigger-based alerts
+- AI-powered research with Claygent prompts
+- CRM and email tool integrations
+- Thrustlab team admin access for ongoing support
+
+**Usage:** `/clay-client-workspace [client name]`
+
+**Requirements:** Clay.com account (guided setup via Thrustlab referral link)
+
 ## 🚀 Installation
 
 ### Quick Install (Recommended)
@@ -89,6 +101,19 @@ Required for: `notion-client-onboarding`
 
 3. Restart Claude Desktop
 
+#### Clay.com Account
+Required for: `clay-client-workspace`
+
+**Setup:**
+The skill guides you through setting up a Clay.com workspace via their web interface:
+
+1. Create account using Thrustlab referral link (included in skill)
+2. Add Thrustlab team members as workspace admins
+3. Configure tables, enrichments, and automations
+4. Connect CRM and email tool integrations
+
+**Note:** Clay.com doesn't have programmatic API access, so the skill provides step-by-step guided setup instructions
+
 ## 💡 Usage Examples
 
 ### Setting Up a New Client Project
@@ -105,11 +130,16 @@ Claude will guide you through:
 
 ### Typical Workflow
 
-1. New client signed → Run `/notion-client-onboarding`
-2. Workspace created with all databases and templates
-3. Begin filling in competitive research, personas, and strategy
-4. Use templates for consistent client reporting
-5. Track all deliverables and meetings in one place
+**Complete Client Onboarding:**
+1. New client signed → Run `/notion-client-onboarding [Client Name]`
+2. Notion workspace created with all databases and templates
+3. Run `/clay-client-workspace [Client Name]`
+4. Follow guided setup to create Clay.com workspace with Thrustlab referral
+5. Add Thrustlab team as admins to Clay workspace
+6. Configure 5 core tables with enrichment and automation
+7. Begin prospect research and ICP validation in Clay
+8. Use Notion for strategy, deliverables, and client reporting
+9. Leverage Clay for data enrichment and automated outreach
 
 ## 🛠️ Skill Development
 
