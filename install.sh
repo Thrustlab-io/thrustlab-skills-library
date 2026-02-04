@@ -69,6 +69,36 @@ else
     echo -e "${GREEN}✓${NC} Skills downloaded and installed"
 fi
 
+# Install Slack MCP globally
+echo ""
+echo "Installing Slack MCP..."
+
+CLAUDE_BIN_DIR="$HOME/.claude/bin"
+mkdir -p "$CLAUDE_BIN_DIR"
+
+if [ -d ".git" ] && [ -f "slack-mcp/slack-mcp" ]; then
+    # Copy binary to global location
+    cp slack-mcp/slack-mcp "$CLAUDE_BIN_DIR/"
+    chmod +x "$CLAUDE_BIN_DIR/slack-mcp"
+    echo -e "${GREEN}✓${NC} Slack MCP binary installed to $CLAUDE_BIN_DIR"
+
+    # Register with Claude (requires SLACK_BOT_TOKEN to be set)
+    if command -v claude &> /dev/null; then
+        if claude mcp get slack &> /dev/null; then
+            echo -e "${YELLOW}!${NC} Slack MCP already registered with Claude"
+        else
+            if [ -n "$SLACK_BOT_TOKEN" ]; then
+                claude mcp add -e SLACK_BOT_TOKEN="$SLACK_BOT_TOKEN" -s user slack -- "$CLAUDE_BIN_DIR/slack-mcp"
+                echo -e "${GREEN}✓${NC} Slack MCP registered with Claude"
+            else
+                echo -e "${YELLOW}!${NC} Set SLACK_BOT_TOKEN and run: claude mcp add -e SLACK_BOT_TOKEN=\"\$SLACK_BOT_TOKEN\" -s user slack -- $CLAUDE_BIN_DIR/slack-mcp"
+            fi
+        fi
+    fi
+else
+    echo -e "${YELLOW}!${NC} Slack MCP binary not found (run from cloned repo to install)"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════════════════════╗"
 echo "║   Installation Complete!                               ║"
@@ -84,8 +114,11 @@ done
 echo ""
 echo -e "${YELLOW}Important: Setup requirements${NC}"
 echo ""
+echo "MCP Setup:"
+echo "  • Slack MCP: Run with SLACK_BOT_TOKEN set, or manually add:"
+echo "    claude mcp add -e SLACK_BOT_TOKEN=\"your-token\" -s user slack -- ~/.claude/bin/slack-mcp"
+echo ""
 echo "Some skills may require additional setup:"
-echo "  • MCP servers (Notion, Slack, etc.)"
 echo "  • External service accounts (Clay, Notion, Slack)"
 echo ""
 echo "See README.md and individual SKILL.md files for detailed requirements"

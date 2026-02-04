@@ -4,7 +4,7 @@ description: Generates a GTM strategy, specializing in precision B2B cold outbou
 argument-hint: "client website"
 ---
 # General
-Put your output as a single md file in strategies/CLIENT_NAME.md
+Put your output as a single md file in <current_working_directory>/strategies/CLIENT.md
 ### **Research Protocol**
 
 1. **Always start with web_fetch on client website** for primary intelligence
