@@ -31,7 +31,7 @@ Guides setup of a Clay.com workspace for new GTM clients with structured tables 
 ### Quick Install (Recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/your-org/thrustlab/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/kiwiidb/thrustlab-skills-library/main/install.sh | bash
 ```
 
 ### Manual Installation
