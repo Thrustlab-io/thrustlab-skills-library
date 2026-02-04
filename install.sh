@@ -75,17 +75,21 @@ echo "║   Installation Complete!                               ║"
 echo "╚════════════════════════════════════════════════════════╝"
 echo ""
 echo "Installed skills:"
-echo "  • notion-client-onboarding - Notion workspace setup"
-echo "  • clay-client-workspace - Clay.com guided workspace setup"
+for skill in "$CLAUDE_SKILLS_DIR"/*; do
+    if [ -d "$skill" ]; then
+        skill_name=$(basename "$skill")
+        echo "  • $skill_name"
+    fi
+done
 echo ""
 echo -e "${YELLOW}Important: Setup requirements${NC}"
 echo ""
-echo "Requirements:"
-echo "  • Notion MCP Server (@modelcontextprotocol/server-notion)"
-echo "  • Clay.com account (guided setup via skill with referral link)"
+echo "Some skills may require additional setup:"
+echo "  • MCP servers (Notion, Slack, etc.)"
+echo "  • External service accounts (Clay, Notion, Slack)"
 echo ""
-echo "See README.md for detailed setup instructions"
+echo "See README.md and individual SKILL.md files for detailed requirements"
 echo ""
-echo "Documentation: https://github.com/your-org/thrustlab"
+echo "Documentation: https://github.com/kwinten/thrustlab"
 echo ""
 echo -e "${GREEN}Happy GTM planning! 🚀${NC}"
