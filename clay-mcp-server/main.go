@@ -134,7 +134,7 @@ func registerTools(s *server.MCPServer) {
 
 	// Tool: Search Businesses by Geography (Google Maps)
 	geographySearchTool := mcp.NewTool("search_businesses_by_geography",
-		mcp.WithDescription("Search for local businesses by geography using Google Maps"),
+		mcp.WithDescription("Search for local businesses by geography using Google Maps. Supports two search modes: business types (e.g., book_store, restaurant) or free text query (e.g., 'slager', 'pizza'). Provide either business_types OR query, not both."),
 		mcp.WithString("workbook_id",
 			mcp.Description("The workbook ID to create the table in (uses current workbook if not specified)"),
 		),
@@ -151,8 +151,13 @@ func registerTools(s *server.MCPServer) {
 			mcp.Description("Search radius in kilometers (e.g., 13)"),
 		),
 		mcp.WithString("business_types",
-			mcp.Required(),
-			mcp.Description("Comma-separated business types (e.g., 'art_gallery,restaurant,cafe')"),
+			mcp.Description("Comma-separated Google Maps business types. Valid types include: accounting, art_gallery, bakery, bank, bar, beauty_salon, book_store, cafe, car_dealer, car_repair, clothing_store, dentist, doctor, electrician, florist, furniture_store, gym, hair_care, hardware_store, hospital, jewelry_store, lawyer, library, liquor_store, lodging, museum, night_club, pharmacy, plumber, real_estate_agency, restaurant, school, shoe_store, spa, store, supermarket, veterinary_care, etc. Required if query is not provided."),
+		),
+		mcp.WithString("query",
+			mcp.Description("Free text search query (e.g., 'slager', 'pizza', 'kapper'). Use this for searches that don't match a standard Google Maps business type. Required if business_types is not provided."),
+		),
+		mcp.WithNumber("num_results",
+			mcp.Description("Maximum number of results to return (default: 100)"),
 		),
 		mcp.WithString("table_name",
 			mcp.Description("Custom table name (default: '⚡️ Find local businesses using Google Maps Table')"),
@@ -222,12 +227,15 @@ Search Commands:
 
 5. search_businesses_by_geography
    Search for local businesses by geography using Google Maps
+   Two search modes: business types or free text query (provide one or the other)
    Parameters:
    - workbook_id (optional): Uses current workbook if not specified
    - latitude (required): Latitude coordinate (e.g., 51.049)
    - longitude (required): Longitude coordinate (e.g., 3.725)
    - proximity_km (required): Search radius in kilometers
-   - business_types (required): Comma-separated types (see clay://business-types)
+   - business_types (optional): Comma-separated types (see clay://business-types)
+   - query (optional): Free text search (e.g., 'slager', 'pizza', 'kapper')
+   - num_results (optional): Maximum number of results (default: 100)
    - table_name (optional): Custom table name
    - table_emoji (optional): Table emoji icon
 
@@ -592,7 +600,41 @@ func searchBusinessesByGeographyHandler(ctx context.Context, req mcp.CallToolReq
 	latitude := args["latitude"].(float64)
 	longitude := args["longitude"].(float64)
 	proximityKm := args["proximity_km"].(float64)
-	businessTypes := strings.Split(args["business_types"].(string), ",")
+
+	// Determine search mode: business types or free text
+	var businessTypes []string
+	var query string
+	isFreeText := false
+
+	if v, ok := args["query"].(string); ok && v != "" {
+		query = v
+		isFreeText = true
+		// Free text mode uses "store" as default business type
+		businessTypes = []string{"store"}
+	}
+
+	if v, ok := args["business_types"].(string); ok && v != "" {
+		raw := strings.Split(v, ",")
+		for _, bt := range raw {
+			cleaned := strings.TrimSpace(bt)
+			if cleaned != "" {
+				businessTypes = append(businessTypes, cleaned)
+			}
+		}
+		if !isFreeText {
+			// Only business types mode
+		}
+	}
+
+	if !isFreeText && len(businessTypes) == 0 {
+		return mcp.NewToolResultError("Either business_types or query must be provided."), nil
+	}
+
+	// Number of results (default: 100)
+	numResults := 100
+	if v, ok := args["num_results"].(float64); ok && v > 0 {
+		numResults = int(v)
+	}
 
 	tableName := "⚡️ Find local businesses using Google Maps Table"
 	if v, ok := args["table_name"].(string); ok && v != "" {
@@ -604,11 +646,31 @@ func searchBusinessesByGeographyHandler(ctx context.Context, req mcp.CallToolReq
 		tableEmoji = v
 	}
 
-	// Build Google Maps search configuration
+	// Build Google Maps search configuration (matching exact HAR format)
 	mapConfig := fmt.Sprintf(`{"latitude":%f,"longitude":%f,"proximity":%d}`,
 		latitude, longitude, int(proximityKm))
 
-	// Build request payload matching HAR structure
+	// Build business types JSON array
+	businessTypesJSON, _ := json.Marshal(businessTypes)
+
+	// Build inputs based on search mode
+	inputs := map[string]any{
+		"usePreferredGoogleApi": "true",
+		"map":                   mapConfig,
+		"numResults":            fmt.Sprintf("%d", numResults),
+		"dynamicFields|businessTypes": string(businessTypesJSON),
+	}
+
+	if isFreeText {
+		inputs["dynamicFields|searchType"] = `"freeText"`
+		inputs["dynamicFields|searchType_displayName"] = `"Free text"`
+		inputs["dynamicFields|query"] = fmt.Sprintf(`"%s"`, query)
+	} else {
+		inputs["dynamicFields|searchType"] = `"businessTypes"`
+		inputs["dynamicFields|searchType_displayName"] = `"Business types"`
+	}
+
+	// Build request payload matching HAR structure exactly
 	payload := map[string]any{
 		"icon": map[string]string{
 			"emoji": tableEmoji,
@@ -629,25 +691,43 @@ func searchBusinessesByGeographyHandler(ctx context.Context, req mcp.CallToolReq
 					"typeSettings": map[string]any{
 						"name":                   "Find local businesses using Google Maps",
 						"description":            "Pull local businesses from a specific location on Google Maps",
+						"stages":                 []string{"Inputs"},
+						"categories":             []string{"FIND"},
+						"customSignalSettings": map[string]any{
+							"categories":  []string{"SOURCING"},
+							"rank":        3,
+							"title":       "Monitor local businesses using Google Maps",
+							"description": "Monitor local businesses from a specific location on Google Maps",
+						},
 						"iconType":               "GoogleMapsSource",
 						"actionKey":              googleMapsActionKey,
 						"actionPackageId":        googleMapsActionPackageID,
 						"defaultPreviewText":     "Business Found",
 						"recordsPath":            "results",
 						"idPath":                 "id",
+						"isAdmin":                false,
 						"dedupeOnUniqueIds":      true,
 						"isPaginationAvailable":  true,
 						"tableType":              "company",
+						"costEstimate":           1,
+						"sourceTableOutputs": map[string]any{
+							"spreadsheet": map[string]any{
+								"newFieldsNameToPaths": map[string]any{
+									"Name":            map[string]any{"path": []string{"name"}, "type": "text"},
+									"Google Maps URL": map[string]any{"path": []string{"googleMapsPlaceLink"}, "type": "url"},
+									"Description":     map[string]any{"path": []string{"description"}, "type": "text"},
+									"Website":         map[string]any{"path": []string{"website"}, "type": "url"},
+									"Phone":           map[string]any{"path": []string{"phone"}, "type": "text"},
+									"Address":         map[string]any{"path": []string{"address"}, "type": "text"},
+									"Rating":          map[string]any{"path": []string{"rating"}, "type": "number"},
+									"Reviews Count":   map[string]any{"path": []string{"reviews.count"}, "type": "number"},
+								},
+							},
+						},
 						"scheduleConfig": map[string]any{
 							"runSettings": "once",
 						},
-						"inputs": map[string]any{
-							"usePreferredGoogleApi":         "true",
-							"map":                           mapConfig,
-							"dynamicFields|searchType":      `"businessTypes"`,
-							"dynamicFields|businessTypes":   fmt.Sprintf(`["%s"]`, strings.Join(businessTypes, `","`)),
-							"dynamicFields|searchType_displayName": `"Business types"`,
-						},
+						"inputs": inputs,
 					},
 				},
 				"isPinned": true,
@@ -677,20 +757,50 @@ func searchBusinessesByGeographyHandler(ctx context.Context, req mcp.CallToolReq
 		return mcp.NewToolResultError(fmt.Sprintf("Failed to parse response: %v", err)), nil
 	}
 
+	// Extract table info from response
+	tableInfo, ok := result["table"].(map[string]any)
+	var tableID, tableNameResult string
+	if ok {
+		if id, ok := tableInfo["id"].(string); ok {
+			tableID = id
+		}
+		if name, ok := tableInfo["name"].(string); ok {
+			tableNameResult = name
+		}
+	}
+	// Fallback to root level if not in nested structure
+	if tableID == "" {
+		if id, ok := result["id"].(string); ok {
+			tableID = id
+		}
+	}
+	if tableNameResult == "" {
+		if name, ok := result["name"].(string); ok {
+			tableNameResult = name
+		}
+	}
+
+	searchMode := fmt.Sprintf("Business Types: %s", strings.Join(businessTypes, ", "))
+	if isFreeText {
+		searchMode = fmt.Sprintf("Free Text Query: %s", query)
+	}
+
 	return mcp.NewToolResultText(fmt.Sprintf(
 		"✅ Geography search table created successfully!\n\n"+
 			"Table ID: %s\n"+
 			"Table Name: %s\n"+
 			"Location: %.4f, %.4f (radius: %.0f km)\n"+
-			"Business Types: %s\n\n"+
+			"Search Mode: %s\n"+
+			"Max Results: %d\n\n"+
 			"View in Clay: https://app.clay.com/workspaces/%s/workbooks/%s/tables/%s",
-		result["id"],
-		result["name"],
+		tableID,
+		tableNameResult,
 		latitude, longitude, proximityKm,
-		strings.Join(businessTypes, ", "),
+		searchMode,
+		numResults,
 		workspaceID,
 		workbookID,
-		result["id"],
+		tableID,
 	)), nil
 }
 
