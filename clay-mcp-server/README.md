@@ -4,10 +4,12 @@ Model Context Protocol (MCP) server for Clay.com - enables programmatic table cr
 
 ## Features
 
+- **Create Workbooks** - Create new Clay workbooks and set as default for subsequent operations
 - **Search Companies by Industry** - Create tables with companies from Mixrank/LinkedIn data
 - **Search Businesses by Geography** - Create tables with local businesses from Google Maps
 - **Iterate on Clay Prompts** - Modify search parameters programmatically
 - **Full Session Authentication** - Uses your Clay session for API access
+- **List Commands & Business Types** - MCP resources for discovering available commands and valid business types
 
 ## Installation
 
@@ -133,6 +135,27 @@ Set my Clay session cookie to s%3AyyBobWOFnTZnRlhw7cJhRG1ncBqKUUmx...
 
 **Note:** These tools provide a convenient way to configure credentials via chat. Changes are permanent (written to config file) but require restarting Claude Desktop to take effect.
 
+### Workbook Tools
+
+#### create_workbook
+
+Create a new Clay workbook and set it as the default for subsequent operations.
+
+**Parameters:**
+- `name` (required) - Name for the new workbook
+- `folder_id` (optional) - Folder ID to create the workbook in
+
+**Example:**
+```
+Create a new Clay workbook called "Q1 2026 Outreach"
+```
+
+**What it does:**
+- Creates a new workbook in your Clay workspace
+- Stores the workbook ID as the default for future operations
+- Returns the workbook URL and ID
+- Subsequent search commands will use this workbook automatically (no need to specify `workbook_id`)
+
 ### Search Tools
 
 #### 1. search_companies_by_industry
@@ -140,32 +163,36 @@ Set my Clay session cookie to s%3AyyBobWOFnTZnRlhw7cJhRG1ncBqKUUmx...
 Search for companies using Clay's Mixrank/LinkedIn data source.
 
 **Parameters:**
-- `workbook_id` (required) - Workbook ID to create table in
+- `workbook_id` (optional) - Workbook ID to create table in (uses current workbook if not specified)
 - `industries` (required) - Comma-separated industries (e.g., "Accounting,Consulting")
-- `countries` - Comma-separated countries (e.g., "Belgium,Netherlands")
-- `company_sizes` - Sizes: `1`, `2-10`, `11-50`, `50`, `200`, `500`, `1000`, `5000`, `10000`
-- `keywords` - Description keywords to filter by
-- `limit` - Max results (default: 25000)
+- `countries` (optional) - Comma-separated countries (e.g., "Belgium,Netherlands")
+- `company_sizes` (optional) - Sizes: `1`, `2-10`, `11-50`, `50`, `200`, `500`, `1000`, `5000`, `10000`
+- `keywords` (optional) - Description keywords to filter by
+- `limit` (optional) - Max results (default: 25000)
 
 **Example Usage in Claude:**
 
 ```
 Create a Clay table to find accounting firms in Belgium with 50 employees
-that mention "boekhouding" in their description. Use workbook wb_0t9zx9hiFdeR4VDUCHj.
+that mention "boekhouding" in their description.
 ```
 
-### 2. search_businesses_by_geography
+**Note:** If you've created a workbook using `create_workbook`, you don't need to specify `workbook_id`.
+
+#### 2. search_businesses_by_geography
 
 Search for local businesses using Google Maps.
 
 **Parameters:**
-- `workbook_id` (required) - Workbook ID to create table in
+- `workbook_id` (optional) - Workbook ID to create table in (uses current workbook if not specified)
 - `latitude` (required) - Latitude coordinate (e.g., 51.049)
 - `longitude` (required) - Longitude coordinate (e.g., 3.725)
 - `proximity_km` (required) - Search radius in km
 - `business_types` (required) - Comma-separated types (e.g., "art_gallery,restaurant")
-- `table_name` - Custom table name (optional)
-- `table_emoji` - Table emoji (optional, default: 🌙)
+- `table_name` (optional) - Custom table name
+- `table_emoji` (optional) - Table emoji (default: 🌙)
+
+**Note:** If you've created a workbook using `create_workbook`, you don't need to specify `workbook_id`.
 
 **Example Usage in Claude:**
 
@@ -175,6 +202,24 @@ and create a table in workbook wb_0t9zx9hiFdeR4VDUCHj.
 ```
 
 ## Examples
+
+### Complete Workflow (Recommended)
+
+**Step 1: Create a workbook**
+```
+Create a new Clay workbook called "Q1 2026 Outreach"
+```
+
+**Step 2: Add searches (no need to specify workbook_id)**
+```
+Find all bookstores in Brussels within 20km radius
+```
+
+```
+Find software companies in Belgium with 50+ employees
+```
+
+All tables will automatically be created in the "Q1 2026 Outreach" workbook.
 
 ### Industry Search
 
@@ -209,6 +254,33 @@ Actually, let's expand that to 10km and also include bars.
 ```
 
 Claude will call the tool again with updated parameters.
+
+## MCP Resources
+
+### clay://commands
+
+Lists all available commands with their parameters and descriptions. Access this resource to discover what the server can do.
+
+**Usage:**
+```
+Show me all available Clay commands
+```
+
+### clay://business-types
+
+Lists all valid Google Maps business types that can be used with `search_businesses_by_geography`.
+
+**Usage:**
+```
+What business types can I search for in Clay?
+```
+
+Contains comprehensive list of types including:
+- Retail: `book_store`, `clothing_store`, `shoe_store`, `department_store`
+- Food & Drink: `restaurant`, `cafe`, `bar`, `bakery`
+- Services: `hair_care`, `beauty_salon`, `spa`, `gym`
+- Professional: `accounting`, `lawyer`, `real_estate_agency`
+- And 100+ more categories...
 
 ## API Structure
 
