@@ -140,6 +140,51 @@ else
     echo -e "${YELLOW}!${NC} Premium Inboxes MCP not found (run from cloned repo to install)"
 fi
 
+# Install Clay MCP
+echo ""
+echo "Installing Clay MCP..."
+
+if [ -d ".git" ] && [ -d "clay-mcp-server" ]; then
+    # Build if needed
+    if [ ! -f "clay-mcp-server/clay-mcp-server" ]; then
+        echo "Building Clay MCP..."
+        if command -v go &> /dev/null; then
+            (cd clay-mcp-server && go build -o clay-mcp-server)
+            echo -e "${GREEN}✓${NC} Clay MCP built successfully"
+        else
+            echo -e "${RED}✗${NC} Go is required to build Clay MCP"
+            echo "Please install Go from https://golang.org/dl/"
+        fi
+    fi
+
+    if [ -f "clay-mcp-server/clay-mcp-server" ]; then
+        # Copy binary to global location
+        cp clay-mcp-server/clay-mcp-server "$CLAUDE_BIN_DIR/"
+        chmod +x "$CLAUDE_BIN_DIR/clay-mcp-server"
+        echo -e "${GREEN}✓${NC} Clay MCP binary installed to $CLAUDE_BIN_DIR"
+
+        # Register with Claude (requires CLAY_WORKSPACE_ID and CLAY_SESSION_COOKIE)
+        if command -v claude &> /dev/null; then
+            if claude mcp get clay &> /dev/null; then
+                echo -e "${YELLOW}!${NC} Clay MCP already registered with Claude"
+            else
+                if [ -n "$CLAY_WORKSPACE_ID" ] && [ -n "$CLAY_SESSION_COOKIE" ]; then
+                    claude mcp add -e CLAY_WORKSPACE_ID="$CLAY_WORKSPACE_ID" -e CLAY_SESSION_COOKIE="$CLAY_SESSION_COOKIE" -s user clay -- "$CLAUDE_BIN_DIR/clay-mcp-server"
+                    echo -e "${GREEN}✓${NC} Clay MCP registered with Claude"
+                else
+                    echo -e "${YELLOW}!${NC} To register Clay MCP, set credentials and run:"
+                    echo "    claude mcp add -e CLAY_WORKSPACE_ID=\"your-workspace-id\" -e CLAY_SESSION_COOKIE=\"your-session-cookie\" -s user clay -- $CLAUDE_BIN_DIR/clay-mcp-server"
+                    echo ""
+                    echo "  Or configure after installation using Claude commands:"
+                    echo "    Use 'set_workspace_id' and 'set_session_cookie' tools in Claude"
+                fi
+            fi
+        fi
+    fi
+else
+    echo -e "${YELLOW}!${NC} Clay MCP not found (run from cloned repo to install)"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════════════════════╗"
 echo "║   Installation Complete!                               ║"
@@ -161,6 +206,10 @@ echo "    claude mcp add -e SLACK_BOT_TOKEN=\"your-token\" -s user slack -- ~/.c
 echo ""
 echo "  • Premium Inboxes MCP: Run with PREMIUMINBOXES_API_TOKEN set, or manually add:"
 echo "    claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"your-token\" -s user premiuminboxes -- ~/.claude/bin/premiuminboxes-mcp"
+echo ""
+echo "  • Clay MCP: Run with CLAY_WORKSPACE_ID and CLAY_SESSION_COOKIE set, or manually add:"
+echo "    claude mcp add -e CLAY_WORKSPACE_ID=\"your-id\" -e CLAY_SESSION_COOKIE=\"your-cookie\" -s user clay -- ~/.claude/bin/clay-mcp-server"
+echo "    Or configure after installation using: set_workspace_id and set_session_cookie tools"
 echo ""
 echo "Some skills may require additional setup:"
 echo "  • External service accounts (Clay, Notion, Slack, Premium Inboxes)"

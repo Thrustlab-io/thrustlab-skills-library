@@ -95,7 +95,47 @@ After updating the config, restart Claude Desktop to load the MCP server.
 
 ## Available Tools
 
-### 1. search_companies_by_industry
+### Configuration Tools
+
+#### set_workspace_id
+
+Set your Clay workspace ID by updating the Claude Desktop config file.
+
+**Parameters:**
+- `workspace_id` (required) - Your Clay workspace ID (e.g., "757984")
+
+**Example:**
+```
+Set my Clay workspace ID to 757984
+```
+
+**What it does:**
+- Updates `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Adds/updates `CLAY_WORKSPACE_ID` in the clay MCP environment variables
+- Requires Claude Desktop restart to take effect
+
+#### set_session_cookie
+
+Set your Clay session cookie by updating the Claude Desktop config file.
+
+**Parameters:**
+- `session_cookie` (required) - Session cookie value from browser
+
+**Example:**
+```
+Set my Clay session cookie to s%3AyyBobWOFnTZnRlhw7cJhRG1ncBqKUUmx...
+```
+
+**What it does:**
+- Updates `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Adds/updates `CLAY_SESSION_COOKIE` in the clay MCP environment variables
+- Requires Claude Desktop restart to take effect
+
+**Note:** These tools provide a convenient way to configure credentials via chat. Changes are permanent (written to config file) but require restarting Claude Desktop to take effect.
+
+### Search Tools
+
+#### 1. search_companies_by_industry
 
 Search for companies using Clay's Mixrank/LinkedIn data source.
 

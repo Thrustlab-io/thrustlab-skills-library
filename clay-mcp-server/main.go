@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
@@ -70,6 +71,26 @@ func main() {
 }
 
 func registerTools(s *server.MCPServer) {
+	// Tool: Set Workspace ID
+	setWorkspaceTool := mcp.NewTool("set_workspace_id",
+		mcp.WithDescription("Set your Clay workspace ID for API access"),
+		mcp.WithString("workspace_id",
+			mcp.Required(),
+			mcp.Description("Your Clay workspace ID (e.g., 757984)"),
+		),
+	)
+	s.AddTool(setWorkspaceTool, setWorkspaceIDHandler)
+
+	// Tool: Set Session Cookie
+	setSessionCookieTool := mcp.NewTool("set_session_cookie",
+		mcp.WithDescription("Set your Clay session cookie for authentication"),
+		mcp.WithString("session_cookie",
+			mcp.Required(),
+			mcp.Description("Session cookie value (starts with s%3A...)"),
+		),
+	)
+	s.AddTool(setSessionCookieTool, setSessionCookieHandler)
+
 	// Tool: Search Companies by Industry
 	industrySearchTool := mcp.NewTool("search_companies_by_industry",
 		mcp.WithDescription("Search for companies by industry using Clay's Mixrank/LinkedIn data source"),
@@ -127,6 +148,98 @@ func registerTools(s *server.MCPServer) {
 		),
 	)
 	s.AddTool(geographySearchTool, searchBusinessesByGeographyHandler)
+}
+
+func setWorkspaceIDHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+	newWorkspaceID := args["workspace_id"].(string)
+
+	// Update the global workspace ID (for immediate use)
+	workspaceID = newWorkspaceID
+
+	// Update Claude Desktop config file
+	if err := updateClaudeConfig(func(config map[string]any) error {
+		// Navigate to mcpServers.clay.env
+		servers, ok := config["mcpServers"].(map[string]any)
+		if !ok {
+			servers = make(map[string]any)
+			config["mcpServers"] = servers
+		}
+
+		clay, ok := servers["clay"].(map[string]any)
+		if !ok {
+			clay = make(map[string]any)
+			servers["clay"] = clay
+		}
+
+		env, ok := clay["env"].(map[string]any)
+		if !ok {
+			env = make(map[string]any)
+			clay["env"] = env
+		}
+
+		env["CLAY_WORKSPACE_ID"] = newWorkspaceID
+		return nil
+	}); err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to update config: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"✅ Clay workspace ID updated successfully!\n\n"+
+			"Workspace ID: %s\n\n"+
+			"Updated in: ~/Library/Application Support/Claude/claude_desktop_config.json\n\n"+
+			"⚠️ Please restart Claude Desktop for changes to take effect.",
+		workspaceID,
+	)), nil
+}
+
+func setSessionCookieHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+	newCookie := args["session_cookie"].(string)
+
+	// Update the global session cookie (for immediate use)
+	sessionCookie = newCookie
+
+	// Mask the cookie for display (show first and last 10 chars)
+	maskedCookie := newCookie
+	if len(newCookie) > 20 {
+		maskedCookie = newCookie[:10] + "..." + newCookie[len(newCookie)-10:]
+	}
+
+	// Update Claude Desktop config file
+	if err := updateClaudeConfig(func(config map[string]any) error {
+		// Navigate to mcpServers.clay.env
+		servers, ok := config["mcpServers"].(map[string]any)
+		if !ok {
+			servers = make(map[string]any)
+			config["mcpServers"] = servers
+		}
+
+		clay, ok := servers["clay"].(map[string]any)
+		if !ok {
+			clay = make(map[string]any)
+			servers["clay"] = clay
+		}
+
+		env, ok := clay["env"].(map[string]any)
+		if !ok {
+			env = make(map[string]any)
+			clay["env"] = env
+		}
+
+		env["CLAY_SESSION_COOKIE"] = newCookie
+		return nil
+	}); err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to update config: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"✅ Clay session cookie updated successfully!\n\n"+
+			"Cookie: %s\n\n"+
+			"Updated in: ~/Library/Application Support/Claude/claude_desktop_config.json\n\n"+
+			"⚠️ Please restart Claude Desktop for changes to take effect.",
+		maskedCookie,
+	)), nil
 }
 
 func searchCompaniesByIndustryHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
@@ -367,6 +480,50 @@ func searchBusinessesByGeographyHandler(ctx context.Context, req mcp.CallToolReq
 		workbookID,
 		result["id"],
 	)), nil
+}
+
+// Helper function to update Claude Desktop config file
+func updateClaudeConfig(updateFn func(config map[string]any) error) error {
+	// Get config file path
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf("failed to get home directory: %w", err)
+	}
+
+	configPath := filepath.Join(homeDir, "Library", "Application Support", "Claude", "claude_desktop_config.json")
+
+	// Read existing config
+	var config map[string]any
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// Create new config if it doesn't exist
+			config = make(map[string]any)
+		} else {
+			return fmt.Errorf("failed to read config: %w", err)
+		}
+	} else {
+		if err := json.Unmarshal(data, &config); err != nil {
+			return fmt.Errorf("failed to parse config: %w", err)
+		}
+	}
+
+	// Apply the update
+	if err := updateFn(config); err != nil {
+		return err
+	}
+
+	// Write back to file
+	updatedData, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal config: %w", err)
+	}
+
+	if err := os.WriteFile(configPath, updatedData, 0644); err != nil {
+		return fmt.Errorf("failed to write config: %w", err)
+	}
+
+	return nil
 }
 
 // Helper function to make authenticated requests to Clay API
