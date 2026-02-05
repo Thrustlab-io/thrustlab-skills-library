@@ -1,0 +1,321 @@
+[
+  {
+    "operation": "CREATE_TABLE_GOOGLE_MAPS",
+    "url": "https://api.clay.com/v3/actions/dynamicFields",
+    "requestBody": {
+      "dynamicRequests": [
+        {
+          "actionPackageId": "3282a1c7-6bb0-497e-a34b-32268e104e55",
+          "actionKey": "google-review-source-v3",
+          "parameterPath": "dynamicFields",
+          "type": "input",
+          "inputs": {
+            "usePreferredGoogleApi": "true"
+          }
+        }
+      ]
+    },
+    "responseStatus": 200,
+    "responseBody": [
+      {
+        "parameterPath": "dynamicFields",
+        "dynamicData": [
+          {
+            "schemaVersion": 2,
+            "name": "searchType",
+            "typeSettings": {
+              "type": "select",
+              "options": [
+                {
+                  "value": "businessTypes",
+                  "displayName": "Business types"
+                },
+                {
+                  "value": "freeText",
+                  "displayName": "Free text"
+                }
+              ]
+            },
+            "optional": false,
+            "displayName": "Search Type",
+            "description": "Searching by business types is more accurate and lets you search for multiple terms at once, but searching by free text lets you search for any term you want.",
+            "refreshDynamicFieldsOnValueChange": true
+          }
+        ],
+        "errors": [],
+        "logUrl": "https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logEventViewer:group=/aws/lambda/ap-3282a1c7-6bb0-497e-a34b-32268e104e55-1-prod-20210910190601;stream=2026/02/05/%5B$LATEST%5D57ce7f1051114756a911482fd0f31228;filter=%22ed9a9ab3-0724-4229-9b02-f5dfb0b1efa9%22"
+      }
+    ]
+  },
+  {
+    "operation": "SEARCH_COMPANIES_BY_INDUSTRY",
+    "url": "https://api.clay.com/v3/workspaces/757984/wizard/evaluate-step",
+    "requestBody": {
+      "workbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+      "wizardId": "find-companies",
+      "wizardStepId": "companies-search",
+      "formInputs": {
+        "clientSettings": {
+          "tableType": "company"
+        },
+        "requiredDataPoint": null,
+        "basicFields": [
+          {
+            "name": "Name",
+            "dataType": "text",
+            "formulaText": "{{source}}.name"
+          },
+          {
+            "name": "Description",
+            "dataType": "text",
+            "formulaText": "{{source}}.description"
+          },
+          {
+            "name": "Primary Industry",
+            "dataType": "text",
+            "formulaText": "{{source}}.industry"
+          },
+          {
+            "name": "Size",
+            "dataType": "select",
+            "formulaText": "{{source}}.size",
+            "options": [
+              {
+                "id": "1a91cfe7-37d5-46a3-ba40-ea627e7f89c0",
+                "text": "Self-employed",
+                "color": "yellow"
+              },
+              {
+                "id": "56ce3269-d035-4383-b138-2702b90bba99",
+                "text": "2-10 employees",
+                "color": "blue"
+              },
+              {
+                "id": "ea351f70-2dc9-4cdd-9b57-e8cdadde24d7",
+                "text": "11-50 employees",
+                "color": "green"
+              },
+              {
+                "id": "538a770f-e901-4490-beb0-97944b904a80",
+                "text": "51-200 employees",
+                "color": "red"
+              },
+              {
+                "id": "22f461c7-6ab1-4873-8165-531dcef2f5d5",
+                "text": "201-500 employees",
+                "color": "violet"
+              },
+              {
+                "id": "13b87b30-ef11-4952-9995-a88680c0ea97",
+                "text": "501-1,000 employees",
+                "color": "grey"
+              },
+              {
+                "id": "982448b2-8fc9-4f82-b04d-0e0c1d9f293e",
+                "text": "1,001-5,000 employees",
+                "color": "orange"
+              },
+              {
+                "id": "611c12d8-ba1b-4afd-aa87-5ab5c8712990",
+                "text": "5,001-10,000 employees",
+                "color": "pink"
+              },
+              {
+                "id": "7617ec5a-b601-4b29-9990-b387d8db63ef",
+                "text": "10,001+ employees",
+                "color": "yellow"
+              }
+            ]
+          },
+          {
+            "name": "Type",
+            "dataType": "text",
+            "formulaText": "{{source}}.type"
+          },
+          {
+            "name": "Location",
+            "dataType": "text",
+            "formulaText": "{{source}}.location"
+          },
+          {
+            "name": "Country",
+            "dataType": "text",
+            "formulaText": "{{source}}.country"
+          },
+          {
+            "name": "Domain",
+            "dataType": "url",
+            "formulaText": "{{source}}.domain"
+          },
+          {
+            "name": "LinkedIn URL",
+            "dataType": "url",
+            "formulaText": "{{source}}.linkedin_url",
+            "isDedupeField": true
+          }
+        ],
+        "previewActionTaskId": "at_0ta00aptvtYiXQmqG6u",
+        "type": "companies",
+        "typeSettings": {
+          "name": "Find companies",
+          "iconType": "Buildings",
+          "actionKey": "find-lists-of-companies-with-mixrank-source",
+          "actionPackageId": "e251a70e-46d7-4f3a-b3ef-a211ad3d8bd2",
+          "previewTextPath": "name",
+          "defaultPreviewText": "Profile",
+          "recordsPath": "companies",
+          "idPath": "linkedin_company_id",
+          "scheduleConfig": {
+            "runSettings": "once"
+          },
+          "inputs": {
+            "types": [],
+            "country_names": [
+              "Belgium"
+            ],
+            "country_names_exclude": [],
+            "sizes": [
+              "50"
+            ],
+            "funding_amounts": [],
+            "annual_revenues": [],
+            "industries": [
+              "Accounting"
+            ],
+            "industries_exclude": [],
+            "description_keywords_exclude": [],
+            "description_keywords": [
+              "boekhouding"
+            ],
+            "minimum_follower_count": null,
+            "minimum_member_count": null,
+            "maximum_member_count": null,
+            "locations": [],
+            "locations_exclude": [],
+            "semantic_description": "",
+            "company_identifier": [],
+            "startFromCompanyType": "company_identifier",
+            "exclude_company_identifiers_mixed": [],
+            "exclude_entities_configuration": [],
+            "exclude_entities_bitmap": null,
+            "previous_entities_bitmap": null,
+            "derived_industries": [],
+            "derived_subindustries": [],
+            "derived_subindustries_exclude": [],
+            "derived_revenue_streams": [],
+            "derived_business_types": [],
+            "limit": null,
+            "tableId": null,
+            "domainFieldId": null,
+            "useRadialKnn": false,
+            "radialKnnMinScore": null,
+            "has_resolved_domain": null,
+            "resolved_domain_is_live": null,
+            "resolved_domain_redirects": null,
+            "name": ""
+          },
+          "hasEvaluatedInputs": true,
+          "previewActionKey": "find-lists-of-companies-with-mixrank-source-preview"
+        }
+      },
+      "sessionId": "2462dc9c-8626-440c-82b9-bda826817ce8",
+      "currentStepIndex": 0,
+      "outputs": [],
+      "firstUseCase": null,
+      "parentFolderId": null
+    },
+    "responseStatus": 200,
+    "responseBody": {
+      "workbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+      "output": {
+        "type": "CPJSourceStep",
+        "categories": [
+          "data-source",
+          "creates-fields",
+          "final-table"
+        ],
+        "stepId": "companies-search",
+        "workbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+        "source": {
+          "sourceId": "s_0ta00b3C8GuYeSBsjcj",
+          "typeSettings": {
+            "name": "Find companies",
+            "idPath": "linkedin_company_id",
+            "inputs": {
+              "name": "",
+              "limit": 25000,
+              "sizes": [
+                "50"
+              ],
+              "types": [],
+              "tableId": null,
+              "locations": [],
+              "industries": [
+                "Accounting"
+              ],
+              "useRadialKnn": false,
+              "country_names": [
+                "Belgium"
+              ],
+              "domainFieldId": null,
+              "annual_revenues": [],
+              "funding_amounts": [],
+              "locations_exclude": [],
+              "radialKnnMinScore": null,
+              "company_identifier": [],
+              "derived_industries": [],
+              "industries_exclude": [],
+              "has_resolved_domain": null,
+              "description_keywords": [
+                "boekhouding"
+              ],
+              "maximum_member_count": null,
+              "minimum_member_count": null,
+              "semantic_description": "",
+              "startFromCompanyType": "company_identifier",
+              "country_names_exclude": [],
+              "derived_subindustries": [],
+              "derived_business_types": [],
+              "minimum_follower_count": null,
+              "derived_revenue_streams": [],
+              "exclude_entities_bitmap": "s_0ta00b3C8GuYeSBsjcj_exclude_company_all",
+              "resolved_domain_is_live": null,
+              "previous_entities_bitmap": "s_0ta00b3C8GuYeSBsjcj_exclude_company_previous_entities",
+              "resolved_domain_redirects": null,
+              "description_keywords_exclude": [],
+              "derived_subindustries_exclude": [],
+              "exclude_entities_configuration": [],
+              "exclude_company_identifiers_mixed": []
+            },
+            "iconType": "Buildings",
+            "actionKey": "find-lists-of-companies-with-mixrank-source",
+            "workbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+            "recordsPath": "companies",
+            "scheduleConfig": {
+              "runSettings": "once"
+            },
+            "actionPackageId": "e251a70e-46d7-4f3a-b3ef-a211ad3d8bd2",
+            "previewTextPath": "name",
+            "previewActionKey": "find-lists-of-companies-with-mixrank-source-preview",
+            "defaultPreviewText": "Profile",
+            "hasEvaluatedInputs": true,
+            "createdFromWorkbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+            "disableTriggerOnCreate": true,
+            "disableTriggerOnUpdate": true
+          }
+        },
+        "table": {
+          "tableId": "t_0ta00b4zvV4kUUdu9ec",
+          "tableName": "Find companies Table",
+          "viewId": "gv_0ta00b6ujDFHZGrzqEg",
+          "fieldIds": [],
+          "creditEstimatePerRow": 0,
+          "isNewTable": true
+        },
+        "sourceFieldId": "f_companies_search",
+        "isNewWorkbook": false,
+        "recordCount": 2
+      }
+    }
+  }
+]

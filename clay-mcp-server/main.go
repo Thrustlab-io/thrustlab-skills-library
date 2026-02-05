@@ -1,0 +1,429 @@
+package main
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"strings"
+
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
+)
+
+const (
+	clayAPIBase = "https://api.clay.com/v3"
+
+	// Action Package IDs from HAR analysis
+	mixrankActionPackageID = "e251a70e-46d7-4f3a-b3ef-a211ad3d8bd2"
+	mixrankActionKey       = "find-lists-of-companies-with-mixrank-source"
+
+	googleMapsActionPackageID = "3282a1c7-6bb0-497e-a34b-32268e104e55"
+	googleMapsActionKey       = "google-review-source-v3"
+)
+
+var (
+	workspaceID    string
+	sessionCookie  string
+	frontendVersion string
+	httpClient     *http.Client
+)
+
+func main() {
+	// Load configuration from environment
+	workspaceID = os.Getenv("CLAY_WORKSPACE_ID")
+	sessionCookie = os.Getenv("CLAY_SESSION_COOKIE")
+	frontendVersion = os.Getenv("CLAY_FRONTEND_VERSION")
+
+	if workspaceID == "" || sessionCookie == "" {
+		fmt.Fprintln(os.Stderr, "Required environment variables:")
+		fmt.Fprintln(os.Stderr, "  CLAY_WORKSPACE_ID - Your Clay workspace ID")
+		fmt.Fprintln(os.Stderr, "  CLAY_SESSION_COOKIE - Session cookie from browser")
+		fmt.Fprintln(os.Stderr, "  CLAY_FRONTEND_VERSION (optional) - Frontend version header")
+		os.Exit(1)
+	}
+
+	if frontendVersion == "" {
+		frontendVersion = "v20260205_151537Z_19e7945c5e"
+	}
+
+	httpClient = &http.Client{}
+
+	// Create MCP server
+	s := server.NewMCPServer(
+		"Clay MCP Server",
+		"1.0.0",
+		server.WithToolCapabilities(true),
+	)
+
+	// Register tools
+	registerTools(s)
+
+	// Start stdio server
+	if err := server.ServeStdio(s); err != nil {
+		fmt.Fprintf(os.Stderr, "Server error: %v\n", err)
+		os.Exit(1)
+	}
+}
+
+func registerTools(s *server.MCPServer) {
+	// Tool: Search Companies by Industry
+	industrySearchTool := mcp.NewTool("search_companies_by_industry",
+		mcp.WithDescription("Search for companies by industry using Clay's Mixrank/LinkedIn data source"),
+		mcp.WithString("workbook_id",
+			mcp.Required(),
+			mcp.Description("The workbook ID to create the table in"),
+		),
+		mcp.WithString("industries",
+			mcp.Required(),
+			mcp.Description("Comma-separated list of industries (e.g., 'Accounting,Consulting')"),
+		),
+		mcp.WithString("countries",
+			mcp.Description("Comma-separated list of country names (e.g., 'Belgium,Netherlands')"),
+		),
+		mcp.WithString("company_sizes",
+			mcp.Description("Comma-separated company sizes: 1,2-10,11-50,50,200,500,1000,5000,10000"),
+		),
+		mcp.WithString("keywords",
+			mcp.Description("Comma-separated description keywords to filter by"),
+		),
+		mcp.WithNumber("limit",
+			mcp.Description("Maximum number of results (default: 25000)"),
+		),
+	)
+	s.AddTool(industrySearchTool, searchCompaniesByIndustryHandler)
+
+	// Tool: Search Businesses by Geography (Google Maps)
+	geographySearchTool := mcp.NewTool("search_businesses_by_geography",
+		mcp.WithDescription("Search for local businesses by geography using Google Maps"),
+		mcp.WithString("workbook_id",
+			mcp.Required(),
+			mcp.Description("The workbook ID to create the table in"),
+		),
+		mcp.WithNumber("latitude",
+			mcp.Required(),
+			mcp.Description("Latitude coordinate (e.g., 51.049)"),
+		),
+		mcp.WithNumber("longitude",
+			mcp.Required(),
+			mcp.Description("Longitude coordinate (e.g., 3.725)"),
+		),
+		mcp.WithNumber("proximity_km",
+			mcp.Required(),
+			mcp.Description("Search radius in kilometers (e.g., 13)"),
+		),
+		mcp.WithString("business_types",
+			mcp.Required(),
+			mcp.Description("Comma-separated business types (e.g., 'art_gallery,restaurant,cafe')"),
+		),
+		mcp.WithString("table_name",
+			mcp.Description("Custom table name (default: '⚡️ Find local businesses using Google Maps Table')"),
+		),
+		mcp.WithString("table_emoji",
+			mcp.Description("Table emoji icon (default: '🌙')"),
+		),
+	)
+	s.AddTool(geographySearchTool, searchBusinessesByGeographyHandler)
+}
+
+func searchCompaniesByIndustryHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+
+	workbookID := args["workbook_id"].(string)
+	industries := strings.Split(args["industries"].(string), ",")
+
+	// Optional parameters
+	var countries []string
+	if v, ok := args["countries"].(string); ok && v != "" {
+		countries = strings.Split(v, ",")
+	}
+
+	var sizes []string
+	if v, ok := args["company_sizes"].(string); ok && v != "" {
+		sizes = strings.Split(v, ",")
+	}
+
+	var keywords []string
+	if v, ok := args["keywords"].(string); ok && v != "" {
+		keywords = strings.Split(v, ",")
+	}
+
+	limit := 25000.0
+	if v, ok := args["limit"].(float64); ok {
+		limit = v
+	}
+
+	// Build request payload matching HAR structure
+	payload := map[string]any{
+		"workbookId":       workbookID,
+		"wizardId":         "find-companies",
+		"wizardStepId":     "companies-search",
+		"sessionId":        generateSessionID(),
+		"currentStepIndex": 0,
+		"outputs":          []any{},
+		"firstUseCase":     nil,
+		"parentFolderId":   nil,
+		"formInputs": map[string]any{
+			"clientSettings": map[string]any{
+				"tableType": "company",
+			},
+			"requiredDataPoint": nil,
+			"type":              "companies",
+			"typeSettings": map[string]any{
+				"name":              "Find companies",
+				"iconType":          "Buildings",
+				"actionKey":         mixrankActionKey,
+				"actionPackageId":   mixrankActionPackageID,
+				"previewTextPath":   "name",
+				"defaultPreviewText": "Profile",
+				"recordsPath":       "companies",
+				"idPath":            "linkedin_company_id",
+				"scheduleConfig": map[string]any{
+					"runSettings": "once",
+				},
+				"inputs": map[string]any{
+					"industries":                         industries,
+					"country_names":                      countries,
+					"sizes":                              sizes,
+					"description_keywords":               keywords,
+					"description_keywords_exclude":       []string{},
+					"limit":                              limit,
+					"types":                              []string{},
+					"locations":                          []string{},
+					"locations_exclude":                  []string{},
+					"funding_amounts":                    []string{},
+					"annual_revenues":                    []string{},
+					"industries_exclude":                 []string{},
+					"minimum_follower_count":             nil,
+					"minimum_member_count":               nil,
+					"maximum_member_count":               nil,
+					"semantic_description":               "",
+					"company_identifier":                 []string{},
+					"startFromCompanyType":               "company_identifier",
+					"exclude_company_identifiers_mixed":  []string{},
+					"exclude_entities_configuration":     []string{},
+					"exclude_entities_bitmap":            nil,
+					"previous_entities_bitmap":           nil,
+					"derived_industries":                 []string{},
+					"derived_subindustries":              []string{},
+					"derived_subindustries_exclude":      []string{},
+					"derived_revenue_streams":            []string{},
+					"derived_business_types":             []string{},
+					"tableId":                            nil,
+					"domainFieldId":                      nil,
+					"useRadialKnn":                       false,
+					"radialKnnMinScore":                  nil,
+					"has_resolved_domain":                nil,
+					"resolved_domain_is_live":            nil,
+					"resolved_domain_redirects":          nil,
+					"name":                               "",
+				},
+				"hasEvaluatedInputs": true,
+			},
+		},
+	}
+
+	url := fmt.Sprintf("%s/workspaces/%s/wizard/evaluate-step", clayAPIBase, workspaceID)
+	resp, err := makeClayRequest("POST", url, payload)
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create company search: %v", err)), nil
+	}
+
+	// Parse response
+	var result map[string]any
+	if err := json.Unmarshal(resp, &result); err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to parse response: %v", err)), nil
+	}
+
+	output := result["output"].(map[string]any)
+	table := output["table"].(map[string]any)
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"✅ Company search table created successfully!\n\n"+
+			"Table ID: %s\n"+
+			"Table Name: %s\n"+
+			"Records Found: %.0f\n"+
+			"Industries: %s\n"+
+			"Countries: %s\n\n"+
+			"View in Clay: https://app.clay.com/workspaces/%s/workbooks/%s/tables/%s",
+		table["tableId"],
+		table["tableName"],
+		output["recordCount"],
+		strings.Join(industries, ", "),
+		strings.Join(countries, ", "),
+		workspaceID,
+		workbookID,
+		table["tableId"],
+	)), nil
+}
+
+func searchBusinessesByGeographyHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+
+	workbookID := args["workbook_id"].(string)
+	latitude := args["latitude"].(float64)
+	longitude := args["longitude"].(float64)
+	proximityKm := args["proximity_km"].(float64)
+	businessTypes := strings.Split(args["business_types"].(string), ",")
+
+	tableName := "⚡️ Find local businesses using Google Maps Table"
+	if v, ok := args["table_name"].(string); ok && v != "" {
+		tableName = v
+	}
+
+	tableEmoji := "🌙"
+	if v, ok := args["table_emoji"].(string); ok && v != "" {
+		tableEmoji = v
+	}
+
+	// Build Google Maps search configuration
+	mapConfig := fmt.Sprintf(`{"latitude":%f,"longitude":%f,"proximity":%d}`,
+		latitude, longitude, int(proximityKm))
+
+	// Build request payload matching HAR structure
+	payload := map[string]any{
+		"icon": map[string]string{
+			"emoji": tableEmoji,
+		},
+		"workspaceId": workspaceID,
+		"type":        "company",
+		"template":    "empty",
+		"name":        tableName,
+		"workbookId":  workbookID,
+		"callerName":  "source creator modal",
+		"sourceSettings": map[string]any{
+			"addSource": map[string]any{
+				"name": "Find local businesses using Google Maps",
+				"source": map[string]any{
+					"name":        "⚡️ Find local businesses using Google Maps",
+					"workspaceId": workspaceID,
+					"type":        "v3-action",
+					"typeSettings": map[string]any{
+						"name":                   "Find local businesses using Google Maps",
+						"description":            "Pull local businesses from a specific location on Google Maps",
+						"iconType":               "GoogleMapsSource",
+						"actionKey":              googleMapsActionKey,
+						"actionPackageId":        googleMapsActionPackageID,
+						"defaultPreviewText":     "Business Found",
+						"recordsPath":            "results",
+						"idPath":                 "id",
+						"dedupeOnUniqueIds":      true,
+						"isPaginationAvailable":  true,
+						"tableType":              "company",
+						"scheduleConfig": map[string]any{
+							"runSettings": "once",
+						},
+						"inputs": map[string]any{
+							"usePreferredGoogleApi":         "true",
+							"map":                           mapConfig,
+							"dynamicFields|searchType":      `"businessTypes"`,
+							"dynamicFields|businessTypes":   fmt.Sprintf(`["%s"]`, strings.Join(businessTypes, `","`)),
+							"dynamicFields|searchType_displayName": `"Business types"`,
+						},
+					},
+				},
+				"isPinned": true,
+			},
+			"addBasicFields": []map[string]any{
+				{"name": "Name", "dataType": "text", "formulaText": "{{source}}.name"},
+				{"name": "Google Maps URL", "dataType": "url", "formulaText": "{{source}}.googleMapsPlaceLink"},
+				{"name": "Description", "dataType": "text", "formulaText": "{{source}}.description"},
+				{"name": "Website", "dataType": "url", "formulaText": "{{source}}.website"},
+				{"name": "Phone", "dataType": "text", "formulaText": "{{source}}.phone"},
+				{"name": "Address", "dataType": "text", "formulaText": "{{source}}.address"},
+				{"name": "Rating", "dataType": "number", "formulaText": "{{source}}.rating"},
+				{"name": "Reviews Count", "dataType": "number", "formulaText": "{{source}}.reviews.count"},
+			},
+		},
+	}
+
+	url := fmt.Sprintf("%s/tables", clayAPIBase)
+	resp, err := makeClayRequest("POST", url, payload)
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create geography search: %v", err)), nil
+	}
+
+	// Parse response
+	var result map[string]any
+	if err := json.Unmarshal(resp, &result); err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to parse response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"✅ Geography search table created successfully!\n\n"+
+			"Table ID: %s\n"+
+			"Table Name: %s\n"+
+			"Location: %.4f, %.4f (radius: %.0f km)\n"+
+			"Business Types: %s\n\n"+
+			"View in Clay: https://app.clay.com/workspaces/%s/workbooks/%s/tables/%s",
+		result["id"],
+		result["name"],
+		latitude, longitude, proximityKm,
+		strings.Join(businessTypes, ", "),
+		workspaceID,
+		workbookID,
+		result["id"],
+	)), nil
+}
+
+// Helper function to make authenticated requests to Clay API
+func makeClayRequest(method, url string, payload any) ([]byte, error) {
+	var body io.Reader
+	if payload != nil {
+		jsonData, err := json.Marshal(payload)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal request: %w", err)
+		}
+		body = bytes.NewReader(jsonData)
+	}
+
+	req, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	// Set headers based on HAR analysis
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:147.0) Gecko/20100101 Firefox/147.0")
+	req.Header.Set("Accept", "application/json, text/plain, */*")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Clay-Frontend-Version", frontendVersion)
+	req.Header.Set("Origin", "https://app.clay.com")
+	req.Header.Set("Referer", "https://app.clay.com/")
+	req.Header.Set("Cookie", fmt.Sprintf("claysession=%s", sessionCookie))
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API error (status %d): %s", resp.StatusCode, string(respBody))
+	}
+
+	return respBody, nil
+}
+
+// Generate a session ID (simplified version)
+func generateSessionID() string {
+	return fmt.Sprintf("%x-%x-%x-%x-%x",
+		randomBytes(4), randomBytes(2), randomBytes(2), randomBytes(2), randomBytes(6))
+}
+
+func randomBytes(n int) []byte {
+	b := make([]byte, n)
+	// Simple pseudo-random for session ID
+	for i := range b {
+		b[i] = byte(i * 17 % 256)
+	}
+	return b
+}

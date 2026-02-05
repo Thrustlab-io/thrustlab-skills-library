@@ -1,0 +1,1274 @@
+{
+  "url": "https://api.clay.com/v3/tables",
+  "requestBody": {
+    "icon": {
+      "emoji": "🌙"
+    },
+    "workspaceId": "757984",
+    "type": "company",
+    "template": "empty",
+    "sourceSettings": {
+      "addSource": {
+        "name": "Find local businesses using Google Maps",
+        "source": {
+          "name": "⚡️ Find local businesses using Google Maps",
+          "workspaceId": "757984",
+          "type": "v3-action",
+          "typeSettings": {
+            "name": "Find local businesses using Google Maps",
+            "description": "Pull local businesses from a specific location on Google Maps",
+            "stages": [
+              "Inputs"
+            ],
+            "categories": [
+              "FIND"
+            ],
+            "customSignalSettings": {
+              "categories": [
+                "SOURCING"
+              ],
+              "rank": 3,
+              "title": "Monitor local businesses using Google Maps",
+              "description": "Monitor local businesses from a specific location on Google Maps"
+            },
+            "iconType": "GoogleMapsSource",
+            "actionKey": "google-review-source-v3",
+            "actionPackageId": "3282a1c7-6bb0-497e-a34b-32268e104e55",
+            "defaultPreviewText": "Business Found",
+            "recordsPath": "results",
+            "idPath": "id",
+            "isAdmin": false,
+            "dedupeOnUniqueIds": true,
+            "isPaginationAvailable": true,
+            "tableType": "company",
+            "costEstimate": 1,
+            "sourceTableOutputs": {
+              "spreadsheet": {
+                "newFieldsNameToPaths": {
+                  "Name": {
+                    "path": [
+                      "name"
+                    ],
+                    "type": "text"
+                  },
+                  "Google Maps URL": {
+                    "path": [
+                      "googleMapsPlaceLink"
+                    ],
+                    "type": "url"
+                  },
+                  "Description": {
+                    "path": [
+                      "description"
+                    ],
+                    "type": "text"
+                  },
+                  "Website": {
+                    "path": [
+                      "website"
+                    ],
+                    "type": "url"
+                  },
+                  "Phone": {
+                    "path": [
+                      "phone"
+                    ],
+                    "type": "text"
+                  },
+                  "Address": {
+                    "path": [
+                      "address"
+                    ],
+                    "type": "text"
+                  },
+                  "Rating": {
+                    "path": [
+                      "rating"
+                    ],
+                    "type": "number"
+                  },
+                  "Reviews Count": {
+                    "path": [
+                      "reviews.count"
+                    ],
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "scheduleConfig": {
+              "runSettings": "once"
+            },
+            "inputs": {
+              "usePreferredGoogleApi": "true",
+              "map": "{\"latitude\":51.04945049862644,\"longitude\":3.725325757953186,\"proximity\":13}",
+              "dynamicFields|searchType": "\"businessTypes\"",
+              "dynamicFields|businessTypes": "[\"art_gallery\"]",
+              "dynamicFields|searchType_displayName": "\"Business types\""
+            }
+          }
+        },
+        "isPinned": true
+      },
+      "addBasicFields": [
+        {
+          "name": "Name",
+          "dataType": "text",
+          "formulaText": "{{source}}.name"
+        },
+        {
+          "name": "Google Maps URL",
+          "dataType": "url",
+          "formulaText": "{{source}}.googleMapsPlaceLink"
+        },
+        {
+          "name": "Description",
+          "dataType": "text",
+          "formulaText": "{{source}}.description"
+        },
+        {
+          "name": "Website",
+          "dataType": "url",
+          "formulaText": "{{source}}.website"
+        },
+        {
+          "name": "Phone",
+          "dataType": "text",
+          "formulaText": "{{source}}.phone"
+        },
+        {
+          "name": "Address",
+          "dataType": "text",
+          "formulaText": "{{source}}.address"
+        },
+        {
+          "name": "Rating",
+          "dataType": "number",
+          "formulaText": "{{source}}.rating"
+        },
+        {
+          "name": "Reviews Count",
+          "dataType": "number",
+          "formulaText": "{{source}}.reviews.count"
+        }
+      ]
+    },
+    "name": "⚡️ Find local businesses using Google Maps Table",
+    "workbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+    "callerName": "source creator modal"
+  },
+  "responseStatus": 200,
+  "responseBody": {
+    "table": {
+      "id": "t_0ta00h54TAPZKcPnWoZ",
+      "workspaceId": 757984,
+      "createdByUserId": "1146316",
+      "name": "⚡️ Find local businesses using Google Maps Table",
+      "description": "",
+      "type": "company",
+      "icon": {
+        "emoji": "🌙"
+      },
+      "parentFolderId": null,
+      "tableSettings": {},
+      "createdAt": "2026-02-05T18:24:41.700Z",
+      "updatedAt": "2026-02-05T18:24:41.700Z",
+      "deletedAt": null,
+      "fieldGroupMap": {},
+      "workbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+      "defaultAccess": "all",
+      "ownerId": "1146316",
+      "isSandbox": false,
+      "isHiddenFromNavigation": false,
+      "abilities": {
+        "canUpdate": true,
+        "canDelete": true,
+        "canManageAccess": false,
+        "canUpdateFromSandbox": true
+      },
+      "firstViewId": "gv_0ta00h7M2m5EXVRcKAh",
+      "owner": {
+        "id": 1146316,
+        "username": "kwinten",
+        "email": "kwinten@thrustlab.io",
+        "name": "Kwinten De Backer",
+        "profilePicture": "https://lh3.googleusercontent.com/a/ACg8ocIrPe9xsV1Y-aPnn5pk_K67hMwNyhyBuQ7r0hRBBXzCIv1jmQ=s96-c",
+        "fullName": "Kwinten De Backer"
+      },
+      "fields": [
+        {
+          "id": "f_0ta00h63nsTm22cqfYv",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Name",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:42.606Z",
+          "updatedAt": "2026-02-05T18:24:42.606Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "text"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.name"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".name"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h6aDCfSUoCHZwi",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Description",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:42.919Z",
+          "updatedAt": "2026-02-05T18:24:42.919Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "text"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.description"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".description"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h6xujnCfofComw",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "source",
+          "name": "Find local businesses using Google Maps",
+          "supportedFilterOperators": [
+            {
+              "operator": "SELECT_SOURCE",
+              "needsValue": true
+            },
+            {
+              "operator": "SELECT_NOT_SOURCE",
+              "needsValue": true
+            }
+          ],
+          "isSortable": false,
+          "createdAt": "2026-02-05T18:24:42.466Z",
+          "updatedAt": "2026-02-05T18:24:42.466Z",
+          "isLocked": false,
+          "typeSettings": {
+            "sourceIds": [
+              "s_0ta00h6FpRuFZKoCQiW"
+            ],
+            "canCreateRecords": true
+          }
+        },
+        {
+          "id": "f_0ta00h6YkYDvimUfEfF",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Google Maps URL",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:42.733Z",
+          "updatedAt": "2026-02-05T18:24:42.733Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "url"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.googleMapsPlaceLink"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".googleMapsPlaceLink"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h7E3ZKrj3a6qis",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Address",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:43.282Z",
+          "updatedAt": "2026-02-05T18:24:43.282Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "text"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.address"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".address"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h7q3b9Y5rywVZp",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Phone",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:43.166Z",
+          "updatedAt": "2026-02-05T18:24:43.166Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "text"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.phone"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".phone"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h7RXkpguSHCw6Z",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Website",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_CONTAIN_ANY",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:43.043Z",
+          "updatedAt": "2026-02-05T18:24:43.043Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "url"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.website"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".website"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h7Sd9vRiqZpvbY",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Rating",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:43.395Z",
+          "updatedAt": "2026-02-05T18:24:43.395Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "number"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.rating"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".rating"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_0ta00h7wee3Mfo3MuDw",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "formula",
+          "name": "Reviews Count",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:43.525Z",
+          "updatedAt": "2026-02-05T18:24:43.525Z",
+          "isLocked": false,
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "number"
+            },
+            "formulaType": "text",
+            "formulaText": "{{f_0ta00h6xujnCfofComw}}.reviews.count"
+          },
+          "isExtractedField": true,
+          "extractedField": {
+            "fieldIdExtractedFrom": "f_0ta00h6xujnCfofComw",
+            "extractedKeyPath": ".reviews.count"
+          },
+          "inputFieldIds": [
+            "f_0ta00h6xujnCfofComw"
+          ]
+        },
+        {
+          "id": "f_created_at",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "date",
+          "name": "Created At",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:41.790Z",
+          "updatedAt": "2026-02-05T18:24:41.790Z",
+          "isLocked": false,
+          "lockSettings": {
+            "lockDelete": true,
+            "lockUpdateCells": true,
+            "lockUpdateSettings": true
+          },
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "date"
+            }
+          },
+          "isExtractedField": false,
+          "extractedField": null
+        },
+        {
+          "id": "f_updated_at",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "type": "date",
+          "name": "Updated At",
+          "supportedFilterOperators": [
+            {
+              "operator": "EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "NOT_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "GREATER_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN",
+              "needsValue": true
+            },
+            {
+              "operator": "LESS_THAN_OR_EQUAL",
+              "needsValue": true
+            },
+            {
+              "operator": "EMPTY",
+              "needsValue": false
+            },
+            {
+              "operator": "NOT_EMPTY",
+              "needsValue": false
+            }
+          ],
+          "isSortable": true,
+          "createdAt": "2026-02-05T18:24:41.897Z",
+          "updatedAt": "2026-02-05T18:24:41.897Z",
+          "isLocked": false,
+          "lockSettings": {
+            "lockDelete": true,
+            "lockUpdateCells": true,
+            "lockUpdateSettings": true
+          },
+          "typeSettings": {
+            "dataTypeSettings": {
+              "type": "date"
+            }
+          },
+          "isExtractedField": false,
+          "extractedField": null
+        }
+      ],
+      "views": [
+        {
+          "id": "gv_0ta00h7JQAKSFsEHMiq",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "name": "Fully enriched rows",
+          "description": null,
+          "order": "w",
+          "fields": {
+            "f_created_at": {
+              "order": "2",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_updated_at": {
+              "order": "5",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_0ta00h63nsTm22cqfYv": {
+              "order": "b",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6YkYDvimUfEfF": {
+              "order": "e",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6aDCfSUoCHZwi": {
+              "order": "h",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6xujnCfofComw": {
+              "order": "8",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7E3ZKrj3a6qis": {
+              "order": "q",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7RXkpguSHCw6Z": {
+              "order": "k",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7Sd9vRiqZpvbY": {
+              "order": "t",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7q3b9Y5rywVZp": {
+              "order": "n",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7wee3Mfo3MuDw": {
+              "order": "w",
+              "width": 200,
+              "isVisible": true
+            }
+          },
+          "sort": null,
+          "filter": null,
+          "limit": null,
+          "offset": null,
+          "createdAt": "2026-02-05T18:24:43.826Z",
+          "updatedAt": "2026-02-05T18:24:43.826Z",
+          "deletedAt": null,
+          "typeSettings": {
+            "isPreconfigured": true,
+            "preconfiguredType": "fully-enriched-rows"
+          }
+        },
+        {
+          "id": "gv_0ta00h7qcmbAVAHpdXS",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "name": "Non enrichment columns",
+          "description": null,
+          "order": "u",
+          "fields": {
+            "f_created_at": {
+              "order": "2",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_updated_at": {
+              "order": "5",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_0ta00h63nsTm22cqfYv": {
+              "order": "b",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6YkYDvimUfEfF": {
+              "order": "e",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6aDCfSUoCHZwi": {
+              "order": "h",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6xujnCfofComw": {
+              "order": "8",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7E3ZKrj3a6qis": {
+              "order": "q",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7RXkpguSHCw6Z": {
+              "order": "k",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7Sd9vRiqZpvbY": {
+              "order": "t",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7q3b9Y5rywVZp": {
+              "order": "n",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7wee3Mfo3MuDw": {
+              "order": "w",
+              "width": 200,
+              "isVisible": true
+            }
+          },
+          "sort": null,
+          "filter": null,
+          "limit": null,
+          "offset": null,
+          "createdAt": "2026-02-05T18:24:43.797Z",
+          "updatedAt": "2026-02-05T18:24:43.797Z",
+          "deletedAt": null,
+          "typeSettings": {
+            "isPreconfigured": true,
+            "preconfiguredType": "non-enrichment-columns"
+          }
+        },
+        {
+          "id": "gv_0ta00h7miBaRttcgUqy",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "name": "Errored rows",
+          "description": null,
+          "order": "q",
+          "fields": {
+            "f_created_at": {
+              "order": "2",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_updated_at": {
+              "order": "5",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_0ta00h63nsTm22cqfYv": {
+              "order": "b",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6YkYDvimUfEfF": {
+              "order": "e",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6aDCfSUoCHZwi": {
+              "order": "h",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6xujnCfofComw": {
+              "order": "8",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7E3ZKrj3a6qis": {
+              "order": "q",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7RXkpguSHCw6Z": {
+              "order": "k",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7Sd9vRiqZpvbY": {
+              "order": "t",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7q3b9Y5rywVZp": {
+              "order": "n",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7wee3Mfo3MuDw": {
+              "order": "w",
+              "width": 200,
+              "isVisible": true
+            }
+          },
+          "sort": null,
+          "filter": {
+            "items": [
+              {
+                "type": "EMPTY",
+                "fieldId": "f_created_at"
+              }
+            ],
+            "combinationMode": "OR"
+          },
+          "limit": null,
+          "offset": null,
+          "createdAt": "2026-02-05T18:24:43.726Z",
+          "updatedAt": "2026-02-05T18:24:43.768Z",
+          "deletedAt": null,
+          "typeSettings": {
+            "isPreconfigured": true,
+            "preconfiguredType": "errored-rows"
+          }
+        },
+        {
+          "id": "gv_0ta00h7M2m5EXVRcKAh",
+          "tableId": "t_0ta00h54TAPZKcPnWoZ",
+          "name": "Default view",
+          "description": null,
+          "order": "h",
+          "fields": {
+            "f_created_at": {
+              "order": "2",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_updated_at": {
+              "order": "5",
+              "width": 200,
+              "isVisible": false
+            },
+            "f_0ta00h63nsTm22cqfYv": {
+              "order": "b",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6YkYDvimUfEfF": {
+              "order": "e",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6aDCfSUoCHZwi": {
+              "order": "h",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h6xujnCfofComw": {
+              "order": "1",
+              "width": 200,
+              "isPinned": true,
+              "isVisible": true
+            },
+            "f_0ta00h7E3ZKrj3a6qis": {
+              "order": "q",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7RXkpguSHCw6Z": {
+              "order": "k",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7Sd9vRiqZpvbY": {
+              "order": "t",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7q3b9Y5rywVZp": {
+              "order": "n",
+              "width": 200,
+              "isVisible": true
+            },
+            "f_0ta00h7wee3Mfo3MuDw": {
+              "order": "w",
+              "width": 200,
+              "isVisible": true
+            }
+          },
+          "sort": null,
+          "filter": null,
+          "limit": null,
+          "offset": null,
+          "createdAt": "2026-02-05T18:24:43.689Z",
+          "updatedAt": "2026-02-05T18:24:43.877Z",
+          "deletedAt": null,
+          "typeSettings": {}
+        }
+      ]
+    },
+    "extraData": {
+      "source": {
+        "id": "s_0ta00h6FpRuFZKoCQiW",
+        "workspaceId": 757984,
+        "name": "⚡️ Find local businesses using Google Maps",
+        "createdAt": "2026-02-05T18:24:42.072Z",
+        "updatedAt": "2026-02-05T18:24:42.072Z",
+        "deletedAt": null,
+        "type": "v3-action",
+        "typeSettings": {
+          "name": "Find local businesses using Google Maps",
+          "idPath": "id",
+          "inputs": {
+            "map": "{\"latitude\":51.04945049862644,\"longitude\":3.725325757953186,\"proximity\":13}",
+            "usePreferredGoogleApi": "true",
+            "dynamicFields|searchType": "\"businessTypes\"",
+            "dynamicFields|businessTypes": "[\"art_gallery\"]",
+            "dynamicFields|searchType_displayName": "\"Business types\""
+          },
+          "stages": [
+            "Inputs"
+          ],
+          "isAdmin": false,
+          "iconType": "GoogleMapsSource",
+          "actionKey": "google-review-source-v3",
+          "tableType": "company",
+          "categories": [
+            "FIND"
+          ],
+          "description": "Pull local businesses from a specific location on Google Maps",
+          "recordsPath": "results",
+          "costEstimate": 1,
+          "scheduleConfig": {
+            "runSettings": "once"
+          },
+          "actionPackageId": "3282a1c7-6bb0-497e-a34b-32268e104e55",
+          "dedupeOnUniqueIds": true,
+          "defaultPreviewText": "Business Found",
+          "sourceTableOutputs": {
+            "spreadsheet": {
+              "newFieldsNameToPaths": {
+                "Name": {
+                  "path": [
+                    "name"
+                  ],
+                  "type": "text"
+                },
+                "Phone": {
+                  "path": [
+                    "phone"
+                  ],
+                  "type": "text"
+                },
+                "Rating": {
+                  "path": [
+                    "rating"
+                  ],
+                  "type": "number"
+                },
+                "Address": {
+                  "path": [
+                    "address"
+                  ],
+                  "type": "text"
+                },
+                "Website": {
+                  "path": [
+                    "website"
+                  ],
+                  "type": "url"
+                },
+                "Description": {
+                  "path": [
+                    "description"
+                  ],
+                  "type": "text"
+                },
+                "Reviews Count": {
+                  "path": [
+                    "reviews.count"
+                  ],
+                  "type": "number"
+                },
+                "Google Maps URL": {
+                  "path": [
+                    "googleMapsPlaceLink"
+                  ],
+                  "type": "url"
+                }
+              }
+            }
+          },
+          "customSignalSettings": {
+            "rank": 3,
+            "title": "Monitor local businesses using Google Maps",
+            "categories": [
+              "SOURCING"
+            ],
+            "description": "Monitor local businesses from a specific location on Google Maps"
+          },
+          "createdFromWorkbookId": "wb_0t9zx9hiFdeR4VDUCHj",
+          "isPaginationAvailable": true
+        },
+        "state": {
+          "token": "ast_0ta00h6wc8AjCSHPtC5",
+          "action": {
+            "status": "RUNNING",
+            "logInfo": null,
+            "textPreview": null,
+            "imagePreview": null
+          },
+          "lambdaInfo": {
+            "isFirstRun": true,
+            "numConsecutiveErrors": 0
+          },
+          "triggeredAt": 1770315882164,
+          "numSourceRecords": 0
+        },
+        "recordSourceUpdatedAt": "2026-02-05T18:24:42.170Z"
+      },
+      "initialRecordIds": [],
+      "initialRecords": [],
+      "newlyCreatedWorkbook": {
+        "id": "wb_0t9zx9hiFdeR4VDUCHj",
+        "workspaceId": 757984,
+        "name": "Find Companies",
+        "description": null,
+        "parentFolderId": null,
+        "settings": {},
+        "annotations": {},
+        "defaultAccess": "all",
+        "ownerId": "1146316",
+        "createdAt": "2026-02-05T17:15:17.960Z",
+        "updatedAt": "2026-02-05T17:15:17.960Z",
+        "deletedAt": null,
+        "isHidden": false,
+        "isHiddenFromNavigation": false,
+        "creditLimit": null,
+        "abilities": {
+          "canDelete": true,
+          "canUpdate": true,
+          "canManageAccess": true
+        },
+        "owner": {
+          "id": 1146316,
+          "username": "kwinten",
+          "email": "kwinten@thrustlab.io",
+          "name": "Kwinten De Backer",
+          "profilePicture": "https://lh3.googleusercontent.com/a/ACg8ocIrPe9xsV1Y-aPnn5pk_K67hMwNyhyBuQ7r0hRBBXzCIv1jmQ=s96-c",
+          "fullName": "Kwinten De Backer"
+        },
+        "tags": []
+      }
+    }
+  }
+}

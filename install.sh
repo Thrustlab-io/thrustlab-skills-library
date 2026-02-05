@@ -99,6 +99,47 @@ else
     echo -e "${YELLOW}!${NC} Slack MCP binary not found (run from cloned repo to install)"
 fi
 
+# Install Premium Inboxes MCP
+echo ""
+echo "Installing Premium Inboxes MCP..."
+
+if [ -d ".git" ] && [ -d "premiuminboxes-mcp" ]; then
+    # Build if needed
+    if [ ! -f "premiuminboxes-mcp/premiuminboxes-mcp" ]; then
+        echo "Building Premium Inboxes MCP..."
+        if command -v go &> /dev/null; then
+            (cd premiuminboxes-mcp && go build -o premiuminboxes-mcp)
+            echo -e "${GREEN}✓${NC} Premium Inboxes MCP built successfully"
+        else
+            echo -e "${RED}✗${NC} Go is required to build Premium Inboxes MCP"
+            echo "Please install Go from https://golang.org/dl/"
+        fi
+    fi
+
+    if [ -f "premiuminboxes-mcp/premiuminboxes-mcp" ]; then
+        # Copy binary to global location
+        cp premiuminboxes-mcp/premiuminboxes-mcp "$CLAUDE_BIN_DIR/"
+        chmod +x "$CLAUDE_BIN_DIR/premiuminboxes-mcp"
+        echo -e "${GREEN}✓${NC} Premium Inboxes MCP binary installed to $CLAUDE_BIN_DIR"
+
+        # Register with Claude (requires PREMIUMINBOXES_API_TOKEN to be set)
+        if command -v claude &> /dev/null; then
+            if claude mcp get premiuminboxes &> /dev/null; then
+                echo -e "${YELLOW}!${NC} Premium Inboxes MCP already registered with Claude"
+            else
+                if [ -n "$PREMIUMINBOXES_API_TOKEN" ]; then
+                    claude mcp add -e PREMIUMINBOXES_API_TOKEN="$PREMIUMINBOXES_API_TOKEN" -s user premiuminboxes -- "$CLAUDE_BIN_DIR/premiuminboxes-mcp"
+                    echo -e "${GREEN}✓${NC} Premium Inboxes MCP registered with Claude"
+                else
+                    echo -e "${YELLOW}!${NC} Set PREMIUMINBOXES_API_TOKEN and run: claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"\$PREMIUMINBOXES_API_TOKEN\" -s user premiuminboxes -- $CLAUDE_BIN_DIR/premiuminboxes-mcp"
+                fi
+            fi
+        fi
+    fi
+else
+    echo -e "${YELLOW}!${NC} Premium Inboxes MCP not found (run from cloned repo to install)"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════════════════════╗"
 echo "║   Installation Complete!                               ║"
@@ -118,8 +159,11 @@ echo "MCP Setup:"
 echo "  • Slack MCP: Run with SLACK_BOT_TOKEN set, or manually add:"
 echo "    claude mcp add -e SLACK_BOT_TOKEN=\"your-token\" -s user slack -- ~/.claude/bin/slack-mcp"
 echo ""
+echo "  • Premium Inboxes MCP: Run with PREMIUMINBOXES_API_TOKEN set, or manually add:"
+echo "    claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"your-token\" -s user premiuminboxes -- ~/.claude/bin/premiuminboxes-mcp"
+echo ""
 echo "Some skills may require additional setup:"
-echo "  • External service accounts (Clay, Notion, Slack)"
+echo "  • External service accounts (Clay, Notion, Slack, Premium Inboxes)"
 echo ""
 echo "See README.md and individual SKILL.md files for detailed requirements"
 echo ""
