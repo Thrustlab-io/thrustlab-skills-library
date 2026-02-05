@@ -9,11 +9,12 @@ Put your output as a single md file in <current_working_directory>/strategies/CL
 
 1. **Always start with web_fetch on client website** for primary intelligence
 2. **Follow with 3-5 targeted web_search queries** using:
+   
     - `"[company]" + industry terms + geography`
     - `"[competitor names]" + regulatory/compliance terms`
     - `"[market segment]" + local market qualifiers`
-3. **Never use generic searches** - always include industry-specific terminology
-4. **Document everything** with [Source: URL] citations
+4. **Never use generic searches** - always include industry-specific terminology
+5. **Document everything** with [Source: URL] citations
 
 ### **Strategy Architecture Requirements**
 
