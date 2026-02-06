@@ -57,10 +57,10 @@ Search Commands:
    - workbook_id (optional): Uses current workbook if not specified
    - industries (required): Comma-separated list (e.g., 'Accounting,Consulting')
    - countries (optional): Comma-separated country names
-   - company_sizes (optional): Comma-separated sizes (1,2-10,11-50,50,200,500,1000,5000,10000)
+   - company_sizes (optional): Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)
    - keywords (optional): Comma-separated description keywords
    - limit (optional): Maximum results (default: 25000)
-   - annual_revenues (optional): Comma-separated revenue ranges (e.g., '$10M-$50M,$50M-$100M')
+   - annual_revenues (optional): Comma-separated revenue ranges (e.g., '10M-50M,50M-100M')
    - minimum_member_count (optional): Minimum number of employees (e.g., 100)
    - maximum_member_count (optional): Maximum number of employees (e.g., 200)
 

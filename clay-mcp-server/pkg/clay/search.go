@@ -3,11 +3,56 @@ package clay
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
+
+var validSizes = map[string]bool{
+	"1": true, "2": true, "10": true, "50": true, "200": true,
+	"500": true, "1000": true, "5000": true, "10000": true,
+}
+
+var validRevenues = map[string]bool{
+	"Less than 1M": true, "1M-5M": true, "5M-10M": true,
+	"10M-50M": true, "50M-100M": true, "100M-250M": true,
+	"250M-500M": true, "500M-1B": true, "1B-10B": true, "10B+": true,
+}
+
+func validateSizes(sizes []string) error {
+	for _, s := range sizes {
+		if !validSizes[s] {
+			valid := make([]string, 0, len(validSizes))
+			for k := range validSizes {
+				valid = append(valid, k)
+			}
+			return fmt.Errorf("invalid company size %q, valid values are: %s", s, strings.Join(valid, ", "))
+		}
+	}
+	return nil
+}
+
+func validateRevenues(revenues []string) error {
+	for _, r := range revenues {
+		if !validRevenues[r] {
+			valid := make([]string, 0, len(validRevenues))
+			for k := range validRevenues {
+				valid = append(valid, k)
+			}
+			return fmt.Errorf("invalid annual revenue %q, valid values are: %s", r, strings.Join(valid, ", "))
+		}
+	}
+	return nil
+}
 
 func (c *Client) SearchCompaniesByIndustry(params SearchCompaniesParams) (*SearchCompaniesResult, error) {
 	if params.WorkbookID == "" {
 		return nil, fmt.Errorf("no workbook specified")
+	}
+
+	if err := validateSizes(params.CompanySizes); err != nil {
+		return nil, err
+	}
+	if err := validateRevenues(params.AnnualRevenues); err != nil {
+		return nil, err
 	}
 
 	countries := ensureSlice(params.Countries)
