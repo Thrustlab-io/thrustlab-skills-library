@@ -23,6 +23,7 @@ type CreateWorkbookResult struct {
 
 type SearchCompaniesParams struct {
 	WorkbookID         string
+	Industries         []string
 	Keywords           []string
 	Countries          []string
 	CompanySizes       []string

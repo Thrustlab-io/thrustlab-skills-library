@@ -70,7 +70,8 @@ func cmdCreateWorkbook(client *clay.Client, args []string) {
 func cmdSearchCompanies(client *clay.Client, args []string) {
 	fs := flag.NewFlagSet("search-companies", flag.ExitOnError)
 	workbookID := fs.String("workbook-id", "", "Workbook ID (required)")
-	keywords := fs.String("keywords", "", "Comma-separated description keywords (required)")
+	industries := fs.String("industries", "", "Comma-separated LinkedIn industries (e.g., Accounting,Computer Software)")
+	keywords := fs.String("keywords", "", "Comma-separated description keywords")
 	countries := fs.String("countries", "", "Comma-separated countries")
 	sizes := fs.String("sizes", "", "Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)")
 	revenues := fs.String("revenues", "", "Comma-separated revenue ranges (e.g., 1M-5M,10M-25M)")
@@ -78,15 +79,20 @@ func cmdSearchCompanies(client *clay.Client, args []string) {
 	maxMembers := fs.Int("max-linkedin-members", 0, "Maximum number of LinkedIn members")
 	fs.Parse(args)
 
-	if *workbookID == "" || *keywords == "" {
-		fmt.Fprintln(os.Stderr, "Error: -workbook-id and -keywords are required")
+	if *workbookID == "" || (*keywords == "" && *industries == "") {
+		fmt.Fprintln(os.Stderr, "Error: -workbook-id is required, and at least one of -industries or -keywords must be provided")
 		fs.Usage()
 		os.Exit(1)
 	}
 
 	params := clay.SearchCompaniesParams{
 		WorkbookID: *workbookID,
-		Keywords:   splitAndTrim(*keywords),
+	}
+	if *industries != "" {
+		params.Industries = splitAndTrim(*industries)
+	}
+	if *keywords != "" {
+		params.Keywords = splitAndTrim(*keywords)
 	}
 	if *countries != "" {
 		params.Countries = splitAndTrim(*countries)

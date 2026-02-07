@@ -6,6 +6,62 @@ import (
 	"strings"
 )
 
+var validIndustries = map[string]bool{
+	"Accounting": true, "Airlines/Aviation": true, "Alternative Dispute Resolution": true,
+	"Alternative Medicine": true, "Animation": true, "Apparel & Fashion": true,
+	"Architecture & Planning": true, "Arts & Crafts": true, "Automotive": true,
+	"Aviation & Aerospace": true, "Banking": true, "Biotechnology": true,
+	"Broadcast Media": true, "Building Materials": true, "Business Supplies & Equipment": true,
+	"Capital Markets": true, "Chemicals": true, "Civic & Social Organization": true,
+	"Civil Engineering": true, "Commercial Real Estate": true, "Computer & Network Security": true,
+	"Computer Games": true, "Computer Hardware": true, "Computer Networking": true,
+	"Computer Software": true, "Construction": true, "Consumer Electronics": true,
+	"Consumer Goods": true, "Consumer Services": true, "Cosmetics": true,
+	"Dairy": true, "Defense & Space": true, "Design": true, "E-learning": true,
+	"Education Management": true, "Electrical/Electronic Manufacturing": true,
+	"Entertainment": true, "Environmental Services": true, "Events Services": true,
+	"Executive Office": true, "Facilities Services": true, "Farming": true,
+	"Financial Services": true, "Fine Art": true, "Fishery": true,
+	"Food & Beverages": true, "Food Production": true, "Fundraising": true,
+	"Furniture": true, "Gambling & Casinos": true, "Glass, Ceramics & Concrete": true,
+	"Government Administration": true, "Government Relations": true, "Graphic Design": true,
+	"Health, Wellness & Fitness": true, "Higher Education": true,
+	"Hospital & Health Care": true, "Hospitality": true, "Human Resources": true,
+	"Import & Export": true, "Individual & Family Services": true,
+	"Industrial Automation": true, "Information Services": true,
+	"Information Technology & Services": true, "Insurance": true,
+	"International Affairs": true, "International Trade & Development": true,
+	"Internet": true, "Investment Banking": true, "Investment Management": true,
+	"Judiciary": true, "Law Enforcement": true, "Law Practice": true,
+	"Legal Services": true, "Legislative Office": true, "Leisure, Travel & Tourism": true,
+	"Libraries": true, "Linguistics": true, "Logistics & Supply Chain": true,
+	"Luxury Goods & Jewelry": true, "Machinery": true, "Management Consulting": true,
+	"Maritime": true, "Market Research": true, "Marketing & Advertising": true,
+	"Mechanical or Industrial Engineering": true, "Media Production": true,
+	"Medical Device": true, "Medical Practice": true, "Mental Health Care": true,
+	"Military": true, "Mining & Metals": true, "Mobile Games": true,
+	"Motion Pictures & Film": true, "Museums & Institutions": true, "Music": true,
+	"Nanotechnology": true, "Newspapers": true, "Non-profit Organization Management": true,
+	"Oil & Energy": true, "Online Media": true, "Outsourcing/Offshoring": true,
+	"Package/Freight Delivery": true, "Packaging & Containers": true,
+	"Paper & Forest Products": true, "Performing Arts": true, "Pharmaceuticals": true,
+	"Philanthropy": true, "Photography": true, "Plastics": true,
+	"Political Organization": true, "Primary/Secondary Education": true, "Printing": true,
+	"Professional Training & Coaching": true, "Program Development": true,
+	"Public Policy": true, "Public Relations & Communications": true,
+	"Public Safety": true, "Publishing": true, "Railroad Manufacture": true,
+	"Ranching": true, "Real Estate": true, "Recreational Facilities & Services": true,
+	"Religious Institutions": true, "Renewables & Environment": true, "Research": true,
+	"Restaurants": true, "Retail": true, "Security & Investigations": true,
+	"Semiconductors": true, "Shipbuilding": true, "Sporting Goods": true,
+	"Sports": true, "Staffing & Recruiting": true, "Supermarkets": true,
+	"Telecommunications": true, "Textiles": true, "Think Tanks": true,
+	"Tobacco": true, "Translation & Localization": true,
+	"Transportation/Trucking/Railroad": true, "Utilities": true,
+	"Venture Capital & Private Equity": true, "Veterinary": true, "Warehousing": true,
+	"Wholesale": true, "Wine & Spirits": true, "Wireless": true, "Writing & Editing": true,
+}
+
 var validSizes = map[string]bool{
 	"1": true, "2": true, "10": true, "50": true, "200": true,
 	"500": true, "1000": true, "5000": true, "10000": true,
@@ -16,6 +72,15 @@ var validRevenues = map[string]bool{
 	"10M-25M": true, "25M-75M": true, "75M-200M": true,
 	"200M-500M": true, "500M-1B": true, "1B-10B": true,
 	"10B-100B": true, "100B-1T": true,
+}
+
+func validateIndustries(industries []string) error {
+	for _, i := range industries {
+		if !validIndustries[i] {
+			return fmt.Errorf("invalid industry %q, see clay://industries resource for valid values", i)
+		}
+	}
+	return nil
 }
 
 func validateSizes(sizes []string) error {
@@ -49,6 +114,9 @@ func (c *Client) SearchCompanies(params SearchCompaniesParams) (*SearchCompanies
 		return nil, fmt.Errorf("no workbook specified")
 	}
 
+	if err := validateIndustries(params.Industries); err != nil {
+		return nil, err
+	}
 	if err := validateSizes(params.CompanySizes); err != nil {
 		return nil, err
 	}
@@ -56,6 +124,7 @@ func (c *Client) SearchCompanies(params SearchCompaniesParams) (*SearchCompanies
 		return nil, err
 	}
 
+	industries := ensureSlice(params.Industries)
 	countries := ensureSlice(params.Countries)
 	sizes := ensureSlice(params.CompanySizes)
 	keywords := ensureSlice(params.Keywords)
@@ -118,7 +187,7 @@ func (c *Client) SearchCompanies(params SearchCompaniesParams) (*SearchCompanies
 					"runSettings": "once",
 				},
 				"inputs": map[string]any{
-					"industries":                        []string{},
+					"industries":                        industries,
 					"country_names":                     countries,
 					"country_names_exclude":              []string{},
 					"sizes":                             sizes,

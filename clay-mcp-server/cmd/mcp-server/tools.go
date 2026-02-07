@@ -47,8 +47,10 @@ func registerTools(s *server.MCPServer) {
 		mcp.WithString("workbook_id",
 			mcp.Description("The workbook ID to create the table in (uses current workbook if not specified)"),
 		),
+		mcp.WithString("industries",
+			mcp.Description("Comma-separated LinkedIn industries to filter by (e.g., 'Accounting,Computer Software'). See clay://industries for valid values."),
+		),
 		mcp.WithString("keywords",
-			mcp.Required(),
 			mcp.Description("Comma-separated description keywords to filter by (e.g., 'accounting,boekhouding,SaaS')"),
 		),
 		mcp.WithString("countries",
@@ -231,9 +233,14 @@ func searchCompaniesHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.
 
 	params := clay.SearchCompaniesParams{
 		WorkbookID: workbookID,
-		Keywords:   splitAndTrim(args["keywords"].(string)),
 	}
 
+	if v, ok := args["industries"].(string); ok && v != "" {
+		params.Industries = splitAndTrim(v)
+	}
+	if v, ok := args["keywords"].(string); ok && v != "" {
+		params.Keywords = splitAndTrim(v)
+	}
 	if v, ok := args["countries"].(string); ok && v != "" {
 		params.Countries = splitAndTrim(v)
 	}

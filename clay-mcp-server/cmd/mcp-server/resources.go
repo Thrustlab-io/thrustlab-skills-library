@@ -63,7 +63,8 @@ Search Commands:
    Search for companies by industry using Clay's Mixrank/LinkedIn data
    Parameters:
    - workbook_id (optional): Uses current workbook if not specified
-   - keywords (required): Comma-separated description keywords (e.g., 'accounting,boekhouding,SaaS')
+   - industries (optional): Comma-separated LinkedIn industries (see clay://industries for valid values)
+   - keywords (optional): Comma-separated description keywords (e.g., 'accounting,boekhouding,SaaS')
    - countries (optional): Comma-separated country names
    - company_sizes (optional): Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)
    - limit (optional): Maximum results (default: 25000)
