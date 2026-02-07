@@ -283,22 +283,29 @@ Add to the main hub page:
 - [ ] Schedule regular check-ins and review cycles
 ```
 
+## Team Space
+
+**All pages must be created under the QuantaScale team space** (`https://www.notion.so/quantascale`).
+
+Before creating any pages, use `notion-search` to find the QuantaScale team space and use it as the parent for the main hub page. All sub-pages are then created under the main hub page as usual.
+
 ## Execution Steps
 
-1. **Locate strategy file** - Find the GTM strategy markdown file at `strategies/[CLIENT_NAME].md` or use the provided path
-2. **Extract client information** - Parse the strategy file to extract:
+1. **Find the QuantaScale team space** - Use `notion-search` to search for "QuantaScale" and get its ID to use as parent
+2. **Locate strategy file** - Find the GTM strategy markdown file at `strategies/[CLIENT_NAME].md` or use the provided path
+3. **Extract client information** - Parse the strategy file to extract:
    - Client name
    - Client website
    - Product/service description
    - Value proposition
    - Any other relevant details from the "Company Snapshot" section
-3. **Create all sub-pages** - Build each of the 14 core documentation pages with the specified structure and content
-4. **Populate GTM Strategy page** - Copy the entire strategy markdown content to the "GTM Strategy - [Client Name]" page
-5. **Create main hub page** - Set up the primary client hub page with braindump sections and getting started checklist
-6. **Link documentation hub** - Add links to all created pages in the Documentation Hub collapsible section on the main page
-7. **Add client-specific details** - Replace all placeholders with extracted client information
-8. **Capture main hub URL** - Save the URL from the main hub page creation response
-9. **Confirm completion** - Provide the user with a formatted message including:
+4. **Create all sub-pages** - Build each of the 14 core documentation pages with the specified structure and content
+5. **Populate GTM Strategy page** - Copy the entire strategy markdown content to the "GTM Strategy - [Client Name]" page
+6. **Create main hub page** - Set up the primary client hub page under the QuantaScale team space, with braindump sections and getting started checklist
+7. **Link documentation hub** - Add links to all created pages in the Documentation Hub collapsible section on the main page
+8. **Add client-specific details** - Replace all placeholders with extracted client information
+9. **Capture main hub URL** - Save the URL from the main hub page creation response
+10. **Confirm completion** - Provide the user with a formatted message including:
    - **Main Notion hub URL** (clickable link from the creation response)
    - Confirmation that strategy was copied from `strategies/[CLIENT_NAME].md`
    - Summary of all 14 pages created
