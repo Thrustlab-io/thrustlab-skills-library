@@ -106,20 +106,10 @@ Content:
 Icon: 🏗️
 Content:
 - # Phase 1: Infrastructure Setup
-- ## Email Infrastructure
-  - [ ] Domain setup and DNS configuration
-  - [ ] SPF, DKIM, DMARC authentication
-  - [ ] Mailbox creation and warming
-  - [ ] Sending limits configuration
-- ## Tool Configuration
-  - [ ] Clay workspace setup
-  - [ ] CRM integration
-  - [ ] Outreach tool connection
-  - [ ] Webhook configuration
-- ## Testing & Validation
-  - [ ] Deliverability tests
-  - [ ] Integration testing
-  - [ ] End-to-end workflow validation
+- ## Tool Signups
+  Please create accounts on the following platforms using our referral links:
+  - **Clay** (prospect research & enrichment): https://clay.com?via=d19428
+  - **Lemlist** (outreach & email sequences): https://get.lemlist.com/my6s45pyuhbv
 
 #### E. **Phase 2: Market Research - [Client Name]**
 Icon: 🔍
@@ -285,13 +275,19 @@ Add to the main hub page:
 
 ## Team Space
 
-**All pages must be created under the QuantaScale team space** (`https://www.notion.so/quantascale`).
+**All pages must be created under the Thrustlab teamspace** (ID: `263fbebd-8160-8158-9f29-004264b9b727`).
 
-Before creating any pages, use `notion-search` to find the QuantaScale team space and use it as the parent for the main hub page. All sub-pages are then created under the main hub page as usual.
+The Notion `notion-create-pages` tool does not support creating pages directly in a teamspace. To place pages in the Thrustlab teamspace:
+
+1. First use `notion-search` with `teamspace_id: "263fbebd-8160-8158-9f29-004264b9b727"` to find an existing top-level page in the teamspace (e.g., search for "Clients" or similar).
+2. If a suitable parent page exists, use its `page_id` as the parent when creating the main hub page.
+3. If no suitable parent page exists, create the main hub page without a parent, then inform the user they need to manually drag it into the Thrustlab teamspace in Notion.
+
+All sub-pages are then created under the main hub page as usual.
 
 ## Execution Steps
 
-1. **Find the QuantaScale team space** - Use `notion-search` to search for "QuantaScale" and get its ID to use as parent
+1. **Find parent page in Thrustlab teamspace** - Use `notion-search` with `teamspace_id: "263fbebd-8160-8158-9f29-004264b9b727"` to find a suitable parent page. If none found, proceed without parent and notify user.
 2. **Locate strategy file** - Find the GTM strategy markdown file at `strategies/[CLIENT_NAME].md` or use the provided path
 3. **Extract client information** - Parse the strategy file to extract:
    - Client name
@@ -301,7 +297,7 @@ Before creating any pages, use `notion-search` to find the QuantaScale team spac
    - Any other relevant details from the "Company Snapshot" section
 4. **Create all sub-pages** - Build each of the 14 core documentation pages with the specified structure and content
 5. **Populate GTM Strategy page** - Copy the entire strategy markdown content to the "GTM Strategy - [Client Name]" page
-6. **Create main hub page** - Set up the primary client hub page under the QuantaScale team space, with braindump sections and getting started checklist
+6. **Create main hub page** - Set up the primary client hub page under the parent page found in the Thrustlab teamspace, with braindump sections and getting started checklist
 7. **Link documentation hub** - Add links to all created pages in the Documentation Hub collapsible section on the main page
 8. **Add client-specific details** - Replace all placeholders with extracted client information
 9. **Capture main hub URL** - Save the URL from the main hub page creation response
