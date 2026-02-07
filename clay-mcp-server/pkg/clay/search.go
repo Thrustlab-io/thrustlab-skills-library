@@ -12,9 +12,10 @@ var validSizes = map[string]bool{
 }
 
 var validRevenues = map[string]bool{
-	"Less than 1M": true, "1M-5M": true, "5M-10M": true,
-	"10M-50M": true, "50M-100M": true, "100M-250M": true,
-	"250M-500M": true, "500M-1B": true, "1B-10B": true, "10B+": true,
+	"0-500K": true, "500K-1M": true, "1M-5M": true, "5M-10M": true,
+	"10M-25M": true, "25M-75M": true, "75M-200M": true,
+	"200M-500M": true, "500M-1B": true, "1B-10B": true,
+	"10B-100B": true, "100B-1T": true,
 }
 
 func validateSizes(sizes []string) error {

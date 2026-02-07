@@ -74,7 +74,7 @@ func cmdSearchCompanies(client *clay.Client, args []string) {
 	countries := fs.String("countries", "", "Comma-separated countries")
 	sizes := fs.String("sizes", "", "Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)")
 	keywords := fs.String("keywords", "", "Comma-separated keywords")
-	revenues := fs.String("revenues", "", "Comma-separated revenue ranges (e.g., 1M-5M,10M-50M)")
+	revenues := fs.String("revenues", "", "Comma-separated revenue ranges (e.g., 1M-5M,10M-25M)")
 	minMembers := fs.Int("min-members", 0, "Minimum number of employees")
 	maxMembers := fs.Int("max-members", 0, "Maximum number of employees")
 	fs.Parse(args)

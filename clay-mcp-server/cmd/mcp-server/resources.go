@@ -60,7 +60,7 @@ Search Commands:
    - company_sizes (optional): Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)
    - keywords (optional): Comma-separated description keywords
    - limit (optional): Maximum results (default: 25000)
-   - annual_revenues (optional): Comma-separated revenue ranges (e.g., '10M-50M,50M-100M')
+   - annual_revenues (optional): Comma-separated revenue ranges (e.g., '1M-5M,10M-25M')
    - minimum_member_count (optional): Minimum number of employees (e.g., 100)
    - maximum_member_count (optional): Maximum number of employees (e.g., 200)
 

@@ -64,7 +64,7 @@ func registerTools(s *server.MCPServer) {
 			mcp.Description("Maximum number of results (default: 25000)"),
 		),
 		mcp.WithString("annual_revenues",
-			mcp.Description("Comma-separated annual revenue ranges. Valid values: Less than 1M, 1M-5M, 5M-10M, 10M-50M, 50M-100M, 100M-250M, 250M-500M, 500M-1B, 1B-10B, 10B+"),
+			mcp.Description("Comma-separated annual revenue ranges. Valid values: 0-500K, 500K-1M, 1M-5M, 5M-10M, 10M-25M, 25M-75M, 75M-200M, 200M-500M, 500M-1B, 1B-10B, 10B-100B, 100B-1T"),
 		),
 		mcp.WithNumber("minimum_member_count",
 			mcp.Description("Minimum number of employees (e.g., 100)"),
