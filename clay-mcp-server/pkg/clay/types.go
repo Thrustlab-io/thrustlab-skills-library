@@ -23,13 +23,12 @@ type CreateWorkbookResult struct {
 
 type SearchCompaniesParams struct {
 	WorkbookID         string
-	Industries         []string
+	Keywords           []string
 	Countries          []string
 	CompanySizes       []string
-	Keywords           []string
 	AnnualRevenues     []string
-	MinimumMemberCount *int
-	MaximumMemberCount *int
+	MinLinkedInMembers *int
+	MaxLinkedInMembers *int
 	Limit              *int
 }
 

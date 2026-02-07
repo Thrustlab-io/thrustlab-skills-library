@@ -44,7 +44,7 @@ func validateRevenues(revenues []string) error {
 	return nil
 }
 
-func (c *Client) SearchCompaniesByIndustry(params SearchCompaniesParams) (*SearchCompaniesResult, error) {
+func (c *Client) SearchCompanies(params SearchCompaniesParams) (*SearchCompaniesResult, error) {
 	if params.WorkbookID == "" {
 		return nil, fmt.Errorf("no workbook specified")
 	}
@@ -62,11 +62,11 @@ func (c *Client) SearchCompaniesByIndustry(params SearchCompaniesParams) (*Searc
 	annualRevenues := ensureSlice(params.AnnualRevenues)
 
 	var minMember, maxMember interface{}
-	if params.MinimumMemberCount != nil {
-		minMember = *params.MinimumMemberCount
+	if params.MinLinkedInMembers != nil {
+		minMember = *params.MinLinkedInMembers
 	}
-	if params.MaximumMemberCount != nil {
-		maxMember = *params.MaximumMemberCount
+	if params.MaxLinkedInMembers != nil {
+		maxMember = *params.MaxLinkedInMembers
 	}
 
 	payload := map[string]any{
@@ -118,7 +118,7 @@ func (c *Client) SearchCompaniesByIndustry(params SearchCompaniesParams) (*Searc
 					"runSettings": "once",
 				},
 				"inputs": map[string]any{
-					"industries":                        params.Industries,
+					"industries":                        []string{},
 					"country_names":                     countries,
 					"country_names_exclude":              []string{},
 					"sizes":                             sizes,

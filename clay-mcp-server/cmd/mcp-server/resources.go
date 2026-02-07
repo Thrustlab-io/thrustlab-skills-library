@@ -23,6 +23,14 @@ func registerResources(s *server.MCPServer) {
 		mcp.WithMIMEType("text/plain"),
 	)
 	s.AddResource(businessTypesResource, listBusinessTypesHandler)
+
+	industriesResource := mcp.NewResource(
+		"clay://industries",
+		"List of all LinkedIn industries for company search",
+		mcp.WithResourceDescription("Complete list of valid industry names used by Clay's company search (sourced from LinkedIn)"),
+		mcp.WithMIMEType("text/plain"),
+	)
+	s.AddResource(industriesResource, listIndustriesHandler)
 }
 
 func listCommandsHandler(ctx context.Context, req mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
@@ -55,14 +63,13 @@ Search Commands:
    Search for companies by industry using Clay's Mixrank/LinkedIn data
    Parameters:
    - workbook_id (optional): Uses current workbook if not specified
-   - industries (required): Comma-separated list (e.g., 'Accounting,Consulting')
+   - keywords (required): Comma-separated description keywords (e.g., 'accounting,boekhouding,SaaS')
    - countries (optional): Comma-separated country names
    - company_sizes (optional): Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)
-   - keywords (optional): Comma-separated description keywords
    - limit (optional): Maximum results (default: 25000)
    - annual_revenues (optional): Comma-separated revenue ranges (e.g., '1M-5M,10M-25M')
-   - minimum_member_count (optional): Minimum number of employees (e.g., 100)
-   - maximum_member_count (optional): Maximum number of employees (e.g., 200)
+   - min_linkedin_members (optional): Minimum number of LinkedIn members (e.g., 100)
+   - max_linkedin_members (optional): Maximum number of LinkedIn members (e.g., 200)
 
 5. search_businesses_by_geography
    Search for local businesses by geography using Google Maps
@@ -82,6 +89,7 @@ Resources:
 ----------
 - clay://commands - This list of commands
 - clay://business-types - List of all valid Google Maps business types
+- clay://industries - List of all valid LinkedIn industries for company search
 `
 
 	content := mcp.TextResourceContents{
@@ -138,6 +146,69 @@ Note: Use underscores (_) not spaces in business type names.
 		URI:      req.Params.URI,
 		MIMEType: "text/plain",
 		Text:     businessTypes,
+	}
+
+	return []mcp.ResourceContents{&content}, nil
+}
+
+func listIndustriesHandler(ctx context.Context, req mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+	industries := `LinkedIn Industries (used by Clay company search)
+===================================================
+
+Accounting, Airlines/Aviation, Alternative Dispute Resolution, Alternative Medicine,
+Animation, Apparel & Fashion, Architecture & Planning, Arts & Crafts,
+Automotive, Aviation & Aerospace, Banking, Biotechnology, Broadcast Media,
+Building Materials, Business Supplies & Equipment, Capital Markets,
+Chemicals, Civic & Social Organization, Civil Engineering,
+Commercial Real Estate, Computer & Network Security, Computer Games,
+Computer Hardware, Computer Networking, Computer Software, Construction,
+Consumer Electronics, Consumer Goods, Consumer Services, Cosmetics,
+Dairy, Defense & Space, Design, E-learning, Education Management,
+Electrical/Electronic Manufacturing, Entertainment, Environmental Services,
+Events Services, Executive Office, Facilities Services,
+Farming, Financial Services, Fine Art, Fishery, Food & Beverages,
+Food Production, Fundraising, Furniture, Gambling & Casinos,
+Glass, Ceramics & Concrete, Government Administration,
+Government Relations, Graphic Design, Health, Wellness & Fitness,
+Higher Education, Hospital & Health Care, Hospitality, Human Resources,
+Import & Export, Individual & Family Services, Industrial Automation,
+Information Services, Information Technology & Services, Insurance,
+International Affairs, International Trade & Development,
+Internet, Investment Banking, Investment Management,
+Judiciary, Law Enforcement, Law Practice, Legal Services,
+Legislative Office, Leisure, Travel & Tourism, Libraries,
+Linguistics, Logistics & Supply Chain, Luxury Goods & Jewelry,
+Machinery, Management Consulting, Maritime, Market Research,
+Marketing & Advertising, Mechanical or Industrial Engineering,
+Media Production, Medical Device, Medical Practice, Mental Health Care,
+Military, Mining & Metals, Mobile Games, Motion Pictures & Film,
+Museums & Institutions, Music, Nanotechnology, Newspapers,
+Non-profit Organization Management, Oil & Energy,
+Online Media, Outsourcing/Offshoring, Package/Freight Delivery,
+Packaging & Containers, Paper & Forest Products,
+Performing Arts, Pharmaceuticals, Philanthropy, Photography,
+Plastics, Political Organization, Primary/Secondary Education,
+Printing, Professional Training & Coaching, Program Development,
+Public Policy, Public Relations & Communications, Public Safety,
+Publishing, Railroad Manufacture, Ranching, Real Estate,
+Recreational Facilities & Services, Religious Institutions,
+Renewables & Environment, Research, Restaurants,
+Retail, Security & Investigations, Semiconductors,
+Shipbuilding, Sporting Goods, Sports, Staffing & Recruiting,
+Supermarkets, Telecommunications, Textiles, Think Tanks,
+Tobacco, Translation & Localization, Transportation/Trucking/Railroad,
+Utilities, Venture Capital & Private Equity, Veterinary, Warehousing,
+Wholesale, Wine & Spirits, Wireless, Writing & Editing
+
+Note: These industry names are sourced from LinkedIn and are used by Clay's
+company search (Mixrank/LinkedIn data source). Use exact names as listed above.
+Multiple industries can be specified as comma-separated values.
+`
+
+	content := mcp.TextResourceContents{
+		URI:      req.Params.URI,
+		MIMEType: "text/plain",
+		Text:     industries,
 	}
 
 	return []mcp.ResourceContents{&content}, nil

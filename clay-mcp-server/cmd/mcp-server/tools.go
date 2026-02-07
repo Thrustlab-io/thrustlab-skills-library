@@ -42,14 +42,14 @@ func registerTools(s *server.MCPServer) {
 	)
 	s.AddTool(createWorkbookTool, createWorkbookHandler)
 
-	industrySearchTool := mcp.NewTool("search_companies_by_industry",
+	companySearchTool := mcp.NewTool("search_companies_by_industry",
 		mcp.WithDescription("Search for companies by industry using Clay's Mixrank/LinkedIn data source"),
 		mcp.WithString("workbook_id",
 			mcp.Description("The workbook ID to create the table in (uses current workbook if not specified)"),
 		),
-		mcp.WithString("industries",
+		mcp.WithString("keywords",
 			mcp.Required(),
-			mcp.Description("Comma-separated list of industries (e.g., 'Accounting,Consulting')"),
+			mcp.Description("Comma-separated description keywords to filter by (e.g., 'accounting,boekhouding,SaaS')"),
 		),
 		mcp.WithString("countries",
 			mcp.Description("Comma-separated list of country names (e.g., 'Belgium,Netherlands')"),
@@ -57,23 +57,20 @@ func registerTools(s *server.MCPServer) {
 		mcp.WithString("company_sizes",
 			mcp.Description("Comma-separated company size codes: 1, 2, 10, 50, 200, 500, 1000, 5000, 10000"),
 		),
-		mcp.WithString("keywords",
-			mcp.Description("Comma-separated description keywords to filter by"),
-		),
 		mcp.WithNumber("limit",
 			mcp.Description("Maximum number of results (default: 25000)"),
 		),
 		mcp.WithString("annual_revenues",
 			mcp.Description("Comma-separated annual revenue ranges. Valid values: 0-500K, 500K-1M, 1M-5M, 5M-10M, 10M-25M, 25M-75M, 75M-200M, 200M-500M, 500M-1B, 1B-10B, 10B-100B, 100B-1T"),
 		),
-		mcp.WithNumber("minimum_member_count",
-			mcp.Description("Minimum number of employees (e.g., 100)"),
+		mcp.WithNumber("min_linkedin_members",
+			mcp.Description("Minimum number of LinkedIn members (e.g., 100)"),
 		),
-		mcp.WithNumber("maximum_member_count",
-			mcp.Description("Maximum number of employees (e.g., 200)"),
+		mcp.WithNumber("max_linkedin_members",
+			mcp.Description("Maximum number of LinkedIn members (e.g., 200)"),
 		),
 	)
-	s.AddTool(industrySearchTool, searchCompaniesByIndustryHandler)
+	s.AddTool(companySearchTool, searchCompaniesHandler)
 
 	geographySearchTool := mcp.NewTool("search_businesses_by_geography",
 		mcp.WithDescription("Search for local businesses by geography using Google Maps. Supports two search modes: business types (e.g., book_store, restaurant) or free text query (e.g., 'slager', 'pizza'). Provide either business_types OR query, not both."),
@@ -221,7 +218,7 @@ func createWorkbookHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.C
 	)), nil
 }
 
-func searchCompaniesByIndustryHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func searchCompaniesHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	args := req.Params.Arguments.(map[string]any)
 
 	workbookID := clayClient.CurrentWorkbookID
@@ -232,11 +229,9 @@ func searchCompaniesByIndustryHandler(ctx context.Context, req mcp.CallToolReque
 		return mcp.NewToolResultError("No workbook specified. Either provide workbook_id or create a workbook first using create_workbook."), nil
 	}
 
-	industries := strings.Split(args["industries"].(string), ",")
-
 	params := clay.SearchCompaniesParams{
 		WorkbookID: workbookID,
-		Industries: industries,
+		Keywords:   splitAndTrim(args["keywords"].(string)),
 	}
 
 	if v, ok := args["countries"].(string); ok && v != "" {
@@ -245,22 +240,19 @@ func searchCompaniesByIndustryHandler(ctx context.Context, req mcp.CallToolReque
 	if v, ok := args["company_sizes"].(string); ok && v != "" {
 		params.CompanySizes = splitAndTrim(v)
 	}
-	if v, ok := args["keywords"].(string); ok && v != "" {
-		params.Keywords = splitAndTrim(v)
-	}
 	if v, ok := args["annual_revenues"].(string); ok && v != "" {
 		params.AnnualRevenues = splitAndTrim(v)
 	}
-	if v, ok := args["minimum_member_count"].(float64); ok {
+	if v, ok := args["min_linkedin_members"].(float64); ok {
 		n := int(v)
-		params.MinimumMemberCount = &n
+		params.MinLinkedInMembers = &n
 	}
-	if v, ok := args["maximum_member_count"].(float64); ok {
+	if v, ok := args["max_linkedin_members"].(float64); ok {
 		n := int(v)
-		params.MaximumMemberCount = &n
+		params.MaxLinkedInMembers = &n
 	}
 
-	result, err := clayClient.SearchCompaniesByIndustry(params)
+	result, err := clayClient.SearchCompanies(params)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("Failed to create company search: %v", err)), nil
 	}
@@ -270,13 +262,13 @@ func searchCompaniesByIndustryHandler(ctx context.Context, req mcp.CallToolReque
 			"Table ID: %s\n"+
 			"Table Name: %s\n"+
 			"Records Found: %.0f\n"+
-			"Industries: %s\n"+
+			"Keywords: %s\n"+
 			"Countries: %s\n\n"+
 			"View in Clay: https://app.clay.com/workspaces/%s/workbooks/%s/tables/%s",
 		result.TableID,
 		result.TableName,
 		result.RecordCount,
-		strings.Join(industries, ", "),
+		strings.Join(params.Keywords, ", "),
 		strings.Join(params.Countries, ", "),
 		clayClient.WorkspaceID,
 		workbookID,

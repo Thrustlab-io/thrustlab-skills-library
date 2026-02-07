@@ -70,24 +70,23 @@ func cmdCreateWorkbook(client *clay.Client, args []string) {
 func cmdSearchCompanies(client *clay.Client, args []string) {
 	fs := flag.NewFlagSet("search-companies", flag.ExitOnError)
 	workbookID := fs.String("workbook-id", "", "Workbook ID (required)")
-	industries := fs.String("industries", "", "Comma-separated industries (required)")
+	keywords := fs.String("keywords", "", "Comma-separated description keywords (required)")
 	countries := fs.String("countries", "", "Comma-separated countries")
 	sizes := fs.String("sizes", "", "Comma-separated size codes (1,2,10,50,200,500,1000,5000,10000)")
-	keywords := fs.String("keywords", "", "Comma-separated keywords")
 	revenues := fs.String("revenues", "", "Comma-separated revenue ranges (e.g., 1M-5M,10M-25M)")
-	minMembers := fs.Int("min-members", 0, "Minimum number of employees")
-	maxMembers := fs.Int("max-members", 0, "Maximum number of employees")
+	minMembers := fs.Int("min-linkedin-members", 0, "Minimum number of LinkedIn members")
+	maxMembers := fs.Int("max-linkedin-members", 0, "Maximum number of LinkedIn members")
 	fs.Parse(args)
 
-	if *workbookID == "" || *industries == "" {
-		fmt.Fprintln(os.Stderr, "Error: -workbook-id and -industries are required")
+	if *workbookID == "" || *keywords == "" {
+		fmt.Fprintln(os.Stderr, "Error: -workbook-id and -keywords are required")
 		fs.Usage()
 		os.Exit(1)
 	}
 
 	params := clay.SearchCompaniesParams{
 		WorkbookID: *workbookID,
-		Industries: splitAndTrim(*industries),
+		Keywords:   splitAndTrim(*keywords),
 	}
 	if *countries != "" {
 		params.Countries = splitAndTrim(*countries)
@@ -95,20 +94,17 @@ func cmdSearchCompanies(client *clay.Client, args []string) {
 	if *sizes != "" {
 		params.CompanySizes = splitAndTrim(*sizes)
 	}
-	if *keywords != "" {
-		params.Keywords = splitAndTrim(*keywords)
-	}
 	if *revenues != "" {
 		params.AnnualRevenues = splitAndTrim(*revenues)
 	}
 	if *minMembers > 0 {
-		params.MinimumMemberCount = minMembers
+		params.MinLinkedInMembers = minMembers
 	}
 	if *maxMembers > 0 {
-		params.MaximumMemberCount = maxMembers
+		params.MaxLinkedInMembers = maxMembers
 	}
 
-	result, err := client.SearchCompaniesByIndustry(params)
+	result, err := client.SearchCompanies(params)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
