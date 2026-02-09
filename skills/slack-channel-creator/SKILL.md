@@ -1,136 +1,69 @@
 ---
 name: slack-channel-creator
-description: Creates a Slack channel with the client, invites Thrustlab team, and posts a welcome message with Notion workspace link
-argument-hint: "client name [client email]"
+description: Creates a private Slack channel for a Thrustlab client, invites the team, and posts a welcome message with Notion workspace links. Use after the Notion workspace has been created. Requires Slack MCP server.
 ---
 
-# Slack Channel Creator Skill
+# Slack Channel Creator
 
-Creates a client collaboration Slack channel, invites the team and client, and posts a welcome message linking to the Notion Phase 1 page.
+Creates a private Slack channel and posts a welcome message linking to the Notion workspace.
 
-## Prerequisites
+**Prerequisites:**
+- `client-profiles/{client-slug}/profile.md` exists
+- Notion workspace has been created (need Phase 1 page URL)
+- Slack MCP server is configured with bot token
 
-**REQUIRED**: The `notion-project-creator` skill must have been run first. This skill requires:
-- The Notion workspace structure to exist
-- Access to the "Phase 1: Infrastructure Setup - [Client Name]" page URL
-- Slack MCP server configured with bot token
+## Workflow
 
-## Required Information
+### Step 1: Load Client Data
 
-1. **Client name** - The name of the client/company (e.g., "Acme Corp")
-2. **Client email** - Primary client contact email address (optional - can invite later)
-3. **Notion Phase 1 URL** - Link to the "Phase 1: Infrastructure Setup - [Client Name]" page
+Read `client-profiles/{client-slug}/profile.md` for:
+- Company name (for channel naming)
+- Client contact email (if available, for Slack invite)
 
-## Execution Steps
+Get from user if not already provided:
+- Notion hub page URL
+- Notion Phase 1: Infrastructure Setup page URL
+- Client contact email for Slack invite (optional)
 
-### Step 1: Verify Prerequisites
+### Step 2: Look Up Slack Users
 
-Confirm that the Notion workspace was created and get the Phase 1 page URL.
-
-If not available:
-- Tell user to run `/notion-project-creator [client-name]` first
-- Do not proceed without the Notion workspace
-
-### Step 2: Look Up Users
-
-Use `lookup_user` tool to find Slack user IDs for:
+Use Slack `lookup_user` for:
 - `kwinten@thrustlab.io` (always invited)
 - `jan@thrustlab.io` (always invited)
 - Client contact email (if provided)
 
-If a user is not found, ask user if they want to proceed and invite manually later.
-If no client email provided, proceed with just Thrustlab team.
-
 ### Step 3: Create Channel
 
-Use `create_channel` tool with:
-- **Name format:** `[client-name]-thrustlab`
-  - Lowercase, hyphens instead of spaces
-  - Example: "Acme Corp" → `acme-corp-thrustlab`
-  - Example: "DataMeister" → `datameister-thrustlab`
-- **is_private:** true (always private for client channels)
-
-**Save the channel ID** from the response.
+Use Slack `create_channel`:
+- **Name format:** `{client-slug}-thrustlab` (lowercase, hyphens, no spaces)
+  - "Acme Corp" → `acme-corp-thrustlab`
+  - "Quality Guard" → `quality-guard-thrustlab`
+- **is_private:** `true` (always private for client channels)
 
 ### Step 4: Invite Users
 
-Use `invite_users` tool to add (comma-separated user IDs):
-- Kwinten (kwinten@thrustlab.io)
-- Jan (jan@thrustlab.io)
-- Client contact (if provided)
+Add all looked-up users to the channel.
 
 ### Step 5: Post Welcome Message
-
-Use `send_message` tool with this template:
 
 ```
 Welcome to your Thrustlab collaboration channel! 👋
 
 This is your direct line to our team for all GTM strategy and execution.
 
-**Getting Started:**
-📋 Phase 1 Infrastructure Setup: [Notion Phase 1 URL]
+📋 **Your GTM Hub:** {Notion Hub URL}
+🏗️ **Phase 1 Setup:** {Notion Phase 1 URL}
 
 **Your Thrustlab Team:**
 • Kwinten (kwinten@thrustlab.io)
 • Jan (jan@thrustlab.io)
 
-Feel free to ask questions anytime. Let's build something great together! 🚀
+Next step: We'll share your tooling setup guide here shortly. Feel free to ask questions anytime — let's build pipeline! 🚀
 ```
 
-Replace `[Notion Phase 1 URL]` with the actual URL from the Notion workspace.
+### Step 6: Confirm & Output
 
-### Step 6: Confirm Completion
-
-Output:
-```
-✅ Slack channel created!
-
-📍 Channel: #[client-name]-thrustlab
-🔗 Link: https://[workspace].slack.com/archives/[channel-id]
-🔒 Private channel
-
-👥 Invited:
-• Kwinten (kwinten@thrustlab.io)
-• Jan (jan@thrustlab.io)
-• [Client Name] ([client-email]) - if provided
-
-💬 Welcome message posted with Notion link
-```
-
-If no client was invited, remind user they can invite the client manually later.
-
-## Channel Naming Examples
-
-- "Acme Corp" → `acme-corp-thrustlab`
-- "DataMeister" → `datameister-thrustlab`
-- "O2O Bicycle Leasing" → `o2o-bicycle-leasing-thrustlab`
-
-## Error Handling
-
-**User not found:** Ask if they want to proceed without them (can invite manually)
-**Channel exists:** Suggest adding `-2` or `-new` suffix
-**No Notion workspace:** Direct user to run `/notion-project-creator` first
-
-## Integration Workflow
-
-Recommended order:
-```bash
-# 1. Generate strategy
-/gtm-strategy-generator https://client.com
-
-# 2. Create Notion workspace
-/notion-project-creator "Client Name"
-
-# 3. Create Slack channel (this skill)
-/slack-channel-creator "Client Name" client@email.com
-```
-
-## Success Criteria
-
-✅ Channel created as `[client-name]-thrustlab`
-✅ Private visibility
-✅ Kwinten and Jan invited
-✅ Client invited
-✅ Welcome message posted with Notion Phase 1 link
-✅ User receives channel link
+Provide to user:
+- Slack channel link
+- Confirmation of who was invited
+- Reminder that tooling-setup-guide output should be shared in this channel
