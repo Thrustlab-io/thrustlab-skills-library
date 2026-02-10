@@ -28,11 +28,9 @@ Include these sections on the main page:
 #### Braindump & Quick Notes
 A callout block with empty checkboxes — space for observations and ideas during execution.
 
-#### To Discuss with Client
-A callout block with checkboxes for topics to raise in next client meeting.
-
 #### Documentation Hub
 A collapsible callout with links to all sub-pages created below.
+Make sure to update these links as you create the sub-pages in Step 3.
 
 ### Step 3: Create Sub-Pages 
 
@@ -46,6 +44,8 @@ Create each as a child page of the main hub. For the strategy page, populate wit
 6. **Meeting Notes** 📅 — Empty template with date + attendees + notes structure
 7. **Workflows** ⚡ — Pre-fill with trigger playbook from strategy
 8. **Copy Repository** 💬 — Will store approved copy as cadences are built
+
+Then update the Documentation Hub section on the main page with links to each of these sub-pages.
 
 ### Step 4: Confirm & Output
 
