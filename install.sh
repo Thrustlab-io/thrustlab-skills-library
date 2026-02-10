@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Thrustlab GTM Skills + MCP Servers — Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/kiwiidb/thrustlab-skills-library/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/Thrustlab-io/thrustlab-skills-library/main/install.sh | bash
 
 set -e
 
@@ -20,10 +20,33 @@ info()  { echo -e "${GREEN}✓${NC} $1"; }
 warn()  { echo -e "${YELLOW}!${NC} $1"; }
 error() { echo -e "${RED}✗${NC} $1"; exit 1; }
 
+# Read from /dev/tty so prompts work even when piped from curl
+prompt() {
+    local var="$1" label="$2"
+    printf "  %s: " "$label" > /dev/tty
+    read -r "$var" < /dev/tty
+}
+
 echo ""
 echo -e "${BOLD}Thrustlab GTM — Skills & MCP Installer${NC}"
 echo "────────────────────────────────────────"
 echo ""
+
+# ── Install Claude Code if needed ────────────────────────────────────
+
+if ! command -v claude &> /dev/null; then
+    if command -v npm &> /dev/null; then
+        echo "Installing Claude Code CLI..."
+        npm install -g @anthropic-ai/claude-code && \
+            info "Claude Code CLI installed" || \
+            warn "Could not install Claude Code CLI (try: npm install -g @anthropic-ai/claude-code)"
+    else
+        warn "Claude Code CLI not found (requires npm)"
+        echo "  Install Node.js from https://nodejs.org then run:"
+        echo "  npm install -g @anthropic-ai/claude-code"
+        echo ""
+    fi
+fi
 
 # ── Fetch latest release ─────────────────────────────────────────────
 
@@ -71,37 +94,81 @@ cp "$TEMP_DIR/bin/"* "$CLAUDE_BIN_DIR/"
 chmod +x "$CLAUDE_BIN_DIR/"*
 info "Installed MCP binaries → $CLAUDE_BIN_DIR"
 
-# ── Register MCPs ────────────────────────────────────────────────────
+# ── Collect credentials ──────────────────────────────────────────────
 
-MCP_SERVERS=(
-    "slack:slack-mcp"
-    "clay:clay-mcp-server"
-    "namecheap:namecheap-mcp"
-    "premiuminboxes:premiuminboxes-mcp"
-)
+echo ""
+echo -e "${BOLD}Configure MCP credentials${NC}"
+echo "Press Enter to skip any service you don't use."
+echo ""
+
+# Slack
+echo -e "${BOLD}Slack${NC}"
+prompt SLACK_BOT_TOKEN "Bot Token (xoxb-...)"
+
+# Clay
+echo -e "${BOLD}Clay${NC}"
+prompt CLAY_WORKSPACE_ID "Workspace ID"
+prompt CLAY_SESSION_COOKIE "Session Cookie (s%3A...)"
+
+# Namecheap
+echo -e "${BOLD}Namecheap${NC}"
+prompt NAMECHEAP_API_USER "API User"
+prompt NAMECHEAP_API_KEY "API Key"
+prompt NAMECHEAP_USERNAME "Username"
+prompt NAMECHEAP_CLIENT_IP "Client IP"
+
+# Premium Inboxes
+echo -e "${BOLD}Premium Inboxes${NC}"
+prompt PREMIUMINBOXES_API_TOKEN "API Token"
+
+# ── Register MCPs with Claude Code (with credentials) ────────────────
 
 if command -v claude &> /dev/null; then
     echo ""
     echo "Registering MCP servers with Claude Code..."
-    for entry in "${MCP_SERVERS[@]}"; do
-        IFS=':' read -r name binary <<< "$entry"
-        if claude mcp get "$name" &> /dev/null 2>&1; then
-            warn "$name — already registered, skipping"
-        else
-            claude mcp add -s user "$name" -- "$CLAUDE_BIN_DIR/$binary" 2>/dev/null && \
-                info "$name — registered" || \
-                warn "$name — could not register (add manually later)"
-        fi
-    done
+
+    register_claude_code() {
+        local name="$1" binary="$2"
+        shift 2
+        # Build env flag args
+        local env_args=()
+        while [ $# -gt 0 ]; do
+            local key="$1" val="$2"
+            shift 2
+            [ -n "$val" ] && env_args+=(-e "${key}=${val}")
+        done
+        # Remove existing registration first to update credentials
+        claude mcp remove "$name" 2>/dev/null || true
+        claude mcp add -s user "${env_args[@]}" "$name" -- "$CLAUDE_BIN_DIR/$binary" 2>/dev/null && \
+            info "$name — registered with Claude Code" || \
+            warn "$name — could not register"
+    }
+
+    register_claude_code slack slack-mcp \
+        SLACK_BOT_TOKEN "$SLACK_BOT_TOKEN"
+
+    register_claude_code clay clay-mcp-server \
+        CLAY_WORKSPACE_ID "$CLAY_WORKSPACE_ID" \
+        CLAY_SESSION_COOKIE "$CLAY_SESSION_COOKIE"
+
+    register_claude_code namecheap namecheap-mcp \
+        NAMECHEAP_API_USER "$NAMECHEAP_API_USER" \
+        NAMECHEAP_API_KEY "$NAMECHEAP_API_KEY" \
+        NAMECHEAP_USERNAME "$NAMECHEAP_USERNAME" \
+        NAMECHEAP_CLIENT_IP "$NAMECHEAP_CLIENT_IP"
+
+    register_claude_code premiuminboxes premiuminboxes-mcp \
+        PREMIUMINBOXES_API_TOKEN "$PREMIUMINBOXES_API_TOKEN"
 fi
 
-# ── Patch Claude Desktop config (fallback) ───────────────────────────
+# ── Configure Claude Desktop ─────────────────────────────────────────
 
-if [ -d "$(dirname "$CLAUDE_DESKTOP_CONFIG")" ]; then
+CLAUDE_DESKTOP_DIR="$(dirname "$CLAUDE_DESKTOP_CONFIG")"
+if [ -d "$CLAUDE_DESKTOP_DIR" ]; then
     echo ""
-    echo "Updating Claude Desktop configuration..."
+    echo "Configuring Claude Desktop..."
     python3 -c "
-import json, os
+import json, os, sys
 
 config_path = os.path.expanduser('~/Library/Application Support/Claude/claude_desktop_config.json')
 config = {}
@@ -112,20 +179,66 @@ if os.path.exists(config_path):
 bin_dir = os.path.expanduser('~/.claude/bin')
 servers = config.setdefault('mcpServers', {})
 
+# Credentials passed as args: key=value pairs
+creds = {}
+for arg in sys.argv[1:]:
+    k, v = arg.split('=', 1)
+    creds[k] = v
+
+def env_or_existing(server_name, key):
+    val = creds.get(key, '')
+    if val:
+        return val
+    return servers.get(server_name, {}).get('env', {}).get(key, '')
+
 mcp_defs = {
-    'slack': {'command': f'{bin_dir}/slack-mcp', 'env': {'SLACK_BOT_TOKEN': servers.get('slack', {}).get('env', {}).get('SLACK_BOT_TOKEN', '')}},
-    'clay': {'command': f'{bin_dir}/clay-mcp-server', 'env': {'CLAY_WORKSPACE_ID': servers.get('clay', {}).get('env', {}).get('CLAY_WORKSPACE_ID', ''), 'CLAY_SESSION_COOKIE': servers.get('clay', {}).get('env', {}).get('CLAY_SESSION_COOKIE', '')}},
-    'namecheap': {'command': f'{bin_dir}/namecheap-mcp', 'env': {'NAMECHEAP_API_USER': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_API_USER', ''), 'NAMECHEAP_API_KEY': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_API_KEY', ''), 'NAMECHEAP_USERNAME': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_USERNAME', ''), 'NAMECHEAP_CLIENT_IP': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_CLIENT_IP', '')}},
-    'premiuminboxes': {'command': f'{bin_dir}/premiuminboxes-mcp', 'env': {'PREMIUMINBOXES_API_TOKEN': servers.get('premiuminboxes', {}).get('env', {}).get('PREMIUMINBOXES_API_TOKEN', '')}},
+    'slack': {
+        'command': f'{bin_dir}/slack-mcp',
+        'env': {
+            'SLACK_BOT_TOKEN': env_or_existing('slack', 'SLACK_BOT_TOKEN'),
+        },
+    },
+    'clay': {
+        'command': f'{bin_dir}/clay-mcp-server',
+        'env': {
+            'CLAY_WORKSPACE_ID': env_or_existing('clay', 'CLAY_WORKSPACE_ID'),
+            'CLAY_SESSION_COOKIE': env_or_existing('clay', 'CLAY_SESSION_COOKIE'),
+        },
+    },
+    'namecheap': {
+        'command': f'{bin_dir}/namecheap-mcp',
+        'env': {
+            'NAMECHEAP_API_USER': env_or_existing('namecheap', 'NAMECHEAP_API_USER'),
+            'NAMECHEAP_API_KEY': env_or_existing('namecheap', 'NAMECHEAP_API_KEY'),
+            'NAMECHEAP_USERNAME': env_or_existing('namecheap', 'NAMECHEAP_USERNAME'),
+            'NAMECHEAP_CLIENT_IP': env_or_existing('namecheap', 'NAMECHEAP_CLIENT_IP'),
+        },
+    },
+    'premiuminboxes': {
+        'command': f'{bin_dir}/premiuminboxes-mcp',
+        'env': {
+            'PREMIUMINBOXES_API_TOKEN': env_or_existing('premiuminboxes', 'PREMIUMINBOXES_API_TOKEN'),
+        },
+    },
 }
 
 for name, defn in mcp_defs.items():
-    if name not in servers:
-        servers[name] = defn
+    servers[name] = defn
 
 with open(config_path, 'w') as f:
     json.dump(config, f, indent=2)
-" && info "Claude Desktop config updated" || warn "Could not update Claude Desktop config"
+" \
+    "SLACK_BOT_TOKEN=$SLACK_BOT_TOKEN" \
+    "CLAY_WORKSPACE_ID=$CLAY_WORKSPACE_ID" \
+    "CLAY_SESSION_COOKIE=$CLAY_SESSION_COOKIE" \
+    "NAMECHEAP_API_USER=$NAMECHEAP_API_USER" \
+    "NAMECHEAP_API_KEY=$NAMECHEAP_API_KEY" \
+    "NAMECHEAP_USERNAME=$NAMECHEAP_USERNAME" \
+    "NAMECHEAP_CLIENT_IP=$NAMECHEAP_CLIENT_IP" \
+    "PREMIUMINBOXES_API_TOKEN=$PREMIUMINBOXES_API_TOKEN" \
+    && info "Claude Desktop config updated" || warn "Could not update Claude Desktop config"
+else
+    warn "Claude Desktop not found — skipping config"
 fi
 
 # ── Summary ──────────────────────────────────────────────────────────
@@ -139,25 +252,15 @@ for skill in "$CLAUDE_SKILLS_DIR"/*/; do
     [ -d "$skill" ] && echo "  /${BOLD}$(basename "$skill")${NC}"
 done
 echo ""
-echo "MCP servers installed:"
-for entry in "${MCP_SERVERS[@]}"; do
-    IFS=':' read -r name binary <<< "$entry"
-    echo "  $name → $CLAUDE_BIN_DIR/$binary"
-done
+echo "MCP servers:"
+[ -n "$SLACK_BOT_TOKEN" ]          && info "slack — configured"          || warn "slack — no credentials (configure later)"
+[ -n "$CLAY_WORKSPACE_ID" ]        && info "clay — configured"           || warn "clay — no credentials (configure later)"
+[ -n "$NAMECHEAP_API_KEY" ]        && info "namecheap — configured"      || warn "namecheap — no credentials (configure later)"
+[ -n "$PREMIUMINBOXES_API_TOKEN" ] && info "premiuminboxes — configured" || warn "premiuminboxes — no credentials (configure later)"
 echo ""
-echo -e "${YELLOW}Next step: Configure API credentials${NC}"
+echo "To update credentials later, re-run this installer or edit:"
+echo "  Claude Desktop: $CLAUDE_DESKTOP_CONFIG"
+echo "  Claude Code:    claude mcp add -e KEY=val -s user <name> -- ~/.claude/bin/<binary>"
 echo ""
-echo "  Slack:"
-echo "    claude mcp add -e SLACK_BOT_TOKEN=\"xoxb-...\" -s user slack -- $CLAUDE_BIN_DIR/slack-mcp"
-echo ""
-echo "  Clay:"
-echo "    claude mcp add -e CLAY_WORKSPACE_ID=\"...\" -e CLAY_SESSION_COOKIE=\"...\" -s user clay -- $CLAUDE_BIN_DIR/clay-mcp-server"
-echo ""
-echo "  Namecheap:"
-echo "    claude mcp add -e NAMECHEAP_API_USER=\"...\" -e NAMECHEAP_API_KEY=\"...\" -e NAMECHEAP_USERNAME=\"...\" -e NAMECHEAP_CLIENT_IP=\"...\" -s user namecheap -- $CLAUDE_BIN_DIR/namecheap-mcp"
-echo ""
-echo "  Premium Inboxes:"
-echo "    claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"...\" -s user premiuminboxes -- $CLAUDE_BIN_DIR/premiuminboxes-mcp"
-echo ""
-echo "Restart Claude Desktop after configuring credentials."
+echo "Restart Claude Desktop to activate MCP servers."
 echo ""
