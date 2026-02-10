@@ -1,6 +1,30 @@
 # Research Protocol & Quality Checkpoints
 
-## Research Execution Rules
+## Phase 1: Profile Discovery Research
+
+### Objective
+Build a comprehensive company profile from scratch using only a LinkedIn Company URL and domain. This runs during Step 2 of the workflow.
+
+### Research Sequence
+1. **Website analysis:** Fetch all key pages (/, /about, /product or /platform, /pricing, /customers, /case-studies, /blog). Extract: product description, value proposition language, customer logos, case study details, pricing model, team page, integrations/partners.
+2. **LinkedIn company page:** Extract: employee count, industry classification, HQ location, founding year, description, specialties, follower count.
+3. **Competitive intelligence:** Search `"{company_name}" vs` and `"{company_name}" alternative` to identify competitors. For each competitor found, note positioning difference.
+4. **Review platforms:** Search G2, Capterra, TrustRadius for customer sentiment, strengths/weaknesses, and competitive positioning.
+5. **Funding & stage:** Search Crunchbase, press releases for funding rounds, investor info, employee growth trajectory.
+6. **Tone analysis:** From website copy and blog posts, characterize the brand voice (formal/conversational/provocative), identify preferred terminology, note words they use frequently.
+
+### Profile Completeness Checklist
+After discovery research, check every field in `references/profile-field-reference.md`. For any field still empty:
+- If a reasonable default exists for this company type/industry → fill it and mark `[Inferred — verify with client]`
+- If no reasonable default exists → mark `[To be confirmed by client]`
+- Never leave a field completely blank
+
+### Transition to Strategy Research
+Once profile.md is saved, continue to Phase 2 (Strategy Research) below. The strategy research uses the profile data as the foundation for deeper market and persona analysis.
+
+---
+
+## Phase 2: Strategy Research
 
 ### Web Research Sequence
 1. **Primary:** Fetch client website — analyze product pages, pricing, case studies, about page, blog
@@ -32,6 +56,7 @@ If inferred from research: `[Inferred from: brief reasoning]`
 ## Quality Checkpoints — Run Before Delivering
 
 ### Completeness
+- [ ] profile.md was saved before strategy generation began
 - [ ] All 13 sections + 2 appendices are present
 - [ ] No section is shorter than 3 paragraphs (except Company Snapshot)
 - [ ] Top 3 recommended trigger plays are clearly identified with rationale

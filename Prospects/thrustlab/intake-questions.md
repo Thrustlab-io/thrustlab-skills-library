@@ -5,8 +5,6 @@ Questions remaining after website research. Fields marked **[Critical]** block d
 ---
 
 ## Company Basics
-- What year was Thrustlab founded?
-- Where is Thrustlab headquartered?
 - Is the public brand "GTM Strategies" or "Thrustlab" — or are you rebranding?
 
 ## Success Metrics
