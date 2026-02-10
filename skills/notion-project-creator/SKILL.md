@@ -47,26 +47,7 @@ Create each as a child page of the main hub. For the strategy page, populate wit
 7. **Workflows** ⚡ — Pre-fill with trigger playbook from strategy
 8. **Copy Repository** 💬 — Will store approved copy as cadences are built
 
-### Step 4: Create Getting Started Checklist
-
-Add to the main hub page:
-
-```
-## Getting Started Checklist
-- [ ] Complete client onboarding and discovery workshop
-- [ ] Set up client workspace structure ✅ (this step)
-- [ ] Create Slack channel for collaboration
-- [ ] Set up Clay workspace and required tooling
-- [ ] Configure domains, inboxes, and technical infrastructure
-- [ ] Define and validate ICP segments
-- [ ] Complete market mapping and initial list build
-- [ ] Create first 3 trigger-based workflow campaigns
-- [ ] Create general outbound campaign
-- [ ] Set up tracking and reporting dashboards
-- [ ] Schedule regular check-ins and review cycles
-```
-
-### Step 5: Confirm & Output
+### Step 4: Confirm & Output
 
 Provide to the user:
 - Main hub page URL
