@@ -22,28 +22,23 @@ jobs:
         run: |
           mkdir -p dist/bin
 
-          # Build each MCP server for arm64 and amd64, then merge with lipo
-          declare -A servers
-          servers[clay-mcp-server]="clay-mcp-server:./cmd/mcp-server"
-          servers[slack-mcp]="slack-mcp:."
-          servers[namecheap-mcp]="namecheap-mcp:."
-          servers[premiuminboxes-mcp]="premiuminboxes-mcp:."
-
-          for name in "${!servers[@]}"; do
-            IFS=':' read -r dir entry <<< "${servers[$name]}"
+          build_server() {
+            local name="$1" dir="$2" entry="$3"
             echo "Building $name..."
-
             cd "$dir"
             CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o "../dist/bin/${name}-arm64" "$entry"
             CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o "../dist/bin/${name}-amd64" "$entry"
             cd ..
-
             lipo -create -output "dist/bin/$name" "dist/bin/${name}-arm64" "dist/bin/${name}-amd64"
             rm "dist/bin/${name}-arm64" "dist/bin/${name}-amd64"
             chmod +x "dist/bin/$name"
-
             echo "  -> $(file dist/bin/$name)"
-          done
+          }
+
+          build_server clay-mcp-server clay-mcp-server ./cmd/mcp-server
+          build_server slack-mcp slack-mcp .
+          build_server namecheap-mcp namecheap-mcp .
+          build_server premiuminboxes-mcp premiuminboxes-mcp .
 
       - name: Package skills
         run: |
