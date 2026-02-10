@@ -9,6 +9,10 @@ Complete field list for client onboarding. Prioritize fields marked **[Critical]
 - Company founding year, HQ location, employee count
 - One-liner: "In one sentence, what does {company} do?"
 
+### Infrastructure already present
+### How will we measure success
+- **[Critical]** What goals will need to be achieved so we can call the project a success within a year?
+
 ### Product & Value Prop
 - **[Critical]** "Describe your product/service in 2-3 sentences"
 - **[Critical]** "What's the #1 outcome your customers get from using you?"

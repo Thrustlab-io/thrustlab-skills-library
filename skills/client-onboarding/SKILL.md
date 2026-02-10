@@ -1,31 +1,21 @@
 ---
 name: client-onboarding
-description: Creates a structured client profile from intake data or discovery call notes. Use when onboarding a new Thrustlab GTM client, when a client provides new information that should update their profile, or when starting any new client engagement. Produces the canonical profile.md that ALL downstream skills read from.
+description: Creates a structured client profile from intake data or discovery call notes. Use when onboarding a new Thrustlab GTM client, when a client provides new information that should update their profile, or when starting any new client engagement. Produces the canonical profile.md that ALL downstream skills read from and intake-questions.md that will further guide the discovery process.
 ---
 
 # Client Onboarding
 
 Creates the canonical client profile at `Prospects/{client-slug}/profile.md`.
-
-This file is the single source of truth for every downstream skill. Nothing ships without it.
+Creates a list of follow-up questions to fill in by the client at `Prospects/{client-slug}/intake-questions.md`.
 
 ## Workflow
 
-### Step 1: Gather Intake Data
+### Step 1: Gather Data from the web
 
-If the user provides a client website URL or unstructured notes, research the company first:
+If the user provides a client website URL research the company first:
 1. Fetch the client website for primary intelligence
 2. Run 2-3 targeted web searches for additional context
-3. Extract as much intake data as possible before asking follow-up questions
 
-For any intake fields not answerable from research, ask the user. See `references/intake-questions.md` for the full field list and guidance on each field.
-
-Prioritize getting these critical fields before proceeding:
-- Company name & website
-- Product/service description
-- Target verticals
-- Target personas
-- Key differentiators
 
 ### Step 2: Generate Client Slug
 
@@ -40,10 +30,7 @@ Format: lowercase, hyphens, no spaces.
 Prospects/{client-slug}/
 └── profile.md
 ```
-
-### Step 4: Write profile.md
-
-Structure the profile using this exact format:
+### Step 4: Write first draft of profile.md
 
 ```markdown
 # {Company Name} — Client Profile
@@ -58,6 +45,12 @@ Structure the profile using this exact format:
 - **HQ:** {location}
 - **Company size:** {employee count/range}
 
+### Step 5: Generate intake-questions.md
+Write the intake question document. Use `references/intake-questions.md` as the source of truth for the questions.
+### Step 6: Expand based on answers to intake questions
+Update the profile based on the answers to the intake questions.
+Use the following structure for the profile, and populate as much as possible based on the answers to the intake questions and any additional research you do. Mark any fields that are still missing information as "TBD" so we can easily identify gaps.
+```markdown
 ## Sales Motion
 - **Type:** {PLG / sales-led / hybrid / channel}
 - **Average deal size:** {if known}
@@ -145,26 +138,6 @@ Structure the profile using this exact format:
 *Profile created: {date}*
 *Last updated: {date}*
 ```
-
-### Step 5: Validate Completeness
-
-Before saving, check:
-- Every section has client-specific data (no placeholders like "TBD" or "N/A" for critical fields)
-- Personas have actual pain points, not generic ones
-- Competitors are real companies, not placeholders
-- Value prop is specific to THIS client, not generic B2B language
-
-For non-critical fields where data isn't available yet, mark as `[To be determined in strategy phase]` — the strategy generator will research and fill these.
-
-### Step 6: Confirm with User
-
-Present a summary of the profile and ask:
-- "Does this accurately capture your product and positioning?"
-- "Are the personas and pain points correct?"
-- "Anything missing or wrong?"
-
-Update based on feedback before proceeding.
-
 ## Output
 
 Final deliverable: `Prospects/{client-slug}/profile.md`
