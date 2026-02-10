@@ -6,7 +6,7 @@ description: Creates a Notion client workspace with the complete GTM Client Hub 
 # Notion Project Creator
 
 Creates a fully populated Notion workspace for a new GTM client.
-Make sure to create this page under the "Thrustlab" teamspace!
+Make sure to create this page under the "Thrustlab-default" teamspace!
 
 **Prerequisites:**
 - `Prospects/{client-slug}/profile.md` exists
