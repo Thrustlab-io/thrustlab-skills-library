@@ -10,6 +10,7 @@ Creates a list of follow-up questions to fill in by the client at `Prospects/{cl
 
 ## Workflow
 
+First check if the intake-questions.md already exists and if it contains answers and if the initial profile.md has already been created. If so, skip to step 6 to update the profile based on any new information. If not, follow the workflow below to create the initial profile and intake questions.
 ### Step 1: Gather Data from the web
 
 If the user provides a client website URL research the company first:
