@@ -45,14 +45,13 @@ See `shared/references/prompt-iteration-pipeline.md`.
 - Target: 70%+ pass rate, 0% fail rate, 30-40+ iterations per campaign over time
 
 ## Skill Execution Order
-1. `/client-onboarding` → `Prospects/{slug}/profile.md`
-2. `/gtm-strategy-generator` → `Prospects/{slug}/strategy.md`
-3. `/notion-project-creator` → Notion workspace
-4. `/slack-channel-creator` → Slack channel
-5. `/tooling-setup-guide` → `Prospects/{slug}/tooling-setup.md`
-6. `/market-mapping` → `Prospects/{slug}/market-mapping.md`
-7. `/icp-mapping` → `Prospects/{slug}/icp-mapping.md`
-8. `/workflow-{trigger-name}` → Clay prompts + copy + enrichment config
+1. `/gtm-strategy-generator` → `Prospects/{slug}/profile.md` + `Prospects/{slug}/strategy.md`
+2. `/notion-project-creator` → Notion workspace
+3. `/slack-channel-creator` → Slack channel
+4. `/tooling-setup-guide` → `Prospects/{slug}/tooling-setup.md`
+5. `/market-mapping` → `Prospects/{slug}/market-mapping.md`
+6. `/icp-mapping` → `Prospects/{slug}/icp-mapping.md`
+7. `/workflow-{trigger-name}` → Clay prompts + copy + enrichment config
 
 ## Available Workflow Skills
 ### Standard Trigger Plays

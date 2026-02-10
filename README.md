@@ -1,6 +1,6 @@
 # Thrustlab GTM — Claude Skills & MCP Servers
 
-A collection of Claude skills and MCP servers for Go-To-Market operations, client onboarding, and outreach automation.
+A collection of Claude skills and MCP servers for Go-To-Market operations and outreach automation.
 
 ## Install
 
@@ -8,7 +8,7 @@ A collection of Claude skills and MCP servers for Go-To-Market operations, clien
 curl -fsSL https://raw.githubusercontent.com/Thrustlab-io/thrustlab-skills-library/main/install.sh | bash
 ```
 
-This installs 22 skills to `~/.claude/skills/` and 4 MCP server binaries (pre-built universal macOS binaries) to `~/.claude/bin/`.
+This installs 21 skills to `~/.claude/skills/` and 4 MCP server binaries (pre-built universal macOS binaries) to `~/.claude/bin/`.
 
 ### Configure MCP Credentials
 
@@ -35,8 +35,7 @@ Restart Claude Desktop after configuring.
 ### Foundation
 | Skill | Purpose |
 |-------|---------|
-| `/client-onboarding` | Create canonical client profile from intake data |
-| `/gtm-strategy-generator` | Generate 13-section GTM strategy with Clay search plan |
+| `/gtm-strategy-generator` | Auto-discover company profile + generate GTM strategy from LinkedIn URL + domain |
 | `/tooling-setup-guide` | Infrastructure checklist for signal sources |
 | `/market-mapping` | Build market research and account lists |
 | `/icp-mapping` | Create persona x vertical matrix |
@@ -68,7 +67,7 @@ Restart Claude Desktop after configuring.
 ### Execution Order
 
 ```
-/client-onboarding → /gtm-strategy-generator → /notion-project-creator → /slack-channel-creator → /tooling-setup-guide → /market-mapping → /icp-mapping → /workflow-*
+/gtm-strategy-generator → /notion-project-creator → /slack-channel-creator → /tooling-setup-guide → /market-mapping → /icp-mapping → /workflow-*
 ```
 
 ## MCP Servers
