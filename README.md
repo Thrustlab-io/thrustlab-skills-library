@@ -35,6 +35,7 @@ Restart Claude Desktop after configuring.
 ### Foundation
 | Skill | Purpose |
 |-------|---------|
+| `/client-onboarding` | End-to-end new client setup: auto-discover profile + generate GTM strategy + create Notion workspace |
 | `/gtm-strategy-generator` | Auto-discover company profile + generate GTM strategy from LinkedIn URL + domain |
 | `/tooling-setup-guide` | Infrastructure checklist for signal sources |
 | `/market-mapping` | Build market research and account lists |
@@ -67,7 +68,7 @@ Restart Claude Desktop after configuring.
 ### Execution Order
 
 ```
-/gtm-strategy-generator → /notion-project-creator → /slack-channel-creator → /tooling-setup-guide → /market-mapping → /icp-mapping → /workflow-*
+/client-onboarding → /slack-channel-creator → /tooling-setup-guide → /market-mapping → /icp-mapping → /workflow-*
 ```
 
 ## MCP Servers

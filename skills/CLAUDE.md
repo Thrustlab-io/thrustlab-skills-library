@@ -45,9 +45,8 @@ See `shared/references/prompt-iteration-pipeline.md`.
 - Target: 70%+ pass rate, 0% fail rate, 30-40+ iterations per campaign over time
 
 ## Skill Execution Order
-1. `/gtm-strategy-generator` → `Prospects/{slug}/profile.md` + `Prospects/{slug}/strategy.md`
-2. `/notion-project-creator` → Notion workspace
-3. `/slack-channel-creator` → Slack channel
+1. `/client-onboarding` → `Prospects/{slug}/profile.md` + `Prospects/{slug}/strategy.md` + Notion workspace (combines gtm-strategy-generator + notion-project-creator)
+2. `/slack-channel-creator` → Slack channel
 4. `/tooling-setup-guide` → `Prospects/{slug}/tooling-setup.md`
 5. `/market-mapping` → `Prospects/{slug}/market-mapping.md`
 6. `/icp-mapping` → `Prospects/{slug}/icp-mapping.md`
