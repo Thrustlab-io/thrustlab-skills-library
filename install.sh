@@ -5,7 +5,7 @@
 
 set -e
 
-REPO="kiwiidb/thrustlab-skills-library"
+REPO="Thrustlab-io/thrustlab-skills-library"
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 CLAUDE_BIN_DIR="$HOME/.claude/bin"
 CLAUDE_DESKTOP_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"

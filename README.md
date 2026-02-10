@@ -5,7 +5,7 @@ A collection of Claude skills and MCP servers for Go-To-Market operations, clien
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kiwiidb/thrustlab-skills-library/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Thrustlab-io/thrustlab-skills-library/main/install.sh | bash
 ```
 
 This installs 22 skills to `~/.claude/skills/` and 4 MCP server binaries (pre-built universal macOS binaries) to `~/.claude/bin/`.
