@@ -101,10 +101,6 @@ echo -e "${BOLD}Configure MCP credentials${NC}"
 echo "Press Enter to skip any service you don't use."
 echo ""
 
-# Notion
-echo -e "${BOLD}Notion${NC}"
-prompt NOTION_API_KEY "API Key (ntn_...)"
-
 # Slack
 echo -e "${BOLD}Slack${NC}"
 prompt SLACK_BOT_TOKEN "Bot Token (xoxb-...)"
@@ -159,37 +155,6 @@ if command -v claude &> /dev/null; then
         fi
     }
 
-    # Notion (npx-based, not a local binary)
-    register_claude_code_npx() {
-        local name="$1"
-        shift
-        local env_args=()
-        local has_new_creds=false
-        while [ $# -gt 0 ]; do
-            local key="$1" val="$2"
-            shift 2
-            if [ -n "$val" ]; then
-                env_args+=(-e "${key}=${val}")
-                has_new_creds=true
-            fi
-        done
-        if [ "$has_new_creds" = true ]; then
-            claude mcp remove "$name" 2>/dev/null || true
-            claude mcp add -s user "${env_args[@]}" "$name" -- npx -y @modelcontextprotocol/server-notion 2>/dev/null && \
-                info "$name — registered with Claude Code" || \
-                warn "$name — could not register"
-        elif ! claude mcp get "$name" &>/dev/null; then
-            claude mcp add -s user "$name" -- npx -y @modelcontextprotocol/server-notion 2>/dev/null && \
-                info "$name — registered with Claude Code (no credentials)" || \
-                warn "$name — could not register"
-        else
-            info "$name — already registered, keeping existing credentials"
-        fi
-    }
-
-    register_claude_code_npx notion \
-        NOTION_API_KEY "$NOTION_API_KEY"
-
     register_claude_code slack "$CLAUDE_BIN_DIR/slack-mcp" \
         SLACK_BOT_TOKEN "$SLACK_BOT_TOKEN"
 
@@ -238,13 +203,6 @@ def env_or_existing(server_name, key):
     return servers.get(server_name, {}).get('env', {}).get(key, '')
 
 mcp_defs = {
-    'notion': {
-        'command': 'npx',
-        'args': ['-y', '@modelcontextprotocol/server-notion'],
-        'env': {
-            'NOTION_API_KEY': env_or_existing('notion', 'NOTION_API_KEY'),
-        },
-    },
     'slack': {
         'command': f'{bin_dir}/slack-mcp',
         'env': {
@@ -281,7 +239,6 @@ for name, defn in mcp_defs.items():
 with open(config_path, 'w') as f:
     json.dump(config, f, indent=2)
 " \
-    "NOTION_API_KEY=$NOTION_API_KEY" \
     "SLACK_BOT_TOKEN=$SLACK_BOT_TOKEN" \
     "CLAY_WORKSPACE_ID=$CLAY_WORKSPACE_ID" \
     "CLAY_SESSION_COOKIE=$CLAY_SESSION_COOKIE" \
@@ -307,7 +264,6 @@ for skill in "$CLAUDE_SKILLS_DIR"/*/; do
 done
 echo ""
 echo "MCP servers:"
-[ -n "$NOTION_API_KEY" ]           && info "notion — configured"         || warn "notion — no credentials (configure later)"
 [ -n "$SLACK_BOT_TOKEN" ]          && info "slack — configured"          || warn "slack — no credentials (configure later)"
 [ -n "$CLAY_WORKSPACE_ID" ]        && info "clay — configured"           || warn "clay — no credentials (configure later)"
 [ -n "$NAMECHEAP_API_KEY" ]        && info "namecheap — configured"      || warn "namecheap — no credentials (configure later)"
