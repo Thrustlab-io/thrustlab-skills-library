@@ -5,8 +5,12 @@
 - Jan (jan@thrustlab.io)
 
 ## Client Data Location
-- Client profiles: `client-profiles/{client-slug}/`
-- Strategies: `strategies/{client-slug}.md`
+- All client data: `Prospects/{client-slug}/`
+  - Profile: `Prospects/{client-slug}/profile.md`
+  - Strategy: `Prospects/{client-slug}/strategy.md`
+  - Market mapping: `Prospects/{client-slug}/market-mapping.md`
+  - ICP mapping: `Prospects/{client-slug}/icp-mapping.md`
+  - Tooling setup: `Prospects/{client-slug}/tooling-setup.md`
 - Clay referral: https://clay.com?via=c75c72
 
 ## Universal Copy Rules
@@ -41,13 +45,13 @@ See `shared/references/prompt-iteration-pipeline.md`.
 - Target: 70%+ pass rate, 0% fail rate, 30-40+ iterations per campaign over time
 
 ## Skill Execution Order
-1. `/client-onboarding` → `client-profiles/{slug}/profile.md`
-2. `/gtm-strategy-generator` → `strategies/{slug}.md`
+1. `/client-onboarding` → `Prospects/{slug}/profile.md`
+2. `/gtm-strategy-generator` → `Prospects/{slug}/strategy.md`
 3. `/notion-project-creator` → Notion workspace
 4. `/slack-channel-creator` → Slack channel
-5. `/tooling-setup-guide` → `client-profiles/{slug}/tooling-setup.md`
-6. `/market-mapping` → `client-profiles/{slug}/market-mapping.md`
-7. `/icp-mapping` → `client-profiles/{slug}/icp-mapping.md`
+5. `/tooling-setup-guide` → `Prospects/{slug}/tooling-setup.md`
+6. `/market-mapping` → `Prospects/{slug}/market-mapping.md`
+7. `/icp-mapping` → `Prospects/{slug}/icp-mapping.md`
 8. `/workflow-{trigger-name}` → Clay prompts + copy + enrichment config
 
 ## Available Workflow Skills

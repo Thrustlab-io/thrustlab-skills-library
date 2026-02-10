@@ -12,8 +12,8 @@ Produces a complete Clay workflow for outreach to past relationships who've chan
 **Why this is the #1 signal:** Former customers convert at dramatically higher rates because trust and product knowledge already exist. Combined with a funding event or hiring surge at the new company, this becomes the highest-converting stack in outbound.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
 - Champion contact list from client's CRM (past customers, past engaged prospects, past meeting contacts)
 - UserGems account OR willingness to use Clay's job change detection on an uploaded list
 

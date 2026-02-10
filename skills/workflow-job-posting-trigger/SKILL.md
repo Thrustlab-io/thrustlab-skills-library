@@ -10,10 +10,10 @@ Produces a complete, ready-to-deploy Clay workflow for job posting signals.
 **Copy DNA:** Hiring reveals pain. When a company posts a job, they're admitting they have a gap. The job description is a goldmine — it lists the exact responsibilities, tools, and challenges the company faces. Copy connects the hiring need to the client's solution, positioning it as a force multiplier for the new hire (or a reason they might not need to hire at all).
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
-- `client-profiles/{client-slug}/icp-mapping.md`
-- `client-profiles/{client-slug}/tooling-setup.md` (confirms signal source — Clay signal, Otta, LinkedIn Jobs)
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
+- `Prospects/{client-slug}/icp-mapping.md`
+- `Prospects/{client-slug}/tooling-setup.md` (confirms signal source — Clay signal, Otta, LinkedIn Jobs)
 
 ## Workflow
 

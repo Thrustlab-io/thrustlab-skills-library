@@ -8,7 +8,7 @@ description: Creates a private Slack channel for a Thrustlab client, invites the
 Creates a private Slack channel and posts a welcome message linking to the Notion workspace.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md` exists
+- `Prospects/{client-slug}/profile.md` exists
 - Notion workspace has been created (need Phase 1 page URL)
 - Slack MCP server is configured with bot token
 
@@ -16,7 +16,7 @@ Creates a private Slack channel and posts a welcome message linking to the Notio
 
 ### Step 1: Load Client Data
 
-Read `client-profiles/{client-slug}/profile.md` for:
+Read `Prospects/{client-slug}/profile.md` for:
 - Company name (for channel naming)
 - Client contact email (if available, for Slack invite)
 

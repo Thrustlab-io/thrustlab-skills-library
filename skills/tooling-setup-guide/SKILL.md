@@ -5,13 +5,13 @@ description: Generates a client-specific tooling setup guide based on the GTM st
 
 # Tooling Setup Guide
 
-Generates a comprehensive, client-specific tooling setup document saved to `client-profiles/{client-slug}/tooling-setup.md`.
+Generates a comprehensive, client-specific tooling setup document saved to `Prospects/{client-slug}/tooling-setup.md`.
 
 The client pays for their own tooling. This skill produces the instructions — not automated creation.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md` exists
-- `strategies/{client-slug}.md` exists (specifically: top 3 trigger plays, ICP scoring criteria, cadence structure)
+- `Prospects/{client-slug}/profile.md` exists
+- `Prospects/{client-slug}/strategy.md` exists (specifically: top 3 trigger plays, ICP scoring criteria, cadence structure)
 
 ## Workflow
 
@@ -28,7 +28,7 @@ See `references/trigger-tooling-map.md` for the complete mapping.
 
 ### Step 3: Generate Setup Document
 
-Write `client-profiles/{client-slug}/tooling-setup.md` using the structure in `references/setup-document-template.md`.
+Write `Prospects/{client-slug}/tooling-setup.md` using the structure in `references/setup-document-template.md`.
 
 The document must be:
 - Specific to THIS client's trigger plays (don't include tools they don't need)
@@ -38,6 +38,6 @@ The document must be:
 
 ### Step 4: Output & Share
 
-Save to `client-profiles/{client-slug}/tooling-setup.md`.
+Save to `Prospects/{client-slug}/tooling-setup.md`.
 
 Suggest sharing in the client's Slack channel as the next action item.

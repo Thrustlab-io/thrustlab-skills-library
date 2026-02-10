@@ -5,11 +5,11 @@ description: Builds the Total Addressable Market to Serviceable Available Market
 
 # Market Mapping
 
-Produces the complete market mapping saved to `client-profiles/{client-slug}/market-mapping.md`.
+Produces the complete market mapping saved to `Prospects/{client-slug}/market-mapping.md`.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md` exists
-- `strategies/{client-slug}.md` exists (specifically: TAM→SAM filtering section, ICP criteria)
+- `Prospects/{client-slug}/profile.md` exists
+- `Prospects/{client-slug}/strategy.md` exists (specifically: TAM→SAM filtering section, ICP criteria)
 
 ## Workflow
 
@@ -102,7 +102,7 @@ For each data source (standard + alternative):
 
 ### Step 6: Write market-mapping.md
 
-Save to `client-profiles/{client-slug}/market-mapping.md`. See `references/market-mapping-template.md` for the output structure.
+Save to `Prospects/{client-slug}/market-mapping.md`. See `references/market-mapping-template.md` for the output structure.
 
 ### Step 7: Validate with User
 

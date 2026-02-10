@@ -10,10 +10,10 @@ Produces a complete, ready-to-deploy Clay workflow for non-triggered, ICP-based 
 **Copy DNA:** Research depth as the hook. Without a trigger, there's no built-in reason for the prospect to care about your email TODAY. The only way to earn attention is through deep personalization that proves you've done your homework. Copy demonstrates genuine understanding of the prospect's company, role, and challenges — then connects to the client's value prop in a way that feels inevitable, not forced. Every email must pass the "would a human SDR write this after 15 minutes of research?" test.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
-- `client-profiles/{client-slug}/icp-mapping.md` (this workflow depends MORE on icp-mapping than any trigger workflow)
-- `client-profiles/{client-slug}/market-mapping.md` (account list sources)
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
+- `Prospects/{client-slug}/icp-mapping.md` (this workflow depends MORE on icp-mapping than any trigger workflow)
+- `Prospects/{client-slug}/market-mapping.md` (account list sources)
 
 ## Workflow
 

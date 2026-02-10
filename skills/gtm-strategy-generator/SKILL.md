@@ -1,19 +1,19 @@
 ---
 name: gtm-strategy-generator
-description: Generates a comprehensive GTM strategy for a Thrustlab client. Use when a client profile exists at client-profiles/{client-slug}/profile.md and a full outbound strategy is needed. Produces a 13-section strategy document with trigger playbook, messaging architecture, and 90-day blueprint. Reads from the canonical client profile — never from just a website URL alone.
+description: Generates a comprehensive GTM strategy for a Thrustlab client. Use when a client profile exists at Prospects/{client-slug}/profile.md and a full outbound strategy is needed. Produces a 13-section strategy document with trigger playbook, messaging architecture, and 90-day blueprint. Reads from the canonical client profile — never from just a website URL alone.
 ---
 
 # GTM Strategy Generator
 
-Generates a complete GTM strategy saved to `strategies/{client-slug}.md`.
+Generates a complete GTM strategy saved to `Prospects/{client-slug}/strategy.md`.
 
-**Prerequisite:** `client-profiles/{client-slug}/profile.md` must exist. Run `/client-onboarding` first if it doesn't.
+**Prerequisite:** `Prospects/{client-slug}/profile.md` must exist. Run `/client-onboarding` first if it doesn't.
 
 ## Workflow
 
 ### Step 1: Load Client Profile
 
-Read `client-profiles/{client-slug}/profile.md` and extract:
+Read `Prospects/{client-slug}/profile.md` and extract:
 - Company identity, product, value prop
 - Target verticals, company size, geographies
 - Target personas with pains
@@ -60,7 +60,7 @@ Before delivering, verify:
 
 ### Step 5: Save & Confirm
 
-Save to `strategies/{client-slug}.md`
+Save to `Prospects/{client-slug}/strategy.md`
 
 Present summary to user highlighting:
 - Top 3 recommended trigger plays (these drive Phase 1 tooling setup)

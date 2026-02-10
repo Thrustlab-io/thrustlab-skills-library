@@ -12,9 +12,9 @@ Produces a complete Clay workflow for outreach to companies currently using a co
 **The key insight:** Competitor customers are NOT cold. They've already bought in the category. Your job is to make them re-evaluate, not discover.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md` (especially competitor section and case studies)
-- `strategies/{client-slug}.md` (especially competitive battlecards in Appendix A)
-- `client-profiles/{client-slug}/icp-mapping.md`
+- `Prospects/{client-slug}/profile.md` (especially competitor section and case studies)
+- `Prospects/{client-slug}/strategy.md` (especially competitive battlecards in Appendix A)
+- `Prospects/{client-slug}/icp-mapping.md`
 - Knowledge of client's top 3-5 competitors
 - At least 1 case study of a customer who switched FROM a competitor
 

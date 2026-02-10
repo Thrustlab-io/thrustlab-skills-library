@@ -5,14 +5,14 @@ description: Refines the Ideal Customer Profile with account scoring, persona ca
 
 # ICP Mapping
 
-Produces the refined ICP saved to `client-profiles/{client-slug}/icp-mapping.md`.
+Produces the refined ICP saved to `Prospects/{client-slug}/icp-mapping.md`.
 
 This is the most copy-critical Phase 2 output. Every workflow skill in Phase 3 reads this file to generate personalized Clay prompts and outbound copy. Invest time here — weak ICP mapping = generic outbound.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md` exists
-- `strategies/{client-slug}.md` exists (ICP section, messaging architecture)
-- `client-profiles/{client-slug}/market-mapping.md` exists (data sources, enrichment fields)
+- `Prospects/{client-slug}/profile.md` exists
+- `Prospects/{client-slug}/strategy.md` exists (ICP section, messaging architecture)
+- `Prospects/{client-slug}/market-mapping.md` exists (data sources, enrichment fields)
 
 ## Workflow
 
@@ -153,7 +153,7 @@ For each persona × vertical combination, pre-generate fallback copy elements th
 
 ### Step 7: Write icp-mapping.md
 
-Save to `client-profiles/{client-slug}/icp-mapping.md` using the structure in `references/icp-output-template.md`.
+Save to `Prospects/{client-slug}/icp-mapping.md` using the structure in `references/icp-output-template.md`.
 
 ### Step 8: Validate
 

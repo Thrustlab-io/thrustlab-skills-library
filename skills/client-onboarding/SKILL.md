@@ -5,7 +5,7 @@ description: Creates a structured client profile from intake data or discovery c
 
 # Client Onboarding
 
-Creates the canonical client profile at `client-profiles/{client-slug}/profile.md`.
+Creates the canonical client profile at `Prospects/{client-slug}/profile.md`.
 
 This file is the single source of truth for every downstream skill. Nothing ships without it.
 
@@ -37,7 +37,7 @@ Format: lowercase, hyphens, no spaces.
 ### Step 3: Create Profile Directory
 
 ```
-client-profiles/{client-slug}/
+Prospects/{client-slug}/
 └── profile.md
 ```
 
@@ -111,62 +111,35 @@ Structure the profile using this exact format:
 - **Words/phrases to avoid:** {client-specific banned terms}
 - **Words/phrases to use:** {client-specific preferred language}
 
-## Tech Stack
+## Tech Stack & Infrastructure
 - **CRM:** {Salesforce / HubSpot / Pipedrive / other}
+- **CRM data quality:** {how clean is the data? Approximate contact count?}
+- **Historical contacts in CRM:** {approximate number of past customers, past prospects, past meetings — whatever exists}
 - **Email sequencer:** {Smartlead / Instantly / Outreach / other / none yet}
-- **Intent/signal tools:** {existing tools, if any}
-- **Other relevant tools:** {marketing automation, analytics, etc.}
+- **Existing signal/intent tools:** {list any tools already in use — e.g., Dealfront, RB2B, Teamfluence, BuiltWith, UserGems, Common Room, etc.}
+- **Marketing automation:** {HubSpot Marketing / Marketo / none / other}
+- **Other relevant tools:** {analytics, BI, project management, etc.}
 
-## Existing Assets
-- **Case studies:** {list with URLs if available}
-- **Social proof:** {notable logos, metrics, quotes}
-- **Content library:** {blog, resources, webinars — what exists}
-- **LinkedIn presence:** {company page URL, key team members}
-
-## Hook Type Readiness
-*(Determines which hook patterns are available — directly impacts reply rates)*
-
-- **Timeline proof points by vertical:**
-  - {vertical_1}: "{discovery_to_result} timeline — e.g., 'From first audit to full visibility in 6 weeks'"
-  - {vertical_2}: "{timeline}"
-- **Numbers proof points:**
-  - "{specific metric — e.g., '40% reduction in review cycles'}"
-  - "{specific metric}"
-- **Named case studies (referenceable in copy):**
-  - {company_1} ({vertical}): "{result}"
-  - {company_2} ({vertical}): "{result}"
-- **Switch stories (customers who switched FROM a competitor):**
-  - Switched from {competitor}: {company} — "{result}"
-
-## Champion Tracking Readiness
-*(Required for the highest-converting signal type)*
-
-- **CRM contact export available:** {yes/no}
-- **Estimated past customer contacts:** {number}
-- **Estimated past prospect contacts (meeting stage+):** {number}
-- **UserGems or job change tracking in place:** {yes/no/planned}
-- **CRM fields available:** {relationship_type, product_used, result_achieved — which exist?}
-
-## Competitor Detection
-- **Competitors detectable via BuiltWith/tech scanning:** {yes for which competitors / no}
-- **Competitors detectable via job postings:** {yes — which keywords / no}
-- **Strongest switch stories:**
-  - From {competitor_1}: {company} saw {result}
-  - From {competitor_2}: {company} saw {result}
-
-## Dark Funnel & Signal Preferences
-- **Website visitor ID tool in place:** {Dealfront / RB2B / none / planned}
-- **LinkedIn engagement monitoring:** {Teamfluence / Trigify / none / planned}
-- **Community monitoring:** {Common Room / none / planned}
-- **Primary market for dark funnel tooling:** {EU / US / Global}
-- **Content publishing frequency:** {weekly / monthly / sporadic / none}
-- **Content topics:** {list main content themes}
+## Existing Assets & Proof Points
+- **Case studies:**
+  {For each, capture: company name (can we reference them by name?), vertical, specific result, timeline to result if known}
+  - {company_1} ({vertical}): "{result}" — {timeline if known} — {referenceable by name? yes/no}
+  - {company_2} ({vertical}): "{result}" — {timeline if known} — {referenceable by name? yes/no}
+- **Quantified metrics:** {any hard numbers — e.g., "40% reduction in X", "6 weeks to full deployment"}
+- **Switch stories:** {customers who switched from a specific competitor — what they switched from, why, what result}
+- **Customer logos available for use:** {list}
+- **Content library:** {blog, resources, webinars, whitepapers — what exists, approximate volume}
+- **Content publishing cadence:** {weekly / monthly / sporadic / none}
+- **Content topics:** {main themes covered}
+- **LinkedIn presence:** {company page URL, follower count if known, key team members who post}
+- **Community presence:** {Slack communities, Discord, forums, events — anything where prospects or customers gather}
 
 ## Engagement Parameters
 - **Clay plan tier:** {starter / explorer / pro / enterprise}
 - **Expected sending volume:** {emails per week/month}
 - **Budget considerations:** {any relevant constraints}
 - **Timeline:** {launch urgency}
+- **Primary market:** {EU / US / Global — affects tooling recommendations}
 
 ---
 *Profile created: {date}*
@@ -194,6 +167,6 @@ Update based on feedback before proceeding.
 
 ## Output
 
-Final deliverable: `client-profiles/{client-slug}/profile.md`
+Final deliverable: `Prospects/{client-slug}/profile.md`
 
 This file is now the input for `/gtm-strategy-generator`.

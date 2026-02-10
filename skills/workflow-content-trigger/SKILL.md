@@ -12,7 +12,7 @@ Produces a complete, ready-to-deploy Clay workflow for content engagement signal
 **Prerequisites:**
 - All standard upstream files
 - **CRITICAL:** Client must have content assets (blog, whitepapers, webinars, podcast, case studies). This trigger doesn't work without content to reference.
-- `client-profiles/{client-slug}/tooling-setup.md` (confirms HubSpot/Marketo, LinkedIn Analytics, or Phantom Buster)
+- `Prospects/{client-slug}/tooling-setup.md` (confirms HubSpot/Marketo, LinkedIn Analytics, or Phantom Buster)
 
 ## Workflow
 

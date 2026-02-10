@@ -17,8 +17,8 @@ Produces a complete Clay workflow for outreach based on anonymous engagement sig
 - **Community signals:** Common Room (Slack, Discord, GitHub, forums)
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
 - At least one dark funnel signal source configured and sending data to Clay
 - Content library: client's blogs, case studies, or resources to share (required for value-forward copy)
 

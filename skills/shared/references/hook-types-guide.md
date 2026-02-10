@@ -248,4 +248,4 @@ During client onboarding, populate these proof points for hook type classificati
 | {vertical_2} | ✅/❌ | ✅/❌ | ✅/❌ | {recommended} |
 ```
 
-This matrix gets stored in `client-profiles/{slug}/profile.md` and is read by the `hook_type` classification prompt.
+This matrix gets stored in `Prospects/{slug}/profile.md` and is read by the `hook_type` classification prompt.

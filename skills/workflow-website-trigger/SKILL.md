@@ -10,11 +10,11 @@ Produces a complete, ready-to-deploy Clay workflow for website visitor intent si
 **Copy DNA:** Recency + inferred intent. The prospect visited specific pages — we know what they're exploring. Copy is warm, timely, and connects their browsing behavior to a relevant pain point. Never creepy ("I saw you on our site"), always insightful ("teams exploring [area] usually...").
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
-- `client-profiles/{client-slug}/icp-mapping.md` (persona cards, pain mapping, fallbacks)
-- `client-profiles/{client-slug}/market-mapping.md` (for enrichment field availability)
-- `client-profiles/{client-slug}/tooling-setup.md` (confirms which intent tool — RB2B, Clearbit, 6sense)
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
+- `Prospects/{client-slug}/icp-mapping.md` (persona cards, pain mapping, fallbacks)
+- `Prospects/{client-slug}/market-mapping.md` (for enrichment field availability)
+- `Prospects/{client-slug}/tooling-setup.md` (confirms which intent tool — RB2B, Clearbit, 6sense)
 
 ## Workflow
 

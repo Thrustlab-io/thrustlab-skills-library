@@ -47,42 +47,33 @@ Complete field list for client onboarding. Prioritize fields marked **[Critical]
 
 ### Tech Stack & Tooling
 - Current CRM (Salesforce, HubSpot, Pipedrive, other)
+- "How clean is your CRM data? Roughly how many contacts do you have?" (past customers, past prospects, leads)
 - Current email sequencing tool (or none)
-- Current intent/signal tools (or none)
+- Any existing signal, intent, or monitoring tools (e.g., Dealfront, RB2B, UserGems, BuiltWith, Teamfluence, Common Room — anything)
 - Other relevant marketing/sales tools
+
+### Proof Points & Customer Evidence
+These are the raw materials for high-performing outbound copy. The more specific, the better.
+
+- **Results with timelines:** "How long does a typical customer take from first meeting to seeing measurable results?" (e.g., "6 weeks from pilot to 20% improvement")
+- **Specific metrics:** "What specific numbers can you share? (e.g., X% improvement, Y hours saved, $Z cost reduction)"
+- **Named references:** "Can you name 2-3 customers and their results that we can reference in outreach? Which can we mention by name?"
+- **Competitor switches:** "Have customers switched FROM a competitor? Which competitor and what was the result?"
+- **Logo permissions:** "Which customer logos can we reference?"
+
+### Content & Community Presence
+- "What content do you publish? (blog, podcast, webinars, whitepapers, LinkedIn posts)"
+- "How often?" (weekly / monthly / sporadic / none)
+- "What topics do you cover?"
+- "Are there communities where your buyers participate? (Slack groups, Discord, forums, events)"
+- Company LinkedIn page URL, key team members who post actively
 
 ### Engagement Parameters
 - Expected Clay plan tier (starter $149/mo, explorer $349/mo, pro $800/mo)
 - Expected email sending volume (per week/month)
 - Any budget or timeline constraints
 - Launch urgency: ASAP / within 2 weeks / within a month
-
-### Hook Type Readiness (For Copy Optimization)
-These questions populate the hook type system — determines which email opener style performs best. See `shared/references/hook-types-guide.md`.
-
-- **Timeline proof:** "How long does a typical customer take from first meeting to seeing measurable results?" (e.g., "6 weeks from pilot to 20% improvement")
-- **Timeline milestones:** "What happens at each stage? What's the first value they see?"
-- **Numbers proof:** "What specific metrics can you share? (e.g., X% improvement, Y hours saved, $Z cost reduction)"
-- **Named case studies:** "Can you name 2-3 customers and their results that we can reference in outreach?"
-- **Switch stories:** "Have customers switched FROM a competitor? Which competitor and what was the result?"
-
-### Champion Tracking Readiness
-- **[Critical for champion tracking]** "Can you export a list of past customer contacts from your CRM?"
-- "Can you export a list of past prospects who had meetings or engaged significantly?"
-- "Do you use UserGems or similar job change tracking tools?"
-- "How many past customer contacts would be on this list? (rough estimate)"
-
-### Competitor Detection
-- "For your competitors: is their product detectable via technology scanning? (e.g., website widgets, JavaScript tags, login pages)"
-- "Do you have any customers who switched FROM a specific competitor?"
-- "Which competitor switch stories are strongest (best before/after data)?"
-
-### Dark Funnel & Social Signals
-- "Do you currently use website visitor identification tools? (Dealfront, RB2B, Clearbit Reveal, 6sense)"
-- "Do you currently monitor LinkedIn engagement on your content? (Teamfluence, Trigify, Phantom Buster)"
-- "Do you have active communities where your ICP participates? (Slack groups, Discord, GitHub, forums)"
-- "What content do you publish regularly? (blog, podcast, webinars, LinkedIn posts)"
-- "Primary market for dark funnel tooling: EU / US / Global" (determines Dealfront vs RB2B recommendation)
+- Primary market: EU / US / Global
 
 ## Research-First Approach
 

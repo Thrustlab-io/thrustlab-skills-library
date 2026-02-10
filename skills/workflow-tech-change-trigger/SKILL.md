@@ -11,7 +11,7 @@ Produces a complete, ready-to-deploy Clay workflow for tech stack change signals
 
 **Prerequisites:**
 - All standard upstream files
-- `client-profiles/{client-slug}/tooling-setup.md` (confirms BuiltWith/Wappalyzer setup)
+- `Prospects/{client-slug}/tooling-setup.md` (confirms BuiltWith/Wappalyzer setup)
 
 ## Workflow
 

@@ -10,11 +10,11 @@ Produces a complete, ready-to-deploy Clay workflow for job change signals.
 **Copy DNA:** Transition momentum. A target persona just changed roles — they're in "new broom" mode, evaluating everything, eager to make an impact in the first 90 days. Copy acknowledges the move, references their background, and positions the client's solution as part of their success at the new company. Warm, congratulatory, never presumptuous.
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
-- `client-profiles/{client-slug}/icp-mapping.md`
-- `client-profiles/{client-slug}/market-mapping.md`
-- `client-profiles/{client-slug}/tooling-setup.md` (confirms signal source — UserGems, Clay signal, or manual SN alerts)
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
+- `Prospects/{client-slug}/icp-mapping.md`
+- `Prospects/{client-slug}/market-mapping.md`
+- `Prospects/{client-slug}/tooling-setup.md` (confirms signal source — UserGems, Clay signal, or manual SN alerts)
 
 ## Workflow
 

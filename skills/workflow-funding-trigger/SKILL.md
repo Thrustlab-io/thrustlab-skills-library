@@ -10,10 +10,10 @@ Produces a complete, ready-to-deploy Clay workflow for funding event signals.
 **Copy DNA:** Growth momentum + investment thesis alignment. When a company raises money, they've committed to a growth plan. The funding announcement often reveals WHERE they're investing (hiring, product, expansion). Copy connects the client's solution to the company's stated growth priorities, NOT just "congrats on the raise." The investor angle can add credibility — "companies backed by [investor] typically invest in [area]."
 
 **Prerequisites:**
-- `client-profiles/{client-slug}/profile.md`
-- `strategies/{client-slug}.md`
-- `client-profiles/{client-slug}/icp-mapping.md`
-- `client-profiles/{client-slug}/tooling-setup.md`
+- `Prospects/{client-slug}/profile.md`
+- `Prospects/{client-slug}/strategy.md`
+- `Prospects/{client-slug}/icp-mapping.md`
+- `Prospects/{client-slug}/tooling-setup.md`
 
 ## Workflow
 
