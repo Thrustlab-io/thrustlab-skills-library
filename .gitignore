@@ -1,2 +1,19 @@
+# MCP config (contains tokens)
 .mcp.json
-slack-mcp
+
+# Compiled MCP binaries
+clay-mcp-server/clay-mcp-server
+clay-mcp-server/clay-cli
+slack-mcp/slack-mcp
+namecheap-mcp/namecheap-mcp
+premiuminboxes-mcp/premiuminboxes-mcp
+
+# Build artifacts
+dist/
+
+# Data dumps and captures
+*.har
+clay-post-requests.json
+clay-post-requests-filtered.json
+clay-table-creation-requests.json
+google-maps-table-creation.json

@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Build MCP servers (universal binaries)
+        run: |
+          mkdir -p dist/bin
+
+          # Build each MCP server for arm64 and amd64, then merge with lipo
+          declare -A servers
+          servers[clay-mcp-server]="clay-mcp-server:./cmd/mcp-server"
+          servers[slack-mcp]="slack-mcp:."
+          servers[namecheap-mcp]="namecheap-mcp:."
+          servers[premiuminboxes-mcp]="premiuminboxes-mcp:."
+
+          for name in "${!servers[@]}"; do
+            IFS=':' read -r dir entry <<< "${servers[$name]}"
+            echo "Building $name..."
+
+            cd "$dir"
+            CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o "../dist/bin/${name}-arm64" "$entry"
+            CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o "../dist/bin/${name}-amd64" "$entry"
+            cd ..
+
+            lipo -create -output "dist/bin/$name" "dist/bin/${name}-arm64" "dist/bin/${name}-amd64"
+            rm "dist/bin/${name}-arm64" "dist/bin/${name}-amd64"
+            chmod +x "dist/bin/$name"
+
+            echo "  -> $(file dist/bin/$name)"
+          done
+
+      - name: Package skills
+        run: |
+          mkdir -p dist/skills
+          cp -r skills/* dist/skills/
+
+      - name: Create tarball
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          cd dist
+          tar -czf "../thrustlab-${VERSION}-darwin-universal.tar.gz" bin/ skills/
+          cd ..
+          echo "TARBALL=thrustlab-${VERSION}-darwin-universal.tar.gz" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.TARBALL }}
+          generate_release_notes: true

@@ -1,198 +1,111 @@
-# Thrustlab GTM Claude Skills Library
+# Thrustlab GTM — Claude Skills & MCP Servers
 
-A curated collection of Claude Desktop skills designed to streamline Go-To-Market (GTM) operations, client onboarding, and strategic planning workflows.
+A collection of Claude skills and MCP servers for Go-To-Market operations, client onboarding, and outreach automation.
 
-## 📚 Available Skills
-
-### Notion Client Onboarding
-Automates the setup of a complete Notion workspace for new GTM clients, including:
-- 5 pre-configured databases (Strategy, Competitive Intel, Personas, Content, Meeting Notes)
-- 3 ready-to-use templates (Status Reports, Strategy Docs, Launch Checklists)
-- Standardized project structure for consistent client delivery
-
-**Usage:** `/notion-client-onboarding [client name]`
-
-**Requirements:** [Notion MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/notion)
-
-### Clay Client Workspace
-Guides setup of a Clay.com workspace for new GTM clients with structured tables for prospect research, data enrichment, and outreach automation:
-- 5 pre-configured Clay tables (Target Accounts, Contacts, Outreach, Competitive Intel, ICP Analysis)
-- Automated enrichment workflows and trigger-based alerts
-- AI-powered research with Claygent prompts
-- CRM and email tool integrations
-- Thrustlab team admin access for ongoing support
-
-**Usage:** `/clay-client-workspace [client name]`
-
-**Requirements:** Clay.com account (guided setup via Thrustlab referral link)
-
-## 🚀 Installation
-
-### Quick Install (Recommended)
+## Install
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kiwiidb/thrustlab-skills-library/main/install.sh | bash
 ```
 
-### Manual Installation
+This installs 22 skills to `~/.claude/skills/` and 4 MCP server binaries (pre-built universal macOS binaries) to `~/.claude/bin/`.
 
-**For Claude Desktop:**
-```bash
-# Clone the repository
-git clone https://github.com/your-org/thrustlab.git
+### Configure MCP Credentials
 
-# Copy skills to your Claude skills directory
-cp -r thrustlab/skills/* ~/.claude/skills/
-```
-
-**For Claude Code (CLI):**
-```bash
-# Clone the repository
-git clone https://github.com/your-org/thrustlab.git
-
-# Copy skills to your project
-cp -r thrustlab/skills/* .claude/skills/
-```
-
-### Development Setup
-
-If you want to contribute or develop locally:
+After install, add your API credentials:
 
 ```bash
-# Clone and symlink for live updates
-git clone https://github.com/your-org/thrustlab.git
-ln -s "$(pwd)/thrustlab/skills"/* ~/.claude/skills/
+# Slack
+claude mcp add -e SLACK_BOT_TOKEN="xoxb-..." -s user slack -- ~/.claude/bin/slack-mcp
+
+# Clay
+claude mcp add -e CLAY_WORKSPACE_ID="..." -e CLAY_SESSION_COOKIE="..." -s user clay -- ~/.claude/bin/clay-mcp-server
+
+# Namecheap
+claude mcp add -e NAMECHEAP_API_USER="..." -e NAMECHEAP_API_KEY="..." -e NAMECHEAP_USERNAME="..." -e NAMECHEAP_CLIENT_IP="..." -s user namecheap -- ~/.claude/bin/namecheap-mcp
+
+# Premium Inboxes
+claude mcp add -e PREMIUMINBOXES_API_TOKEN="..." -s user premiuminboxes -- ~/.claude/bin/premiuminboxes-mcp
 ```
 
-## 📋 Prerequisites
+Restart Claude Desktop after configuring.
 
-### Required MCP Servers
+## Skills
 
-Some skills require specific MCP (Model Context Protocol) servers to be installed:
+### Foundation
+| Skill | Purpose |
+|-------|---------|
+| `/client-onboarding` | Create canonical client profile from intake data |
+| `/gtm-strategy-generator` | Generate 13-section GTM strategy with Clay search plan |
+| `/tooling-setup-guide` | Infrastructure checklist for signal sources |
+| `/market-mapping` | Build market research and account lists |
+| `/icp-mapping` | Create persona x vertical matrix |
 
-#### Notion MCP Server
-Required for: `notion-client-onboarding`
+### Admin & Integrations
+| Skill | Purpose |
+|-------|---------|
+| `/notion-project-creator` | Create Notion workspace with 14 pages from strategy |
+| `/slack-channel-creator` | Create private Slack channel with team invites |
+| `/clay-campaign-generator` | Create Clay workbook and search tables from strategy |
+| `/clay-account-setup` | Guide Clay.com account creation |
 
-**Installation:**
-1. Add to your Claude Desktop config at `~/Library/Application Support/Claude/claude_desktop_config.json`:
+### Trigger-Based Workflows
+| Skill | Signal |
+|-------|--------|
+| `/workflow-website-trigger` | Website visitor intent (RB2B/Dealfront) |
+| `/workflow-job-change-trigger` | Person changes roles (UserGems/Clay) |
+| `/workflow-job-posting-trigger` | Company posts relevant job |
+| `/workflow-funding-trigger` | Company raises funding |
+| `/workflow-tech-change-trigger` | Company adds/removes tech (BuiltWith) |
+| `/workflow-growth-trigger` | Headcount surge or expansion |
+| `/workflow-compliance-trigger` | Regulatory deadline approaching |
+| `/workflow-content-trigger` | Prospect engages with content |
+| `/workflow-champion-tracking` | Former customers change jobs |
+| `/workflow-competitor-customer` | Companies using competitor products |
+| `/workflow-dark-funnel` | Anonymous engagement signals |
+| `/workflow-general-outbound` | Research-based outreach (no trigger) |
 
-```json
-{
-  "mcpServers": {
-    "notion": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-notion"
-      ],
-      "env": {
-        "NOTION_API_KEY": "your-notion-integration-token"
-      }
-    }
-  }
-}
-```
-
-2. Get your Notion API key:
-   - Go to https://www.notion.so/my-integrations
-   - Create a new integration
-   - Copy the "Internal Integration Token"
-   - Share relevant Notion pages with your integration
-
-3. Restart Claude Desktop
-
-#### Clay.com Account
-Required for: `clay-client-workspace`
-
-**Setup:**
-The skill guides you through setting up a Clay.com workspace via their web interface:
-
-1. Create account using Thrustlab referral link (included in skill)
-2. Add Thrustlab team members as workspace admins
-3. Configure tables, enrichments, and automations
-4. Connect CRM and email tool integrations
-
-**Note:** Clay.com doesn't have programmatic API access, so the skill provides step-by-step guided setup instructions
-
-## 💡 Usage Examples
-
-### Setting Up a New Client Project
+### Execution Order
 
 ```
-/notion-client-onboarding Acme Corp
+/client-onboarding → /gtm-strategy-generator → /notion-project-creator → /slack-channel-creator → /tooling-setup-guide → /market-mapping → /icp-mapping → /workflow-*
 ```
 
-Claude will guide you through:
-1. Gathering client details (start date, contact, GTM focus)
-2. Creating the complete Notion workspace structure
-3. Pre-populating databases with standard tasks
-4. Setting up templates and resources
+## MCP Servers
 
-### Typical Workflow
+| Server | Tools | Auth |
+|--------|-------|------|
+| Clay | create_workbook, search_companies_by_industry, search_businesses_by_geography | CLAY_WORKSPACE_ID + CLAY_SESSION_COOKIE |
+| Slack | create_channel, lookup_user, invite_users, send_message | SLACK_BOT_TOKEN |
+| Namecheap | check_domain, create_domain, list_domains | NAMECHEAP_API_KEY + user/ip |
+| Premium Inboxes | get/create/cancel subscriptions and orders | PREMIUMINBOXES_API_TOKEN |
 
-**Complete Client Onboarding:**
-1. New client signed → Run `/notion-client-onboarding [Client Name]`
-2. Notion workspace created with all databases and templates
-3. Run `/clay-client-workspace [Client Name]`
-4. Follow guided setup to create Clay.com workspace with Thrustlab referral
-5. Add Thrustlab team as admins to Clay workspace
-6. Configure 5 core tables with enrichment and automation
-7. Begin prospect research and ICP validation in Clay
-8. Use Notion for strategy, deliverables, and client reporting
-9. Leverage Clay for data enrichment and automated outreach
+## Development
 
-## 🛠️ Skill Development
+### Releasing
 
-Want to add your own GTM skills? Here's the structure:
+Tag a version to trigger the build:
 
-```
-skills/
-└── your-skill-name/
-    └── SKILL.md
+```bash
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
-**SKILL.md format:**
+GitHub Actions will build universal macOS binaries for all MCP servers and attach them to the release.
+
+### Adding a Skill
+
+Create `skills/<skill-name>/SKILL.md`:
+
 ```yaml
 ---
-name: your-skill-name
-description: What your skill does
-argument-hint: "expected arguments"
+name: skill-name
+description: What the skill does
 ---
 
-# Your Skill Instructions
-
-Detailed instructions for Claude on how to execute this skill...
+# Instructions for Claude...
 ```
 
-See [skills/notion-client-onboarding/SKILL.md](skills/notion-client-onboarding/SKILL.md) for a complete example.
+## License
 
-## 🤝 Contributing
-
-We welcome contributions! To add a new skill:
-
-1. Fork this repository
-2. Create a new skill directory under `skills/`
-3. Add your `SKILL.md` file with proper frontmatter
-4. Test the skill locally
-5. Submit a pull request with:
-   - Skill description
-   - Usage examples
-   - Any prerequisites (MCP servers, etc.)
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details
-
-## 🔗 Resources
-
-- [Claude Code Documentation](https://code.claude.com)
-- [Model Context Protocol (MCP)](https://modelcontextprotocol.io)
-- [Notion API Documentation](https://developers.notion.com)
-
-## 🆘 Support
-
-Found a bug or have a feature request? [Open an issue](https://github.com/your-org/thrustlab/issues)
-
----
-
-Built with ❤️ for GTM teams using Claude Desktop
+MIT

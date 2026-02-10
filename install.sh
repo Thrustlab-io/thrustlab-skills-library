@@ -1,221 +1,163 @@
 #!/bin/bash
 
-# Thrustlab GTM Claude Skills - Installation Script
-# This script installs Thrustlab skills to your Claude skills directory
+# Thrustlab GTM Skills + MCP Servers — Installer
+# Usage: curl -fsSL https://raw.githubusercontent.com/kiwiidb/thrustlab-skills-library/main/install.sh | bash
 
 set -e
 
-# Colors for output
+REPO="kiwiidb/thrustlab-skills-library"
+CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
+CLAUDE_BIN_DIR="$HOME/.claude/bin"
+CLAUDE_DESKTOP_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BOLD='\033[1m'
+NC='\033[0m'
 
-# Detect Claude skills directory
-CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
+info()  { echo -e "${GREEN}✓${NC} $1"; }
+warn()  { echo -e "${YELLOW}!${NC} $1"; }
+error() { echo -e "${RED}✗${NC} $1"; exit 1; }
 
-echo "╔════════════════════════════════════════════════════════╗"
-echo "║   Thrustlab GTM Claude Skills - Installer             ║"
-echo "╚════════════════════════════════════════════════════════╝"
+echo ""
+echo -e "${BOLD}Thrustlab GTM — Skills & MCP Installer${NC}"
+echo "────────────────────────────────────────"
 echo ""
 
-# Check if Claude directory exists
-if [ ! -d "$HOME/.claude" ]; then
-    echo -e "${YELLOW}Warning: ~/.claude directory not found.${NC}"
-    echo "This might mean Claude Desktop/Code is not installed."
-    echo ""
-    read -p "Do you want to create the directory anyway? (y/n) " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${RED}Installation cancelled.${NC}"
-        exit 1
-    fi
+# ── Fetch latest release ─────────────────────────────────────────────
+
+echo "Fetching latest release..."
+RELEASE_JSON=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest") || error "Failed to fetch release info. Is the repo public?"
+
+VERSION=$(echo "$RELEASE_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'])")
+TARBALL_URL=$(echo "$RELEASE_JSON" | python3 -c "
+import sys, json
+assets = json.load(sys.stdin)['assets']
+for a in assets:
+    if a['name'].endswith('.tar.gz'):
+        print(a['browser_download_url'])
+        break
+")
+
+if [ -z "$TARBALL_URL" ]; then
+    error "No tarball found in release $VERSION"
 fi
 
-# Create skills directory if it doesn't exist
+info "Latest release: $VERSION"
+
+# ── Download and extract ─────────────────────────────────────────────
+
+TEMP_DIR=$(mktemp -d)
+trap "rm -rf $TEMP_DIR" EXIT
+
+echo "Downloading $VERSION..."
+curl -fsSL -o "$TEMP_DIR/thrustlab.tar.gz" "$TARBALL_URL" || error "Download failed"
+tar -xzf "$TEMP_DIR/thrustlab.tar.gz" -C "$TEMP_DIR" || error "Extract failed"
+
+info "Downloaded and extracted"
+
+# ── Install skills ───────────────────────────────────────────────────
+
 mkdir -p "$CLAUDE_SKILLS_DIR"
-echo -e "${GREEN}✓${NC} Skills directory ready: $CLAUDE_SKILLS_DIR"
+cp -r "$TEMP_DIR/skills/"* "$CLAUDE_SKILLS_DIR/"
+SKILL_COUNT=$(find "$CLAUDE_SKILLS_DIR" -maxdepth 1 -type d | tail -n +2 | wc -l | tr -d ' ')
+info "Installed $SKILL_COUNT skills → $CLAUDE_SKILLS_DIR"
 
-# Determine installation method
-if [ -d ".git" ] && [ -d "skills" ]; then
-    # Running from cloned repository
-    echo ""
-    echo "Installing from local repository..."
-    cp -r skills/* "$CLAUDE_SKILLS_DIR/"
-    echo -e "${GREEN}✓${NC} Skills copied to $CLAUDE_SKILLS_DIR"
-else
-    # Need to download from GitHub
-    echo ""
-    echo "Downloading latest skills from GitHub..."
+# ── Install MCP binaries ────────────────────────────────────────────
 
-    TEMP_DIR=$(mktemp -d)
-
-    # Download and extract
-    if command -v curl &> /dev/null; then
-        curl -fsSL https://github.com/your-org/thrustlab/archive/main.tar.gz | tar -xz -C "$TEMP_DIR"
-    elif command -v wget &> /dev/null; then
-        wget -qO- https://github.com/your-org/thrustlab/archive/main.tar.gz | tar -xz -C "$TEMP_DIR"
-    else
-        echo -e "${RED}Error: curl or wget is required but not installed.${NC}"
-        exit 1
-    fi
-
-    # Copy skills
-    cp -r "$TEMP_DIR"/thrustlab-main/skills/* "$CLAUDE_SKILLS_DIR/"
-
-    # Cleanup
-    rm -rf "$TEMP_DIR"
-
-    echo -e "${GREEN}✓${NC} Skills downloaded and installed"
-fi
-
-# Install Slack MCP globally
-echo ""
-echo "Installing Slack MCP..."
-
-CLAUDE_BIN_DIR="$HOME/.claude/bin"
 mkdir -p "$CLAUDE_BIN_DIR"
+cp "$TEMP_DIR/bin/"* "$CLAUDE_BIN_DIR/"
+chmod +x "$CLAUDE_BIN_DIR/"*
+info "Installed MCP binaries → $CLAUDE_BIN_DIR"
 
-if [ -d ".git" ] && [ -f "slack-mcp/slack-mcp" ]; then
-    # Copy binary to global location
-    cp slack-mcp/slack-mcp "$CLAUDE_BIN_DIR/"
-    chmod +x "$CLAUDE_BIN_DIR/slack-mcp"
-    echo -e "${GREEN}✓${NC} Slack MCP binary installed to $CLAUDE_BIN_DIR"
+# ── Register MCPs ────────────────────────────────────────────────────
 
-    # Register with Claude (requires SLACK_BOT_TOKEN to be set)
-    if command -v claude &> /dev/null; then
-        if claude mcp get slack &> /dev/null; then
-            echo -e "${YELLOW}!${NC} Slack MCP already registered with Claude"
+MCP_SERVERS=(
+    "slack:slack-mcp"
+    "clay:clay-mcp-server"
+    "namecheap:namecheap-mcp"
+    "premiuminboxes:premiuminboxes-mcp"
+)
+
+if command -v claude &> /dev/null; then
+    echo ""
+    echo "Registering MCP servers with Claude Code..."
+    for entry in "${MCP_SERVERS[@]}"; do
+        IFS=':' read -r name binary <<< "$entry"
+        if claude mcp get "$name" &> /dev/null 2>&1; then
+            warn "$name — already registered, skipping"
         else
-            if [ -n "$SLACK_BOT_TOKEN" ]; then
-                claude mcp add -e SLACK_BOT_TOKEN="$SLACK_BOT_TOKEN" -s user slack -- "$CLAUDE_BIN_DIR/slack-mcp"
-                echo -e "${GREEN}✓${NC} Slack MCP registered with Claude"
-            else
-                echo -e "${YELLOW}!${NC} Set SLACK_BOT_TOKEN and run: claude mcp add -e SLACK_BOT_TOKEN=\"\$SLACK_BOT_TOKEN\" -s user slack -- $CLAUDE_BIN_DIR/slack-mcp"
-            fi
+            claude mcp add -s user "$name" -- "$CLAUDE_BIN_DIR/$binary" 2>/dev/null && \
+                info "$name — registered" || \
+                warn "$name — could not register (add manually later)"
         fi
-    fi
-else
-    echo -e "${YELLOW}!${NC} Slack MCP binary not found (run from cloned repo to install)"
+    done
 fi
 
-# Install Premium Inboxes MCP
-echo ""
-echo "Installing Premium Inboxes MCP..."
+# ── Patch Claude Desktop config (fallback) ───────────────────────────
 
-if [ -d ".git" ] && [ -d "premiuminboxes-mcp" ]; then
-    # Build if needed
-    if [ ! -f "premiuminboxes-mcp/premiuminboxes-mcp" ]; then
-        echo "Building Premium Inboxes MCP..."
-        if command -v go &> /dev/null; then
-            (cd premiuminboxes-mcp && go build -o premiuminboxes-mcp)
-            echo -e "${GREEN}✓${NC} Premium Inboxes MCP built successfully"
-        else
-            echo -e "${RED}✗${NC} Go is required to build Premium Inboxes MCP"
-            echo "Please install Go from https://golang.org/dl/"
-        fi
-    fi
+if [ -d "$(dirname "$CLAUDE_DESKTOP_CONFIG")" ]; then
+    echo ""
+    echo "Updating Claude Desktop configuration..."
+    python3 -c "
+import json, os
 
-    if [ -f "premiuminboxes-mcp/premiuminboxes-mcp" ]; then
-        # Copy binary to global location
-        cp premiuminboxes-mcp/premiuminboxes-mcp "$CLAUDE_BIN_DIR/"
-        chmod +x "$CLAUDE_BIN_DIR/premiuminboxes-mcp"
-        echo -e "${GREEN}✓${NC} Premium Inboxes MCP binary installed to $CLAUDE_BIN_DIR"
+config_path = os.path.expanduser('~/Library/Application Support/Claude/claude_desktop_config.json')
+config = {}
+if os.path.exists(config_path):
+    with open(config_path) as f:
+        config = json.load(f)
 
-        # Register with Claude (requires PREMIUMINBOXES_API_TOKEN to be set)
-        if command -v claude &> /dev/null; then
-            if claude mcp get premiuminboxes &> /dev/null; then
-                echo -e "${YELLOW}!${NC} Premium Inboxes MCP already registered with Claude"
-            else
-                if [ -n "$PREMIUMINBOXES_API_TOKEN" ]; then
-                    claude mcp add -e PREMIUMINBOXES_API_TOKEN="$PREMIUMINBOXES_API_TOKEN" -s user premiuminboxes -- "$CLAUDE_BIN_DIR/premiuminboxes-mcp"
-                    echo -e "${GREEN}✓${NC} Premium Inboxes MCP registered with Claude"
-                else
-                    echo -e "${YELLOW}!${NC} Set PREMIUMINBOXES_API_TOKEN and run: claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"\$PREMIUMINBOXES_API_TOKEN\" -s user premiuminboxes -- $CLAUDE_BIN_DIR/premiuminboxes-mcp"
-                fi
-            fi
-        fi
-    fi
-else
-    echo -e "${YELLOW}!${NC} Premium Inboxes MCP not found (run from cloned repo to install)"
+bin_dir = os.path.expanduser('~/.claude/bin')
+servers = config.setdefault('mcpServers', {})
+
+mcp_defs = {
+    'slack': {'command': f'{bin_dir}/slack-mcp', 'env': {'SLACK_BOT_TOKEN': servers.get('slack', {}).get('env', {}).get('SLACK_BOT_TOKEN', '')}},
+    'clay': {'command': f'{bin_dir}/clay-mcp-server', 'env': {'CLAY_WORKSPACE_ID': servers.get('clay', {}).get('env', {}).get('CLAY_WORKSPACE_ID', ''), 'CLAY_SESSION_COOKIE': servers.get('clay', {}).get('env', {}).get('CLAY_SESSION_COOKIE', '')}},
+    'namecheap': {'command': f'{bin_dir}/namecheap-mcp', 'env': {'NAMECHEAP_API_USER': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_API_USER', ''), 'NAMECHEAP_API_KEY': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_API_KEY', ''), 'NAMECHEAP_USERNAME': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_USERNAME', ''), 'NAMECHEAP_CLIENT_IP': servers.get('namecheap', {}).get('env', {}).get('NAMECHEAP_CLIENT_IP', '')}},
+    'premiuminboxes': {'command': f'{bin_dir}/premiuminboxes-mcp', 'env': {'PREMIUMINBOXES_API_TOKEN': servers.get('premiuminboxes', {}).get('env', {}).get('PREMIUMINBOXES_API_TOKEN', '')}},
+}
+
+for name, defn in mcp_defs.items():
+    if name not in servers:
+        servers[name] = defn
+
+with open(config_path, 'w') as f:
+    json.dump(config, f, indent=2)
+" && info "Claude Desktop config updated" || warn "Could not update Claude Desktop config"
 fi
 
-# Install Clay MCP
-echo ""
-echo "Installing Clay MCP..."
-
-if [ -d ".git" ] && [ -d "clay-mcp-server" ]; then
-    # Build if needed
-    if [ ! -f "clay-mcp-server/clay-mcp-server" ]; then
-        echo "Building Clay MCP..."
-        if command -v go &> /dev/null; then
-            (cd clay-mcp-server && go build -o clay-mcp-server)
-            echo -e "${GREEN}✓${NC} Clay MCP built successfully"
-        else
-            echo -e "${RED}✗${NC} Go is required to build Clay MCP"
-            echo "Please install Go from https://golang.org/dl/"
-        fi
-    fi
-
-    if [ -f "clay-mcp-server/clay-mcp-server" ]; then
-        # Copy binary to global location
-        cp clay-mcp-server/clay-mcp-server "$CLAUDE_BIN_DIR/"
-        chmod +x "$CLAUDE_BIN_DIR/clay-mcp-server"
-        echo -e "${GREEN}✓${NC} Clay MCP binary installed to $CLAUDE_BIN_DIR"
-
-        # Register with Claude (requires CLAY_WORKSPACE_ID and CLAY_SESSION_COOKIE)
-        if command -v claude &> /dev/null; then
-            if claude mcp get clay &> /dev/null; then
-                echo -e "${YELLOW}!${NC} Clay MCP already registered with Claude"
-            else
-                if [ -n "$CLAY_WORKSPACE_ID" ] && [ -n "$CLAY_SESSION_COOKIE" ]; then
-                    claude mcp add -e CLAY_WORKSPACE_ID="$CLAY_WORKSPACE_ID" -e CLAY_SESSION_COOKIE="$CLAY_SESSION_COOKIE" -s user clay -- "$CLAUDE_BIN_DIR/clay-mcp-server"
-                    echo -e "${GREEN}✓${NC} Clay MCP registered with Claude"
-                else
-                    echo -e "${YELLOW}!${NC} To register Clay MCP, set credentials and run:"
-                    echo "    claude mcp add -e CLAY_WORKSPACE_ID=\"your-workspace-id\" -e CLAY_SESSION_COOKIE=\"your-session-cookie\" -s user clay -- $CLAUDE_BIN_DIR/clay-mcp-server"
-                    echo ""
-                    echo "  Or configure after installation using Claude commands:"
-                    echo "    Use 'set_workspace_id' and 'set_session_cookie' tools in Claude"
-                fi
-            fi
-        fi
-    fi
-else
-    echo -e "${YELLOW}!${NC} Clay MCP not found (run from cloned repo to install)"
-fi
+# ── Summary ──────────────────────────────────────────────────────────
 
 echo ""
-echo "╔════════════════════════════════════════════════════════╗"
-echo "║   Installation Complete!                               ║"
-echo "╚════════════════════════════════════════════════════════╝"
+echo -e "${BOLD}Installation complete!${NC} ($VERSION)"
+echo "────────────────────────────────────────"
 echo ""
-echo "Installed skills:"
-for skill in "$CLAUDE_SKILLS_DIR"/*; do
-    if [ -d "$skill" ]; then
-        skill_name=$(basename "$skill")
-        echo "  • $skill_name"
-    fi
+echo "Skills installed:"
+for skill in "$CLAUDE_SKILLS_DIR"/*/; do
+    [ -d "$skill" ] && echo "  /${BOLD}$(basename "$skill")${NC}"
 done
 echo ""
-echo -e "${YELLOW}Important: Setup requirements${NC}"
+echo "MCP servers installed:"
+for entry in "${MCP_SERVERS[@]}"; do
+    IFS=':' read -r name binary <<< "$entry"
+    echo "  $name → $CLAUDE_BIN_DIR/$binary"
+done
 echo ""
-echo "MCP Setup:"
-echo "  • Slack MCP: Run with SLACK_BOT_TOKEN set, or manually add:"
-echo "    claude mcp add -e SLACK_BOT_TOKEN=\"your-token\" -s user slack -- ~/.claude/bin/slack-mcp"
+echo -e "${YELLOW}Next step: Configure API credentials${NC}"
 echo ""
-echo "  • Premium Inboxes MCP: Run with PREMIUMINBOXES_API_TOKEN set, or manually add:"
-echo "    claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"your-token\" -s user premiuminboxes -- ~/.claude/bin/premiuminboxes-mcp"
+echo "  Slack:"
+echo "    claude mcp add -e SLACK_BOT_TOKEN=\"xoxb-...\" -s user slack -- $CLAUDE_BIN_DIR/slack-mcp"
 echo ""
-echo "  • Clay MCP: Run with CLAY_WORKSPACE_ID and CLAY_SESSION_COOKIE set, or manually add:"
-echo "    claude mcp add -e CLAY_WORKSPACE_ID=\"your-id\" -e CLAY_SESSION_COOKIE=\"your-cookie\" -s user clay -- ~/.claude/bin/clay-mcp-server"
-echo "    Or configure after installation using: set_workspace_id and set_session_cookie tools"
+echo "  Clay:"
+echo "    claude mcp add -e CLAY_WORKSPACE_ID=\"...\" -e CLAY_SESSION_COOKIE=\"...\" -s user clay -- $CLAUDE_BIN_DIR/clay-mcp-server"
 echo ""
-echo "Some skills may require additional setup:"
-echo "  • External service accounts (Clay, Notion, Slack, Premium Inboxes)"
+echo "  Namecheap:"
+echo "    claude mcp add -e NAMECHEAP_API_USER=\"...\" -e NAMECHEAP_API_KEY=\"...\" -e NAMECHEAP_USERNAME=\"...\" -e NAMECHEAP_CLIENT_IP=\"...\" -s user namecheap -- $CLAUDE_BIN_DIR/namecheap-mcp"
 echo ""
-echo "See README.md and individual SKILL.md files for detailed requirements"
+echo "  Premium Inboxes:"
+echo "    claude mcp add -e PREMIUMINBOXES_API_TOKEN=\"...\" -s user premiuminboxes -- $CLAUDE_BIN_DIR/premiuminboxes-mcp"
 echo ""
-echo "Documentation: https://github.com/kwinten/thrustlab"
+echo "Restart Claude Desktop after configuring credentials."
 echo ""
-echo -e "${GREEN}Happy GTM planning! 🚀${NC}"
