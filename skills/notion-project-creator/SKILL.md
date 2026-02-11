@@ -28,10 +28,10 @@ Create an entry on the "Companies" page in the "Prospect" column: https://www.no
 Include these sections on the main page:
 
 #### Braindump & Quick Notes
-A callout block with empty checkboxes — an empty list
+A callout block with empty checkboxes — make sure this is an empty list
 
 #### To Discuss with Client:
-A callout block with empty checkboxes — an empty list
+A callout block with empty checkboxes — make sure this is an empty list
 
 #### Documentation Hub
 A collapsible callout with links to all sub-pages created below.
@@ -43,7 +43,7 @@ Create each as a child page of the main hub. For the strategy page, populate wit
 
 1. **GTM Strategy - {Company Name}** 🎯 — Make sure to populate this page with an exact copy of the strategy document.
 2. **Competitor Analysis - {Company Name}** 📊 — Pre-fill with competitors from profile.md
-3. **Infrastructure** 📋 — Domains and tools used
+3. **Infrastructure** 📋 — Empty, populated after the plays will be finalized
 4. **ICP Mapping** 🎯 — Empty, populated during ICP mapping phase
 5. **Roadmap** 🗓️ — Empty, populated in a later phase
 6. **Meeting Notes** 📅 — Empty template with date + attendees + notes structure
@@ -52,7 +52,7 @@ Create each as a child page of the main hub. For the strategy page, populate wit
 
 Then update the Documentation Hub section on the main page with links to each of these sub-pages.
 
-** Make that the GTM strategy page is an EXACT copy of the strategy.md content. This is critical.**
+**Make that the GTM strategy page is an EXACT copy of the strategy.md content. This is critical.**
 
 ### Step 4: Confirm & Output
 
