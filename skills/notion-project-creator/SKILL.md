@@ -52,6 +52,8 @@ Create each as a child page of the main hub. For the strategy page, populate wit
 
 Then update the Documentation Hub section on the main page with links to each of these sub-pages.
 
+** Make that the GTM strategy page is an EXACT copy of the strategy.md content. This is critical.**
+
 ### Step 4: Confirm & Output
 
 Provide to the user:
