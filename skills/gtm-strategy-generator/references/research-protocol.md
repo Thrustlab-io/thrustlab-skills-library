@@ -71,35 +71,24 @@ If inferred from research: `[Inferred from: brief reasoning]`
 
 ### Completeness
 - [ ] profile.md was saved before strategy generation began
-- [ ] All 13 sections + 2 appendices are present
 - [ ] No section is shorter than 3 paragraphs (except Company Snapshot)
 - [ ] Top 3 recommended trigger plays are clearly identified with rationale
 - [ ] At least 10 triggers in the playbook across 3 tiers
 - [ ] Signal stacking section identifies high-converting combinations for this client
 - [ ] Hook type recommendations populated with actual client proof points (not placeholders)
-- [ ] Three new signal types evaluated: champion tracking, competitor customer, dark funnel
 
 ### Client Specificity
 - [ ] Every recommendation ties back to profile.md data or web research
 - [ ] Zero generic value props — all reference this client's specific product
 - [ ] Pain points are for THIS client's personas, not generic B2B
 - [ ] Competitor analysis uses real competitors from profile, not placeholders
-- [ ] Copy examples use client's tone preference and banned word list
 
 ### Actionability
 - [ ] Boolean search strings are ready to paste into Sales Navigator / Apollo
 - [ ] Clay enrichment fields are named with specific providers
-- [ ] Cadence steps have specific timing and copy examples
 - [ ] 90-day blueprint has concrete weekly milestones
 - [ ] Every trigger has a named signal source and detection method
 
-### Copy Quality
-- [ ] Email subjects ≤45 characters
-- [ ] Email bodies ≤90 words
-- [ ] LinkedIn messages ≤280 characters
-- [ ] No banned words/phrases (see shared/references/copy-rules.md)
-- [ ] All openers are observational, not generic
-- [ ] CTAs are stage-appropriate
 
 ### Downstream Readiness
 - [ ] Strategy clearly feeds into Phase 1 tooling setup (which tools to buy)
