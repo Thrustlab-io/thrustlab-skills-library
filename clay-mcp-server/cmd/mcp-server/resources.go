@@ -37,21 +37,49 @@ func listCommandsHandler(ctx context.Context, req mcp.ReadResourceRequest) ([]mc
 	commands := `Clay MCP Server - Available Commands
 ==========================================
 
-Configuration Commands:
------------------------
-1. set_workspace_id
-   Set your Clay workspace ID for API access
+Workspace Management Commands (NEW):
+-------------------------------------
+1. add_workspace_profile
+   Add or update a named workspace profile for easy switching
+   Parameters:
+   - name (required): Profile name (e.g., 'thrustlab', 'client-acme')
+   - workspace_id (required): Clay workspace ID
+   - session_cookie (required): Session cookie value
+   - description (optional): Description for this workspace
+   - frontend_version (optional): Frontend version header
+   - set_as_default (optional): Set as default workspace (default: false)
+
+2. list_workspace_profiles
+   List all saved workspace profiles and show current active workspace
+
+3. switch_workspace
+   Switch to a different workspace at runtime (no restart required!)
+   Parameters:
+   - name (required): Profile name to switch to
+
+4. get_current_workspace
+   Get information about the currently active workspace
+
+5. remove_workspace_profile
+   Remove a saved workspace profile
+   Parameters:
+   - name (required): Profile name to remove
+
+Legacy Configuration Commands:
+-------------------------------
+6. set_workspace_id
+   Set your Clay workspace ID for API access (requires restart)
    Parameters:
    - workspace_id (required): Your Clay workspace ID (e.g., 757984)
 
-2. set_session_cookie
-   Set your Clay session cookie for authentication
+7. set_session_cookie
+   Set your Clay session cookie for authentication (requires restart)
    Parameters:
    - session_cookie (required): Session cookie value (starts with s%3A...)
 
 Workbook Commands:
 ------------------
-3. create_workbook
+8. create_workbook
    Create a new Clay workbook and set it as default
    Parameters:
    - name (required): Name for the new workbook
@@ -59,7 +87,7 @@ Workbook Commands:
 
 Search Commands:
 ----------------
-4. search_companies_by_industry
+9. search_companies_by_industry
    Search for companies by industry using Clay's Mixrank/LinkedIn data
    Parameters:
    - workbook_id (optional): Uses current workbook if not specified
@@ -72,19 +100,30 @@ Search Commands:
    - min_linkedin_members (optional): Minimum number of LinkedIn members (e.g., 100)
    - max_linkedin_members (optional): Maximum number of LinkedIn members (e.g., 200)
 
-5. search_businesses_by_geography
-   Search for local businesses by geography using Google Maps
-   Two search modes: business types or free text query (provide one or the other)
-   Parameters:
-   - workbook_id (optional): Uses current workbook if not specified
-   - latitude (required): Latitude coordinate (e.g., 51.049)
-   - longitude (required): Longitude coordinate (e.g., 3.725)
-   - proximity_km (required): Search radius in kilometers
-   - business_types (optional): Comma-separated types (see clay://business-types)
-   - query (optional): Free text search (e.g., 'slager', 'pizza', 'kapper')
-   - num_results (optional): Maximum number of results (default: 100)
-   - table_name (optional): Custom table name
-   - table_emoji (optional): Table emoji icon
+10. search_businesses_by_geography
+    Search for local businesses by geography using Google Maps
+    Two search modes: business types or free text query (provide one or the other)
+    Parameters:
+    - workbook_id (optional): Uses current workbook if not specified
+    - latitude (required): Latitude coordinate (e.g., 51.049)
+    - longitude (required): Longitude coordinate (e.g., 3.725)
+    - proximity_km (required): Search radius in kilometers
+    - business_types (optional): Comma-separated types (see clay://business-types)
+    - query (optional): Free text search (e.g., 'slager', 'pizza', 'kapper')
+    - num_results (optional): Maximum number of results (default: 100)
+    - table_name (optional): Custom table name
+    - table_emoji (optional): Table emoji icon
+
+Quick Start with Workspace Profiles:
+------------------------------------
+1. Add a workspace profile:
+   add_workspace_profile(name='thrustlab', workspace_id='757984', session_cookie='s%3A...', set_as_default=true)
+
+2. List all profiles:
+   list_workspace_profiles()
+
+3. Switch between workspaces instantly:
+   switch_workspace(name='client-acme')
 
 Resources:
 ----------

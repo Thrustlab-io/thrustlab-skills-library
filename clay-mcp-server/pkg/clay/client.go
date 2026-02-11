@@ -28,3 +28,23 @@ func (c *Client) SetWorkspaceID(id string) {
 func (c *Client) SetSessionCookie(cookie string) {
 	c.SessionCookie = cookie
 }
+
+// SwitchWorkspace switches to a different workspace profile at runtime
+func (c *Client) SwitchWorkspace(profile *WorkspaceProfile) {
+	c.WorkspaceID = profile.WorkspaceID
+	c.SessionCookie = profile.SessionCookie
+	if profile.FrontendVersion != "" {
+		c.FrontendVersion = profile.FrontendVersion
+	}
+	// Clear current workbook when switching workspaces
+	c.CurrentWorkbookID = ""
+}
+
+// GetWorkspaceInfo returns current workspace information
+func (c *Client) GetWorkspaceInfo() map[string]string {
+	return map[string]string{
+		"workspace_id":     c.WorkspaceID,
+		"frontend_version": c.FrontendVersion,
+		"workbook_id":      c.CurrentWorkbookID,
+	}
+}

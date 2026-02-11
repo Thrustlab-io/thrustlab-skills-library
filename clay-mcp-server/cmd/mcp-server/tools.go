@@ -108,6 +108,61 @@ func registerTools(s *server.MCPServer) {
 		),
 	)
 	s.AddTool(geographySearchTool, searchBusinessesByGeographyHandler)
+
+	// Workspace profile management tools
+	addWorkspaceProfileTool := mcp.NewTool("add_workspace_profile",
+		mcp.WithDescription("Add or update a named workspace profile for easy switching between workspaces"),
+		mcp.WithString("name",
+			mcp.Required(),
+			mcp.Description("Profile name (e.g., 'thrustlab', 'client-acme')"),
+		),
+		mcp.WithString("workspace_id",
+			mcp.Required(),
+			mcp.Description("Clay workspace ID"),
+		),
+		mcp.WithString("session_cookie",
+			mcp.Required(),
+			mcp.Description("Session cookie value"),
+		),
+		mcp.WithString("description",
+			mcp.Description("Optional description for this workspace"),
+		),
+		mcp.WithString("frontend_version",
+			mcp.Description("Optional frontend version header"),
+		),
+		mcp.WithBoolean("set_as_default",
+			mcp.Description("Set this profile as the default workspace (default: false)"),
+		),
+	)
+	s.AddTool(addWorkspaceProfileTool, addWorkspaceProfileHandler)
+
+	listWorkspaceProfilesTool := mcp.NewTool("list_workspace_profiles",
+		mcp.WithDescription("List all saved workspace profiles"),
+	)
+	s.AddTool(listWorkspaceProfilesTool, listWorkspaceProfilesHandler)
+
+	switchWorkspaceTool := mcp.NewTool("switch_workspace",
+		mcp.WithDescription("Switch to a different workspace profile at runtime (no restart required)"),
+		mcp.WithString("name",
+			mcp.Required(),
+			mcp.Description("Profile name to switch to"),
+		),
+	)
+	s.AddTool(switchWorkspaceTool, switchWorkspaceHandler)
+
+	removeWorkspaceProfileTool := mcp.NewTool("remove_workspace_profile",
+		mcp.WithDescription("Remove a saved workspace profile"),
+		mcp.WithString("name",
+			mcp.Required(),
+			mcp.Description("Profile name to remove"),
+		),
+	)
+	s.AddTool(removeWorkspaceProfileTool, removeWorkspaceProfileHandler)
+
+	getCurrentWorkspaceTool := mcp.NewTool("get_current_workspace",
+		mcp.WithDescription("Get information about the currently active workspace"),
+	)
+	s.AddTool(getCurrentWorkspaceTool, getCurrentWorkspaceHandler)
 }
 
 func setWorkspaceIDHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
@@ -355,4 +410,191 @@ func splitAndTrim(s string) []string {
 		}
 	}
 	return out
+}
+
+// Workspace profile management handlers
+func addWorkspaceProfileHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+	name := args["name"].(string)
+	workspaceID := args["workspace_id"].(string)
+	sessionCookie := args["session_cookie"].(string)
+
+	profile := &clay.WorkspaceProfile{
+		WorkspaceID:   workspaceID,
+		SessionCookie: sessionCookie,
+	}
+
+	if v, ok := args["description"].(string); ok && v != "" {
+		profile.Description = v
+	}
+	if v, ok := args["frontend_version"].(string); ok && v != "" {
+		profile.FrontendVersion = v
+	}
+
+	pm, err := clay.NewProfileManager()
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to initialize profile manager: %v", err)), nil
+	}
+
+	if err := pm.AddProfile(name, profile); err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to add profile: %v", err)), nil
+	}
+
+	setAsDefault := false
+	if v, ok := args["set_as_default"].(bool); ok {
+		setAsDefault = v
+	}
+
+	if setAsDefault {
+		if err := pm.SetDefault(name); err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to set default: %v", err)), nil
+		}
+	}
+
+	maskedCookie := sessionCookie
+	if len(sessionCookie) > 20 {
+		maskedCookie = sessionCookie[:10] + "..." + sessionCookie[len(sessionCookie)-10:]
+	}
+
+	defaultMsg := ""
+	if setAsDefault {
+		defaultMsg = "\n\nThis profile has been set as the default workspace."
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"Workspace profile '%s' saved successfully!\n\n"+
+			"Workspace ID: %s\n"+
+			"Session Cookie: %s\n"+
+			"Description: %s\n\n"+
+			"Saved in: ~/.clay/workspaces.json\n"+
+			"Use 'switch_workspace' to activate this profile.%s",
+		name,
+		workspaceID,
+		maskedCookie,
+		profile.Description,
+		defaultMsg,
+	)), nil
+}
+
+func listWorkspaceProfilesHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	pm, err := clay.NewProfileManager()
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to initialize profile manager: %v", err)), nil
+	}
+
+	profiles := pm.ListProfiles()
+	defaultProfile := pm.GetDefault()
+	currentInfo := clayClient.GetWorkspaceInfo()
+
+	if len(profiles) == 0 {
+		return mcp.NewToolResultText(
+			"No workspace profiles saved.\n\n" +
+				"Use 'add_workspace_profile' to save a workspace for easy switching.",
+		), nil
+	}
+
+	var result strings.Builder
+	result.WriteString("Saved Workspace Profiles\n")
+	result.WriteString("=========================\n\n")
+
+	for name, profile := range profiles {
+		isDefault := name == defaultProfile
+		isCurrent := profile.WorkspaceID == currentInfo["workspace_id"]
+
+		result.WriteString(fmt.Sprintf("Profile: %s", name))
+		if isDefault {
+			result.WriteString(" [DEFAULT]")
+		}
+		if isCurrent {
+			result.WriteString(" [ACTIVE]")
+		}
+		result.WriteString("\n")
+
+		result.WriteString(fmt.Sprintf("  Workspace ID: %s\n", profile.WorkspaceID))
+		if profile.Description != "" {
+			result.WriteString(fmt.Sprintf("  Description: %s\n", profile.Description))
+		}
+		result.WriteString("\n")
+	}
+
+	result.WriteString("\nCurrent Active Workspace:\n")
+	result.WriteString(fmt.Sprintf("  Workspace ID: %s\n", currentInfo["workspace_id"]))
+	if currentInfo["workbook_id"] != "" {
+		result.WriteString(fmt.Sprintf("  Current Workbook: %s\n", currentInfo["workbook_id"]))
+	}
+
+	return mcp.NewToolResultText(result.String()), nil
+}
+
+func switchWorkspaceHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+	name := args["name"].(string)
+
+	pm, err := clay.NewProfileManager()
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to initialize profile manager: %v", err)), nil
+	}
+
+	profile, err := pm.GetProfile(name)
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to get profile: %v", err)), nil
+	}
+
+	clayClient.SwitchWorkspace(profile)
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"Switched to workspace '%s'!\n\n"+
+			"Workspace ID: %s\n"+
+			"Description: %s\n\n"+
+			"All subsequent operations will use this workspace.\n"+
+			"No restart required - the switch is effective immediately.",
+		name,
+		profile.WorkspaceID,
+		profile.Description,
+	)), nil
+}
+
+func removeWorkspaceProfileHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	args := req.Params.Arguments.(map[string]any)
+	name := args["name"].(string)
+
+	pm, err := clay.NewProfileManager()
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to initialize profile manager: %v", err)), nil
+	}
+
+	if err := pm.RemoveProfile(name); err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to remove profile: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(fmt.Sprintf(
+		"Workspace profile '%s' removed successfully!\n\n"+
+			"The profile has been deleted from ~/.clay/workspaces.json",
+		name,
+	)), nil
+}
+
+func getCurrentWorkspaceHandler(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	info := clayClient.GetWorkspaceInfo()
+
+	result := fmt.Sprintf(
+		"Current Active Workspace\n"+
+			"========================\n\n"+
+			"Workspace ID: %s\n"+
+			"Frontend Version: %s\n",
+		info["workspace_id"],
+		info["frontend_version"],
+	)
+
+	if info["workbook_id"] != "" {
+		result += fmt.Sprintf("Current Workbook: %s\n", info["workbook_id"])
+		result += fmt.Sprintf("\nView in Clay: https://app.clay.com/workspaces/%s/workbooks/%s",
+			info["workspace_id"],
+			info["workbook_id"])
+	} else {
+		result += "\nNo workbook currently selected.\n"
+		result += "Create a workbook with 'create_workbook' to get started."
+	}
+
+	return mcp.NewToolResultText(result), nil
 }
