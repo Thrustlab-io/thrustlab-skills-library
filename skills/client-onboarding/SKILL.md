@@ -1,6 +1,6 @@
 ---
 name: client-onboarding
-description: End-to-end onboarding for a new Thrustlab client. Takes a LinkedIn Company URL and domain, auto-discovers the company profile, generates a full GTM strategy, and creates the Notion workspace — all in one skill. Outputs {client-slug}/profile.md, {client-slug}/strategy.md, and a fully populated Notion GTM Client Hub.
+description: End-to-end onboarding for a new Thrustlab client. Takes a LinkedIn Company URL and domain, auto-discovers the company profile, generates a full GTM strategy, and creates the Notion workspace — all in one skill. Outputs Prospects/{client-slug}/profile.md, Prospects/{client-slug}/strategy.md, and a fully populated Notion GTM Client Hub.
 ---
 
 # Client Onboarding
@@ -8,8 +8,8 @@ description: End-to-end onboarding for a new Thrustlab client. Takes a LinkedIn 
 The single entry point for every new Thrustlab client engagement. Combines profile discovery, strategy generation, and Notion workspace creation into one seamless workflow.
 
 **Produces:**
-1. `{client-slug}/profile.md` — the canonical client profile (read by ALL downstream skills)
-2. `{client-slug}/strategy.md` — the full GTM strategy
+1. `Prospects/{client-slug}/profile.md` — the canonical client profile (read by ALL downstream skills)
+2. `Prospects/{client-slug}/strategy.md` — the full GTM strategy
 3. Notion GTM Client Hub — fully populated workspace with strategy, competitor analysis, roadmap, and workflows
 
 **Input required:** LinkedIn Company URL + company domain (e.g., `https://www.linkedin.com/company/acme-corp` + `acme.com`)
@@ -32,7 +32,7 @@ Format: lowercase, hyphens, no spaces.
 - "Quality Guard" → `quality-guard`
 - "DataFlow.io" → `dataflow`
 
-Create the directory: `{client-slug}/`
+Create the directory: `Prospects/{client-slug}/`
 
 ### Step 2: Auto-Discover Company Profile
 
@@ -79,7 +79,7 @@ Build a complete client profile from scratch using web research. Reference `refe
 
 ### Step 3: Save Draft profile.md
 
-Save to `{client-slug}/profile.md` using the exact template structure from `references/profile-field-reference.md`.
+Save to `Prospects/{client-slug}/profile.md` using the exact template structure from `references/profile-field-reference.md`.
 
 **Important:** Strip the discoverability tier tags (`[Auto]`, `[Infer]`, `[Client]`) from the output — only include the confidence annotations where applicable (`[Inferred — verify with client]`, `[To be confirmed by client]`).
 
@@ -131,7 +131,7 @@ Before delivering, verify:
 
 ### Step 5: Save strategy.md
 
-Save to `{client-slug}/strategy.md`
+Save to `Prospects/{client-slug}/strategy.md`
 
 ---
 
@@ -155,7 +155,7 @@ A collapsible callout with links to all sub-pages created below.
 
 ### Step 7: Create Sub-Pages
 
-Create each as a child page of the main hub. For the strategy page, populate with actual strategy content from `{client-slug}/strategy.md`. All other pages get their template structure:
+Create each as a child page of the main hub. For the strategy page, populate with actual strategy content from `Prospects/{client-slug}/strategy.md`. All other pages get their template structure:
 
 1. **GTM Strategy - {Company Name}** 🎯 — Populate with full strategy.md content
 2. **Competitor Analysis - {Company Name}** 📊 — Pre-fill with competitors from profile.md

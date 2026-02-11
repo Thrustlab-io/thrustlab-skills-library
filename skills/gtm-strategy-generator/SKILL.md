@@ -1,13 +1,13 @@
 ---
 name: gtm-strategy-generator
-description: The first step for any new Thrustlab client. Takes a LinkedIn Company URL and domain as input, auto-discovers the company profile through web research, produces the canonical profile.md, then generates a GTM strategy. Outputs both {client-slug}/profile.md and {client-slug}/strategy.md. Fields that cannot be auto-discovered are marked "[To be confirmed by client]" for follow-up.
+description: The first step for any new Thrustlab client. Takes a LinkedIn Company URL and domain as input, auto-discovers the company profile through web research, produces the canonical profile.md, then generates a GTM strategy. Outputs both Prospects/{client-slug}/profile.md and Prospects/{client-slug}/strategy.md. Fields that cannot be auto-discovered are marked "[To be confirmed by client]" for follow-up.
 ---
 
 # GTM Strategy Generator
 
 The entry point for every new Thrustlab client engagement. Produces both:
-1. `{client-slug}/profile.md` — the canonical client profile (read by ALL downstream skills)
-2. `{client-slug}/strategy.md` — the full GTM strategy
+1. `Prospects/{client-slug}/profile.md` — the canonical client profile (read by ALL downstream skills)
+2. `Prospects/{client-slug}/strategy.md` — the full GTM strategy
 
 **Input required:** LinkedIn Company URL + company domain (e.g., `https://www.linkedin.com/company/acme-corp` + `acme.com`)
 
@@ -71,7 +71,7 @@ Build a complete client profile from scratch using web research. Reference `refe
 
 ### Step 3: Save Draft profile.md
 
-Save to `{client-slug}/profile.md` using the exact template structure from `references/profile-field-reference.md`.
+Save to `Prospects/{client-slug}/profile.md` using the exact template structure from `references/profile-field-reference.md`.
 
 **Important:** Strip the discoverability tier tags (`[Auto]`, `[Infer]`, `[Client]`) from the output — only include the confidence annotations where applicable (`[Inferred — verify with client]`, `[To be confirmed by client]`).
 
@@ -114,7 +114,7 @@ Before delivering, verify:
 
 ### Step 5: Save strategy.md & Present Outputs
 
-Save to `{client-slug}/strategy.md`
+Save to `Prospects/{client-slug}/strategy.md`
 
 Present both outputs to the user:
 
