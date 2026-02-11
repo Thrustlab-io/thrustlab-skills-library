@@ -39,9 +39,6 @@ Once profile.md is saved, continue to Phase 2 (Strategy Research) below. The str
 4. **Persona:** Search target titles — what they care about, how they buy, communities they're in
 5. **Triggers:** Search for signal sources — which events are detectable and actionable
 6. **Hook Type Data:** Extract from case studies — timeline milestones, specific metrics, named results. For each vertical, identify: (a) fastest time-to-value story, (b) strongest quantified outcome, (c) most referenceable named customer. See `shared/references/hook-types-guide.md`.
-7. **Champion Potential:** Check if client has CRM data on past customers/prospects. Assess volume and data quality for champion tracking viability.
-8. **Competitor Detection:** For each competitor, check if detectable via BuiltWith/tech scanning, job posting keywords, or G2/review platforms. Note detection method and confidence.
-9. **Dark Funnel Readiness:** Identify existing signal tools (website visitor ID, LinkedIn monitoring, community presence). Note client's primary market (EU/US/Global) for tool recommendations. See `shared/references/clay-enrichment-guide.md` dark funnel section.
 
 ### Search Query Patterns (Always Industry-Specific)
 ```

@@ -14,7 +14,7 @@ Every strategy follows this exact structure. Each section header includes guidan
 - **Primary vertical:** {vertical_1}
 - **Primary persona:** {persona_title}
 - **Sales motion:** {PLG / sales-led / hybrid}
-- **Recommended trigger plays:** {trigger_1}, {trigger_2}, {trigger_3}
+- **Recommended Outbound plays:** {General-outbound}, {trigger_1}, {trigger_2} 
 ```
 
 ---
@@ -25,7 +25,6 @@ One page max. Bullet format.
 - Current traction: ARR, customer count, notable logos (if known)
 - Market position: leader / challenger / niche player
 - Key insight: What makes their outbound motion unique or challenging?
-- Source all claims: `[Source: URL]`
 
 ### ICP & Buying Personas
 For each persona (primary, secondary, tertiary):
@@ -60,5 +59,7 @@ For each recommended play, include:
 - **Why this fits:** Specific reason this play works for this client
 - **Prerequisites:** What the client needs to have or set up
 - **Expected conversion:** Based on industry benchmarks
+
+
 
 ---
