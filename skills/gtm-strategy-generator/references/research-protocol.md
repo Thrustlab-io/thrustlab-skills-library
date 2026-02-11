@@ -29,7 +29,13 @@ Once profile.md is saved, continue to Phase 2 (Strategy Research) below. The str
 ### Web Research Sequence
 1. **Primary:** Fetch client website — analyze product pages, pricing, case studies, about page, blog
 2. **Competitive:** Search each competitor — positioning, pricing, target market, weaknesses
-3. **Market:** Search target verticals — trends, challenges, regulations, market size
+3. **Market (per vertical):** For EACH ranked vertical from the profile, perform a separate research pass:
+   - Search `"{vertical}" trends {year}` and `"{vertical}" challenges {year}` — identify 2-3 macro trends (regulatory changes, technology shifts, market pressures)
+   - Search `"{vertical}" {geography} outlook OR forecast` — understand the market direction
+   - Connect trends to client's product — articulate why prospects in this vertical need to act now
+   - Identify vertical-specific pain points beyond the general persona pains
+   - Research buying behavior: typical procurement process, budget cycles, compliance requirements
+   - Do this for each vertical separately — trends in healthcare are completely different from trends in manufacturing
 4. **Persona:** Search target titles — what they care about, how they buy, communities they're in
 5. **Triggers:** Search for signal sources — which events are detectable and actionable
 6. **Hook Type Data:** Extract from case studies — timeline milestones, specific metrics, named results. For each vertical, identify: (a) fastest time-to-value story, (b) strongest quantified outcome, (c) most referenceable named customer. See `shared/references/hook-types-guide.md`.
@@ -41,11 +47,19 @@ Once profile.md is saved, continue to Phase 2 (Strategy Research) below. The str
 ```
 "{company_name}" + "{vertical}" + {geography}
 "{competitor}" + vs + "{company_name}"
-"{vertical}" + challenges + {year}
 "{persona_title}" + "{vertical}" + priorities
+site:linkedin.com "{persona_title}" + "{vertical}" + {geography}
+```
+
+### Per-Vertical Trend Research Queries (run for EACH vertical)
+```
+"{vertical}" + trends + {year}
+"{vertical}" + challenges + {year} + {geography}
 "{vertical}" + compliance + regulations + {geography}
 "{vertical}" + technology + trends + adoption
-site:linkedin.com "{persona_title}" + "{vertical}" + {geography}
+"{vertical}" + market + outlook + forecast + {year}
+"{vertical}" + buying + process OR procurement
+"{vertical}" + budget + priorities + {year}
 ```
 
 ### Citation Standard

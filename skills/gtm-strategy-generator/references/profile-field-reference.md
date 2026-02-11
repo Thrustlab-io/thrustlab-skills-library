@@ -29,7 +29,7 @@ Each field is tagged with how it can be sourced:
 
 ## Sales Motion
 - **Type:** {PLG / sales-led / hybrid / channel} `[Infer]` — infer from website CTAs: "Try free" = PLG, "Book demo" = sales-led, "Find a partner" = channel
-- **Average deal size:** {if known} `[Client]`
+- **Average deal size:** {if known} `[Infer]`
 - **Sales cycle:** {if known} `[Client]`
 - **Current outbound status:** {none / early / established} `[Client]`
 
@@ -42,6 +42,20 @@ Each field is tagged with how it can be sourced:
 - **Revenue range:** {if relevant} `[Infer]`
 - **Geographies:** {target markets} `[Infer]` — infer from language, currencies, office locations, compliance references
 - **Exclusions:** {verticals, company types, or geos to avoid} `[Client]`
+- **Common characteristics between customers:** {what unites all customers, what makes a prospect a potential good fit in specific characteristics} `[Infer]`
+
+### Vertical 1: {primary vertical}
+- **Why this vertical:** {why client's product resonates here — infer from case studies, website copy, feature emphasis} `[Infer]`
+- **Industry trends:** {2-3 macro trends shaping this vertical right now — regulatory changes, technology shifts, market pressures} `[Infer]` — search for `"{vertical}" trends 2026 OR challenges OR outlook`
+- **How trends create urgency:** {connect the trends to the client's product — why prospects in this vertical need to act now} `[Infer]`
+- **Vertical-specific pain points:** {pains unique to this vertical that go beyond the general persona pains} `[Infer]`
+- **Buying behavior in this vertical:** {typical procurement process, decision-makers, budget cycles, compliance requirements} `[Infer]`
+
+### Vertical 2: {secondary vertical}
+{same structure}
+
+### Vertical 3: {tertiary vertical} (if applicable)
+{same structure}
 
 ## Target Personas
 ### Primary Persona
@@ -51,7 +65,7 @@ Each field is tagged with how it can be sourced:
 - **Key responsibilities:** {what they own} `[Infer]`
 - **Primary pain:** {the #1 problem they face that client solves} `[Infer]` — infer from product messaging, case study language
 - **Secondary pains:** {other relevant challenges} `[Infer]`
-- **How they buy:** {research process, stakeholders involved} `[Client]`
+- **How they buy:** {research process, stakeholders involved, industrie trends} `[Infer]`
 
 ### Secondary Persona
 {same structure}
@@ -60,7 +74,7 @@ Each field is tagged with how it can be sourced:
 {same structure}
 
 ## Value Proposition
-- **Core value prop:** {1 sentence — what outcome do they deliver?} `[Auto]`
+- **Core value prop:** {3 sentences max — what outcome do they deliver?} `[Auto]`
 - **Key differentiators:** `[Auto]` — extract from website positioning, "why us" pages
   1. {differentiator 1}
   2. {differentiator 2}
@@ -77,8 +91,8 @@ Each field is tagged with how it can be sourced:
 ## Tone & Messaging Preferences
 - **Tone:** {formal / conversational / provocative} `[Auto]` — analyze website and blog copy style
 - **Brand voice notes:** {any specific preferences or restrictions} `[Auto]`
-- **Words/phrases to avoid:** {client-specific banned terms} `[Client]`
-- **Words/phrases to use:** {client-specific preferred language} `[Auto]` — extract from website copy patterns
+- **Words/phrases to avoid:** {client-specific banned terms, buzzwords to avoid in their industry} `[Infer]`
+- **Words/phrases to use:** {client-specific preferred language} `[Infer]` — extract from website copy patterns
 
 ## Tech Stack & Infrastructure
 - **CRM:** {Salesforce / HubSpot / Pipedrive / other} `[Client]`
@@ -88,6 +102,8 @@ Each field is tagged with how it can be sourced:
 - **Existing signal/intent tools:** {list any tools already in use} `[Client]`
 - **Marketing automation:** {HubSpot Marketing / Marketo / none / other} `[Infer]` — sometimes detectable from website source/tracking scripts
 - **Other relevant tools:** {analytics, BI, project management, etc.} `[Client]`
+- **Databases in use:** {Bizzy, LinkedIn Sales Nav, Apollo, Clay}
+- **Other GTM tooling in use that i shoudl know about:** `[Client]`
 
 ## Existing Assets & Proof Points
 - **Case studies:** `[Auto]` — extract from website case study pages
@@ -102,13 +118,6 @@ Each field is tagged with how it can be sourced:
 - **Content topics:** {main themes covered} `[Auto]`
 - **LinkedIn presence:** {company page URL, follower count, key team members who post} `[Auto]`
 - **Community presence:** {Slack communities, Discord, forums, events} `[Infer]`
-
-## Engagement Parameters
-- **Clay plan tier:** {starter / explorer / pro / enterprise} `[Client]`
-- **Expected sending volume:** {emails per week/month} `[Client]`
-- **Budget considerations:** {any relevant constraints} `[Client]`
-- **Timeline:** {launch urgency} `[Client]`
-- **Primary market:** {EU / US / Global — affects tooling recommendations} `[Infer]`
 
 ---
 *Profile created: {date}*
