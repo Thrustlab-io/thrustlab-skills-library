@@ -45,7 +45,6 @@ Build a complete client profile from scratch using web research. Reference `refe
    - Employee count, industry classification, HQ location
    - Company description and specialties
    - Founded year, follower count
-   - Recent posts for tone and messaging style
 
 3. **Run discovery web searches** (5-7 targeted searches):
    - `"{company_name}" product OR solution OR platform` — product positioning
@@ -81,7 +80,7 @@ The profile must include:
 
 ### Step 4: Research + Generate Strategy
 
-Now use the auto-discovered profile as foundation to generate the full GTM strategy.
+Now use the auto-discovered profile as foundation to generate the full GTM strategy. Do **NOT** add messaging copy. This is a strategic battle plan, not a messaging document.
 
 **4a. Deepen research using the research protocol:**
 
@@ -109,8 +108,9 @@ See `references/research-protocol.md` for the quality checkpoint list.
 
 Before delivering, verify:
 - Every recommendation is tied to source material or profile data
+- ** NO MESSAGING COPY** - this is an initial strategy and this will make the document too big and unfocused. Messaging will come in later steps once we have the strategy locked down.
 - Zero generic value props — all industry/role specific
-- 3 recommended trigger plays are clearly identified with rationale
+- 3 recommended plays (INCLUDING general outbound) are clearly identified with rationale
 
 ### Step 5: Save strategy.md & Present Outputs
 
@@ -126,7 +126,6 @@ Present both outputs to the user:
 **Strategy highlights:**
 - Top 3 recommended trigger plays with rationale
 - Key ICP refinements discovered during research
-- Any gaps or assumptions that need client validation
 
 **Next steps:**
 - Review and confirm/correct fields marked `[To be confirmed by client]` in profile.md
