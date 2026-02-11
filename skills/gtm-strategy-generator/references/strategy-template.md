@@ -1,5 +1,4 @@
-# Strategy Template — 13 Sections + 2 Appendices
-
+# Strategy Template 
 Every strategy follows this exact structure. Each section header includes guidance on what to include.
 
 ## Document Header
@@ -20,9 +19,7 @@ Every strategy follows this exact structure. Each section header includes guidan
 
 ---
 
-## Phase 1: Intelligence Gathering (Sections 1-3)
-
-### Section 1: Company Snapshot
+### Company Snapshot
 One page max. Bullet format.
 - What they sell, to whom, and why it matters
 - Current traction: ARR, customer count, notable logos (if known)
@@ -30,7 +27,7 @@ One page max. Bullet format.
 - Key insight: What makes their outbound motion unique or challenging?
 - Source all claims: `[Source: URL]`
 
-### Section 2: ICP & Buying Personas
+### ICP & Buying Personas
 For each persona (primary, secondary, tertiary):
 - Title variations (all titles that map to this persona)
 - Department and reporting line
@@ -41,212 +38,81 @@ For each persona (primary, secondary, tertiary):
 - **Disqualifiers:** What makes a company/person NOT a fit (anti-patterns)
 - **Buying triggers:** What events make them actively search for a solution
 
-### Section 3: Marketing Ecosystem Integration
-Bridge outbound insights to existing marketing:
-- What content assets already exist that outbound can leverage?
-- What messaging gaps exist between marketing and sales?
-- How should outbound signals feed back into marketing (intent data, content topics)?
-- Quick wins: existing content that can be repurposed for outbound touchpoints
+### Available Plays — Menu
+
+These are the outbound workflows available to clients. Select exactly 3 that best fit the client's ICP, sales motion, and available data sources.
+
+#### Tier 1: Highest-Converting Plays (Warm Signals)
+
+**Champion Tracking** — The #1 highest-converting signal type
+Monitors when past customers, engaged prospects, or known contacts change jobs, then generates outreach leveraging the existing relationship. Copy DNA: Trust and shared history. Former customers convert at dramatically higher rates because trust and product knowledge already exist. Combined with funding or hiring signals, this becomes the highest-converting stack in outbound.
+*Required:* CRM contact list, UserGems or Clay job change detection
+
+**Content Trigger** — The warmest trigger type
+Captures engagement with content (downloads, webinar attendance, social engagement, podcast listens). Copy DNA: Demonstrated interest. The prospect already engaged with the client's content, making outreach feel like a natural next step rather than cold outreach.
+*Required:* Content assets (blog, whitepapers, webinars), HubSpot/Marketo or LinkedIn Analytics
+
+**Website Trigger** — Recency + inferred intent
+Captures website visitors and infers intent from page behavior. Copy DNA: The prospect was JUST looking at the client's solution. Never feels creepy ("I saw you on our site"), always insightful ("teams exploring [area] usually...").
+*Required:* Intent tool (RB2B, Clearbit, 6sense, Dealfront)
+
+**Competitor Customer** — 2.5x higher conversion
+Identifies companies using competitor products and generates competitive displacement outreach. Copy DNA: Competitive intelligence. These prospects already understand the problem space — they're actively paying for a solution. Data shows 3x conversion when mentioning an existing customer who switched.
+*Required:* Competitor list, BuiltWith/G2 data, case study of customer who switched
+
+#### Tier 2: High-Intent Timing Signals
+
+**Funding Trigger** — Growth momentum
+Captures funding announcements. Copy DNA: Investment thesis alignment. The funding announcement reveals WHERE they're investing (hiring, product, expansion). Connect the client's solution to stated growth priorities, NOT just "congrats on the raise." Timing is critical (first 2-4 weeks post-announcement).
+*Required:* Funding data source (Crunchbase, PitchBook)
+
+**Job Change Trigger** — The "new broom" window
+Targets personas who just started a new role. Copy DNA: Transition momentum. They're in "new broom" mode, evaluating everything, eager to make an impact in the first 90 days. Warm, congratulatory, never presumptuous.
+*Required:* Job change signal (UserGems, Clay, LinkedIn Sales Nav alerts)
+
+**Job Posting Trigger** — Hiring reveals pain
+Monitors job postings for roles that indicate a gap the client's product fills. Copy DNA: The job description is a goldmine — it lists the exact responsibilities, tools, and challenges. Copy connects the hiring need to the client's solution, positioning it as a force multiplier for the new hire.
+*Required:* Job posting data (Clay, Otta, LinkedIn Jobs)
+
+**Compliance Trigger** — Strongest urgency of any trigger type
+Targets companies affected by regulatory deadlines, new laws, or policy changes. Copy DNA: External mandate urgency. Unlike other triggers where the company chooses to act, compliance triggers mean they MUST act — there's a deadline, a fine, or a legal requirement. Highly vertical-specific.
+*Required:* Deep vertical knowledge, specific regulatory mapping
+
+#### Tier 3: Operational & Stack Signals
+
+**Growth Trigger** — Scaling pain
+Monitors headcount growth (>20% in a quarter), new office openings, or market expansion. Copy DNA: When a company grows rapidly, existing processes break. What worked for 50 people doesn't work for 100. Copy connects this scaling pain to the client's solution, framing it as infrastructure for the next stage.
+*Required:* Headcount tracking data (LinkedIn, Crunchbase)
+
+**Tech Change Trigger** — Stack evolution
+Captures technology adoption or removal. Copy DNA: Adding a complementary tool = integration opportunity. Removing a competitor = active replacement window. Shows you understand their tech ecosystem, not just one tool.
+*Required:* BuiltWith, Wappalyzer, tech stack tracking
+
+**Dark Funnel** — Captures 70%+ of buyer journey
+Captures anonymous buying signals from LinkedIn engagement (Teamfluence/Trigify), community activity (Common Room), and website visits beyond basic page views. Copy DNA: Relevance without surveillance. Use the signal for TIMING and ANGLE selection, never reference the specific signal directly.
+*Required:* Dark funnel tooling (Teamfluence, Trigify, Common Room, Dealfront)
+
+#### Universal Play (Always Active)
+
+**General Outbound** — The hardest workflow to make effective
+Proactive outreach to ICP-fit accounts WITHOUT a specific trigger event. Copy DNA: Research depth as the hook. Since there's no timing signal, the email must earn attention purely through relevance and insight. Every email must pass the "would a human SDR write this after 15 minutes of research?" test.
+*Required:* Strong ICP definition, persona × vertical matrix
 
 ---
 
-## Phase 2: Market Mapping (Sections 4-5)
+### Proposed Plays
 
-### Section 4: TAM → SAM Filtering
-Provide EXACT Clay enrichment fields and filters:
-- Total Addressable Market: size estimate with methodology
-- Serviceable Available Market: specific filters that narrow TAM to SAM
-- For each filter: which Clay enrichment provider to use, which field to check, what values to match
-- Example Clay table filter configuration
+Recommend exactly 3 plays from the menu above based on:
+- Client's ICP characteristics and data availability
+- Sales motion (PLG / sales-led / hybrid)
+- Existing content and customer base
+- Available tooling and budget
+- Team capacity for workflow management
 
-### Section 5: List-Building Mechanics
-Concrete, executable instructions:
-- Boolean search strings for LinkedIn Sales Navigator (ready to paste)
-- Boolean search strings for Apollo (ready to paste)
-- Alternative data sources specific to this client's vertical
-- Import strategy: which source first, expected volume per source
-- Deduplication approach
+For each recommended play, include:
+- **Play name**
+- **Why this fits:** Specific reason this play works for this client
+- **Prerequisites:** What the client needs to have or set up
+- **Expected conversion:** Based on industry benchmarks
 
 ---
-
-## Phase 3: Messaging & Personalization (Sections 6-9)
-
-### Section 6: Messaging Architecture
-Map pains → outcomes → proof 1:1:
-- For each persona pain: what outcome does the client deliver? What proof exists?
-- Core narrative: the story arc of the outbound campaign
-- Positioning against each competitor: what angle to take when prospect uses competitor X
-
-### Section 7: Scalable Personalization Framework
-3 effort tiers with time allocations:
-- **Tier 1 (30 sec/prospect):** Automated — Clay enrichment + AI copy generation
-- **Tier 2 (2 min/prospect):** Semi-manual — AI-generated draft + human review for A-tier accounts
-- **Tier 3 (5+ min/prospect):** White-glove — Full manual research for A+ tier strategic accounts
-- Which accounts go in which tier (based on ICP score)
-
-### Section 8: Outbound Cadences
-2 complete cadence variants, 10-14 business days max:
-
-**Cadence A: Trigger-based** (for workflows with active signal)
-- Step 1 (Day 1): Trigger-based email
-- Step 2 (Day 3): LinkedIn connection request
-- Step 3 (Day 5): Follow-up email (different angle)
-- Step 4 (Day 8): LinkedIn message
-- Step 5 (Day 12): Breakup email or new insight
-
-**Cadence B: Research-based** (for general outbound, no trigger)
-- Step 1 (Day 1): Company-observation email
-- Step 2 (Day 3): LinkedIn connection request
-- Step 3 (Day 6): Value-add email (case study / insight)
-- Step 4 (Day 9): LinkedIn message
-- Step 5 (Day 13): Breakup with new angle
-
-All copy examples must follow `shared/references/copy-rules.md`.
-
-### Section 9: Top 6 Observational Openers
-Based on ACTUAL research about the client's market, not templates:
-- 3 company-based openers (work for any prospect in ICP)
-- 3 trigger-based openers (specific to the most common triggers)
-- Each opener: the observation + why it matters + how to bridge to value prop
-- Show exactly how each would read for a real example prospect
-
----
-
-## Phase 4: Advanced Systems (Sections 10-13)
-
-### Section 10: Trigger Playbook & Signal Stacking
-Minimum 10 triggers across 3 tiers:
-
-**Tier 1 — Direct Intent (highest conversion):**
-- Tech migrations, compliance deadlines, vendor evaluations
-- For each: signal source, detection method, response time window, copy angle
-
-**Tier 2 — Behavioral (medium conversion):**
-- Website visits, content consumption, social engagement, peer activity
-- For each: signal source, detection method, response time window, copy angle
-
-**Tier 3 — Environmental (lower conversion, higher volume):**
-- Funding events, leadership changes, hiring surges, market dynamics
-- For each: signal source, detection method, response time window, copy angle
-
-**Top 3 Recommended Trigger Plays:**
-Clearly identify the 3 triggers to build first, with rationale:
-1. {trigger_1}: Why this is priority — expected volume, conversion potential, data availability
-2. {trigger_2}: Why this is priority — ...
-3. {trigger_3}: Why this is priority — ...
-
-These 3 drives the Phase 1 tooling setup.
-
-**Signal Stacking Configuration:**
-Analyze which trigger combinations create the highest-converting stacks for THIS client:
-
-```markdown
-## Signal Stacking Matrix
-Review all active trigger plays and identify compound signal stacks:
-
-### Available Signal Sources (check which apply)
-- [ ] Website visitor identification (Dealfront / RB2B)
-- [ ] Job change monitoring (UserGems / Clay signal)
-- [ ] Job posting monitoring (Clay signal / LinkedIn Jobs)
-- [ ] Funding event monitoring (Crunchbase / Clay signal)
-- [ ] Tech stack change monitoring (BuiltWith / Wappalyzer)
-- [ ] Hiring surge monitoring (Clay signal / LinkedIn)
-- [ ] Champion tracking (UserGems / CRM data)
-- [ ] Competitor customer identification (Claygent / BuiltWith)
-- [ ] Dark funnel - LinkedIn engagement (Teamfluence / Trigify)
-- [ ] Dark funnel - community signals (Common Room)
-- [ ] Content engagement (marketing automation / Phantom Buster)
-- [ ] Compliance/regulatory events (industry sources)
-
-### High-Converting Stacks (Client-Specific)
-Based on {client_name}'s market, these signal combinations should trigger escalated treatment:
-
-| Stack ID | Signals Combined | Expected Multiplier | Routing |
-|---|---|---|---|
-| stack_1 | {signal_a} + {signal_b} | {X}x baseline | {Hot/Warm} |
-| stack_2 | {signal_a} + {signal_c} | {X}x baseline | {Hot/Warm} |
-| stack_3 | {signal_b} + {signal_c} + {signal_d} | {X}x baseline | {Hot} |
-
-### Composite Score Weights (Client-Specific)
-Adjust default weights from signal-stacking-guide.md based on:
-- Which signals are most predictive for {client_name}'s buyer journey
-- Data availability and reliability of each signal source
-- Client's sales capacity (don't create more Hot leads than AEs can handle)
-```
-
-See `shared/references/signal-stacking-guide.md` for the full composite scoring framework.
-
-### Section 10b: Hook Type Recommendations
-Based on {client_name}'s available proof points, recommend the hook type strategy:
-
-```markdown
-## Hook Type Availability Audit
-
-### Timeline Proof Points
-- Vertical 1 ({vertical}): {discovery → pilot → result in X weeks}
-- Vertical 2 ({vertical}): {discovery → pilot → result in X weeks}
-- Average implementation time: {X weeks}
-- First value milestone: {what happens at week Y}
-
-### Numbers Proof Points
-- {X% improvement in Y for Z company type}
-- {X hours/$ saved per week for Z role}
-- {X% cost reduction / revenue increase}
-
-### Named Case Studies (for Social Proof hooks)
-- {Company name} ({vertical}, {size}) — {headline result}
-- {Company name} ({vertical}, {size}) — {headline result}
-
-### Recommended Hook Strategy
-| Vertical | Default Hook | Fallback Hook | Rationale |
-|---|---|---|---|
-| {vertical_1} | {timeline/numbers/social_proof} | hypothesis | {why} |
-| {vertical_2} | {timeline/numbers/social_proof} | hypothesis | {why} |
-
-### A/B Testing Plan
-- Weeks 1-2: 40% timeline, 20% numbers, 20% social proof, 20% hypothesis
-- Weeks 3-4: Scale to winning type, continue testing within type
-- Week 5+: 70% winner, 30% rotation
-```
-
-See `shared/references/hook-types-guide.md` for hook type definitions and performance benchmarks.
-
-### Section 11: GTM Flywheel
-Focus on compound effects:
-- How outbound data feeds marketing intelligence
-- How reply data refines ICP scoring
-- How trigger data improves over time
-- Feedback loops between Clay data and strategy refinement
-
-### Section 12: Playbooks & Enablement
-- 3-minute research checklist for SDRs
-- Call script framework (opener → discovery question → bridge → CTA)
-- Objection handling for top 5 objections per persona
-- Voicemail script (≤20 seconds)
-
-### Section 13: The Thrustlab 90-Day GTM Machine Blueprint
-Week-by-week execution plan:
-- Weeks 1-2: Infrastructure + tooling setup
-- Weeks 3-4: Market mapping + ICP validation + first list build
-- Weeks 5-6: First trigger play live + general outbound live
-- Weeks 7-8: Second and third trigger plays live
-- Weeks 9-10: Optimization (A/B testing copy, refining scoring)
-- Weeks 11-12: Scale (increase volume, add new trigger plays, expand ICP)
-
----
-
-## Appendices
-
-### Appendix A: Competitive Battlecards
-For each competitor:
-- Their positioning vs. client's positioning
-- When prospects mention competitor: what to say
-- Where client wins vs. where competitor wins
-- Proof points to counter competitor claims
-
-### Appendix B: Metrics & KPIs
-- Reply rate targets by workflow type
-- Meeting book rate targets
-- ICP accuracy targets (% of outreach that matches refined ICP)
-- Trigger response time targets
-- Weekly/monthly reporting cadence

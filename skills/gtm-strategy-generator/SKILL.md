@@ -1,6 +1,6 @@
 ---
 name: gtm-strategy-generator
-description: The first step for any new Thrustlab client. Takes a LinkedIn Company URL and domain as input, auto-discovers the company profile through web research, produces the canonical profile.md, then generates a full 13-section GTM strategy. Outputs both Prospects/{client-slug}/profile.md and Prospects/{client-slug}/strategy.md. Fields that cannot be auto-discovered are marked "[To be confirmed by client]" for follow-up.
+description: The first step for any new Thrustlab client. Takes a LinkedIn Company URL and domain as input, auto-discovers the company profile through web research, produces the canonical profile.md, then generates a GTM strategy. Outputs both Prospects/{client-slug}/profile.md and Prospects/{client-slug}/strategy.md. Fields that cannot be auto-discovered are marked "[To be confirmed by client]" for follow-up.
 ---
 
 # GTM Strategy Generator
@@ -99,7 +99,7 @@ Document everything with `[Source: URL]` citations.
 
 **4b. Generate strategy document:**
 
-See `references/strategy-template.md` for the full 13-section + 2 appendix structure.
+See `references/strategy-template.md` for the structure.
 
 Every section must reference profile data. The strategy is not generic advice — it is a battle plan for THIS specific client, THIS specific market, THESE specific personas.
 
@@ -110,16 +110,7 @@ See `references/research-protocol.md` for the quality checkpoint list.
 Before delivering, verify:
 - Every recommendation is tied to source material or profile data
 - Zero generic value props — all industry/role specific
-- Trigger playbook has minimum 10 triggers across 3 tiers, each with specific signal sources
-- First 3 recommended trigger plays are clearly identified with rationale
-- **Signal stacking section** identifies high-converting signal combinations for THIS client (see template Section 10)
-- **Hook type recommendations** are populated with client proof points (see template Section 10b)
-- All copy examples use client-specific language, not templates
-- Scoring formula references actual client ICP criteria
-- **Three new signal types** are evaluated for inclusion:
-  - Champion tracking: Does the client have past customers/prospects to monitor? If yes, ALWAYS recommend.
-  - Competitor customer targeting: Are competitors identifiable via tech detection or research? If yes, recommend.
-  - Dark funnel: Which tools are appropriate for the client's market? (Dealfront/RB2B + Teamfluence/Trigify)
+- 3 recommended trigger plays are clearly identified with rationale
 
 ### Step 5: Save strategy.md & Present Outputs
 

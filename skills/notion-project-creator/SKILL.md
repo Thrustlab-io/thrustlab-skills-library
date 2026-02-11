@@ -6,10 +6,11 @@ description: Creates a Notion client workspace with the complete GTM Client Hub 
 # Notion Project Creator
 
 Creates a fully populated Notion workspace for a new GTM client.
-Make sure to create this page under the "Thrustlab-default" teamspace!
+**Make sure to create this page under the "Thrustlab-default" teamspace!**
 
 **Prerequisites:**
 - `Prospects/{client-slug}/profile.md` exists
+- `Prospects/{client-slug}/strategy.md` exists
 - Notion MCP server is configured
 
 ## Workflow
@@ -40,13 +41,13 @@ Make sure to update these links as you create the sub-pages in Step 3.
 
 Create each as a child page of the main hub. For the strategy page, populate with actual strategy content from `Prospects/{client-slug}/strategy.md`. All other pages get their template structure:
 
-1. **GTM Strategy - {Company Name}** 🎯 — Populate with full strategy.md content
+1. **GTM Strategy - {Company Name}** 🎯 — Make sure to populate this page with an exact copy of the strategy document.
 2. **Competitor Analysis - {Company Name}** 📊 — Pre-fill with competitors from profile.md
 3. **Infrastructure** 📋 — Domains and tools used
 4. **ICP Mapping** 🎯 — Empty, populated during ICP mapping phase
-5. **Roadmap** 🗓️ — Pre-fill with 90-day blueprint from strategy
+5. **Roadmap** 🗓️ — Empty, populated in a later phase
 6. **Meeting Notes** 📅 — Empty template with date + attendees + notes structure
-7. **Workflows** ⚡ — Pre-fill with trigger playbook from strategy
+7. **Workflows** ⚡ — Pre-fill with the proposed trigger playbook from strategy
 8. **Copy Repository** 💬 — Will store approved copy as cadences are built
 
 Then update the Documentation Hub section on the main page with links to each of these sub-pages.
