@@ -17,8 +17,9 @@ The single entry point for every new Thrustlab prospect engagement. Combines pro
 **Produces:**
 1. `Prospects/{prospect-slug}/profile.md` — the canonical prospect profile
 2. `Prospects/{prospect-slug}/strategy.md` — the full GTM strategy
-3. `Prospects/{prospect-slug}/presentation.html` — beautiful HTML presentation of the strategy
-4. Notion GTM Client Hub — fully populated workspace
+3. `Prospects/{prospect-slug}/onboarding-questions.md` — questions for the client onboarding meeting
+4. `Prospects/{prospect-slug}/presentation.html` — beautiful HTML presentation of the strategy
+5. Notion GTM Client Hub — fully populated workspace
 
 ---
 
@@ -30,8 +31,9 @@ Use the `gtm-strategy-generator` skill to:
 - Auto-discover the company profile through web research
 - Generate the canonical profile.md
 - Create the full GTM strategy document
+- Generate the onboarding questions document for the client meeting
 
-This will output both `Prospects/{prospect-slug}/profile.md` and `Prospects/{prospect-slug}/strategy.md`.
+This will output `Prospects/{prospect-slug}/profile.md`, `Prospects/{prospect-slug}/strategy.md`, and `Prospects/{prospect-slug}/onboarding-questions.md`.
 
 ### Step 2: Create Notion Workspace
 
@@ -57,10 +59,12 @@ This creates a shareable presentation that summarizes the strategy for the prosp
 Provide the user with:
 - Profile summary (company identity, fields needing confirmation)
 - Strategy highlights (top 3 recommended trigger plays)
+- Onboarding questions document confirmation (highlight most critical questions)
 - Notion workspace URL and confirmation of what was populated
 - Presentation file path and preview
 
 **Next steps:**
 - Review and confirm/correct fields marked `[To be confirmed by client]` in profile.md
+- Use onboarding-questions.md as the agenda for the client onboarding meeting
 - Share the presentation.html with the prospect for review
 - Once profile is confirmed, proceed with: `/slack-channel-creator` → `/tooling-setup-guide` → `/market-mapping` → `/icp-mapping` → `/workflow-*`

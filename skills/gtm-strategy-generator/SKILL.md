@@ -5,9 +5,10 @@ description: The first step for any new Thrustlab client. Takes a LinkedIn Compa
 
 # GTM Strategy Generator
 
-The entry point for every new Thrustlab client engagement. Produces both:
+The entry point for every new Thrustlab client engagement. Produces:
 1. `Prospects/{client-slug}/profile.md` — the canonical client profile (read by ALL downstream skills)
 2. `Prospects/{client-slug}/strategy.md` — the full GTM strategy
+3. `Prospects/{client-slug}/onboarding-questions.md` — questions for the client onboarding meeting
 
 **Input required:** LinkedIn Company URL + company domain (e.g., `https://www.linkedin.com/company/acme-corp` + `acme.com`)
 
@@ -112,11 +113,43 @@ Before delivering, verify:
 - Zero generic value props — all industry/role specific
 - 3 recommended plays (INCLUDING general outbound) are clearly identified with rationale
 
-### Step 5: Save strategy.md & Present Outputs
+### Step 5: Save strategy.md
 
 Save to `Prospects/{client-slug}/strategy.md`
 
-Present both outputs to the user:
+### Step 6: Generate Onboarding Questions Document
+
+Generate `Prospects/{client-slug}/onboarding-questions.md` — a structured document of questions for the client onboarding meeting.
+
+**Purpose:** This document consolidates everything we need to ask the client to confirm/correct from the auto-discovered profile and validate the strategy. It ensures the onboarding meeting is efficient and nothing is missed.
+
+**The document must include these sections:**
+
+1. **Profile Confirmation** — Questions for every field marked `[To be confirmed by client]` or `[Inferred — verify with client]` in profile.md, organized by section (Sales Motion, Target Market, Personas, Engagement Parameters)
+
+2. **Strategy Validation** — Questions to validate the recommended trigger plays, targeting approach, messaging tone, and any strategy-specific assumptions
+
+3. **Product & Proof Points** — Questions about customer count, success stories, testimonials available for outreach, product capabilities, pricing confirmation, trial/guarantee offers
+
+4. **Tech Stack & Infrastructure** — Questions about CRM, email sequencer, LinkedIn access, existing tools, databases, and any GTM tooling already in use
+
+5. **Existing Content & Assets** — Questions about content library, lead magnets, social presence, reviews, sales collateral, customer logos available for use
+
+6. **Operations & Capacity** — Questions about who handles meetings, booking tools, follow-up process, budget for tooling, and whether Thrustlab manages operations end-to-end
+
+7. **Quick Wins & Priorities** — Questions about existing warm leads, past trial users, referral programs, and seasonal priorities
+
+8. **Success Metrics & Expectations** — Questions about primary KPIs, reporting cadence, reporting format, and decision-maker for strategy changes
+
+9. **Action Items After Meeting** — A table template with Owner and Due Date columns for post-meeting follow-ups
+
+Use `references/onboarding-questions-template.md` as the structure template.
+
+**Format:** Each question should be a checkbox `- [ ]` for easy tracking during the meeting. Group questions logically. Include brief context for why each question matters where non-obvious.
+
+### Step 7: Present Outputs
+
+Present all three outputs to the user:
 
 **Profile summary:**
 - Company identity and positioning (1-2 sentences)
@@ -127,6 +160,11 @@ Present both outputs to the user:
 - Top 3 recommended trigger plays with rationale
 - Key ICP refinements discovered during research
 
+**Onboarding questions:**
+- Confirm the onboarding-questions.md was generated
+- Highlight the most critical questions that MUST be answered before implementation can begin
+
 **Next steps:**
 - Review and confirm/correct fields marked `[To be confirmed by client]` in profile.md
+- Use onboarding-questions.md as the agenda for the client onboarding meeting
 - Once profile is confirmed, proceed with: `/notion-project-creator` → `/slack-channel-creator` → `/tooling-setup-guide` → `/market-mapping` → `/icp-mapping` → `/workflow-*`
